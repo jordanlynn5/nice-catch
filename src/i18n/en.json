@@ -1,0 +1,112 @@
+{
+  "app_name": "Nice Catch",
+  "tagline": "Fish with conscience",
+  "nav": {
+    "scan": "Scan",
+    "history": "History",
+    "profile": "Profile",
+    "about": "About"
+  },
+  "home": {
+    "title": "What fish are you buying?",
+    "subtitle": "Scan the label or search by species",
+    "scan_barcode": "Scan barcode",
+    "capture_label": "Photograph label",
+    "manual_search": "Search species",
+    "recent_scans": "Recent scans",
+    "no_recent_scans": "You haven't scanned anything yet",
+    "start_scanning": "Start scanning!"
+  },
+  "scanner": {
+    "scanning": "Scanning...",
+    "aim_at_barcode": "Point at the barcode",
+    "barcode_detected": "Barcode detected",
+    "try_camera": "Try with camera",
+    "try_manual": "Manual search",
+    "camera_permission": "Camera access required",
+    "camera_not_available": "Camera not available",
+    "take_photo": "Take photo",
+    "analyzing": "Analyzing label...",
+    "search_placeholder": "E.g.: hake, sea bream, salmon...",
+    "no_results": "No results found",
+    "searching": "Searching..."
+  },
+  "result": {
+    "sustainability_score": "Sustainability score",
+    "best_choice": "Best choice",
+    "good_choice": "Good choice",
+    "think_twice": "Think twice",
+    "avoid": "Avoid",
+    "co2_per_kg": "CO₂/kg",
+    "confidence": "Confidence",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "fishing_method": "Fishing method",
+    "catch_area": "Catch area",
+    "production": "Production",
+    "wild": "Wild",
+    "farmed": "Farmed",
+    "score_breakdown": "Score breakdown",
+    "iucn_status": "IUCN status",
+    "method_impact": "Method impact",
+    "area_impact": "Area impact",
+    "certification": "Certification",
+    "alternatives": "Sustainable alternatives",
+    "same_species_better": "Same species, better method",
+    "better_species": "More sustainable species",
+    "no_alternative_title": "No better alternative right now",
+    "reduce_consumption": "Consider reducing consumption to once a month",
+    "best_season": "Best season",
+    "avoid_season": "Avoid in",
+    "species_info": "Species information"
+  },
+  "gamification": {
+    "ocean_score": "Ocean Score",
+    "your_badges": "Your badges",
+    "locked": "Locked",
+    "share_badge": "Share",
+    "scan_history": "Scan history",
+    "no_history": "No history yet",
+    "points_earned": "+{points} pts",
+    "badge_unlocked": "Badge unlocked!"
+  },
+  "profile": {
+    "title": "Your profile",
+    "total_scans": "Total scans",
+    "high_score_scans": "High score scans",
+    "alternatives_chosen": "Alternatives chosen"
+  },
+  "about": {
+    "title": "Methodology",
+    "how_it_works": "How does it work?",
+    "data_sources": "Data sources",
+    "scoring_explanation": "The score is based on IUCN conservation status, fishing method, and FAO catch area.",
+    "iucn_source": "IUCN Red List — Global conservation status",
+    "fishbase_source": "FishBase — Species biology",
+    "wolfram_source": "Wolfram Alpha — Carbon footprint data",
+    "fao_source": "FAO — Fishing areas and statistics",
+    "off_source": "Open Food Facts — Product database"
+  },
+  "errors": {
+    "network": "Connection error. Check your internet.",
+    "not_found": "Species not found",
+    "barcode_failed": "Could not read barcode. Try camera or search.",
+    "camera_failed": "Error accessing camera",
+    "generic": "Something went wrong. Please try again."
+  },
+  "offline": {
+    "banner": "Offline — using saved data",
+    "cached": "Cached result"
+  },
+  "iucn": {
+    "LC": "Least Concern",
+    "NT": "Near Threatened",
+    "VU": "Vulnerable",
+    "EN": "Endangered",
+    "CR": "Critically Endangered",
+    "EX": "Extinct",
+    "DD": "Data Deficient",
+    "NE": "Not Evaluated"
+  }
+}

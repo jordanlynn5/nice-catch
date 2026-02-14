@@ -1,0 +1,338 @@
+[
+  {
+    "id": "merluza",
+    "names": {
+      "es": ["Merluza", "Pescadilla"],
+      "en": ["European hake", "Hake"],
+      "fr": ["Merlu", "Colin"],
+      "scientific": "Merluccius merluccius",
+      "eu_commercial": "Merluza"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 55,
+    "scoreRange": [20, 75],
+    "goodAlternatives": ["bacalao_atlantico", "abadejo"],
+    "category": "white_fish",
+    "notes_es": "La merluza mediterránea está muy sobreexplotada. Prefiere merluza del Atlántico norte."
+  },
+  {
+    "id": "dorada",
+    "names": {
+      "es": ["Dorada", "Orada"],
+      "en": ["Gilt-head bream", "Gilthead seabream"],
+      "fr": ["Daurade", "Daurade royale"],
+      "scientific": "Sparus aurata",
+      "eu_commercial": "Dorada"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 60,
+    "scoreRange": [40, 80],
+    "goodAlternatives": ["lubina", "besugo"],
+    "category": "white_fish",
+    "notes_es": "La dorada de acuicultura certificada es una opción razonable. La silvestre del Mediterráneo está bajo presión."
+  },
+  {
+    "id": "lubina",
+    "names": {
+      "es": ["Lubina", "Róbalo", "Lobo de mar"],
+      "en": ["European sea bass", "Sea bass"],
+      "fr": ["Bar", "Loup de mer"],
+      "scientific": "Dicentrarchus labrax",
+      "eu_commercial": "Lubina"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 58,
+    "scoreRange": [38, 78],
+    "goodAlternatives": ["dorada", "besugo"],
+    "category": "white_fish",
+    "notes_es": "La lubina salvaje mediterránea está bajo presión pesquera moderada."
+  },
+  {
+    "id": "salmon",
+    "names": {
+      "es": ["Salmón", "Salmón del Atlántico"],
+      "en": ["Atlantic salmon", "Salmon"],
+      "fr": ["Saumon", "Saumon atlantique"],
+      "scientific": "Salmo salar",
+      "eu_commercial": "Salmón del Atlántico"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 55,
+    "scoreRange": [30, 72],
+    "goodAlternatives": ["trucha_arcoiris", "sardina"],
+    "category": "fatty_fish",
+    "notes_es": "El salmón salvaje del Atlántico está muy reducido. El salmón de acuicultura varía mucho según certificación."
+  },
+  {
+    "id": "sardina",
+    "names": {
+      "es": ["Sardina", "Sardina europea"],
+      "en": ["European pilchard", "Sardine"],
+      "fr": ["Sardine", "Pilchard"],
+      "scientific": "Sardina pilchardus",
+      "eu_commercial": "Sardina"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 70,
+    "scoreRange": [45, 85],
+    "goodAlternatives": ["anchoa", "boqueron"],
+    "category": "small_pelagic",
+    "notes_es": "Las sardinas son una de las opciones más sostenibles cuando proceden del Atlántico. Evita las del Mediterráneo sur."
+  },
+  {
+    "id": "anchoa",
+    "names": {
+      "es": ["Anchoa", "Boquerón", "Anchoa europea"],
+      "en": ["European anchovy", "Anchovy"],
+      "fr": ["Anchois", "Anchois européen"],
+      "scientific": "Engraulis encrasicolus",
+      "eu_commercial": "Anchoa"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 75,
+    "scoreRange": [50, 88],
+    "goodAlternatives": ["sardina", "caballa"],
+    "category": "small_pelagic",
+    "notes_es": "Las anchoas del Cantábrico (Golfo de Vizcaya) son una excelente elección sostenible."
+  },
+  {
+    "id": "boqueron",
+    "names": {
+      "es": ["Boquerón", "Anchoa fresca"],
+      "en": ["European anchovy fresh"],
+      "fr": ["Anchois frais"],
+      "scientific": "Engraulis encrasicolus",
+      "eu_commercial": "Anchoa"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 75,
+    "scoreRange": [50, 88],
+    "goodAlternatives": ["sardina", "caballa"],
+    "category": "small_pelagic",
+    "notes_es": "El boquerón fresco es nutritivo y generalmente bien gestionado en el Cantábrico."
+  },
+  {
+    "id": "caballa",
+    "names": {
+      "es": ["Caballa", "Verdel", "Sarda"],
+      "en": ["Atlantic mackerel", "Mackerel"],
+      "fr": ["Maquereau", "Maquereau commun"],
+      "scientific": "Scomber scombrus",
+      "eu_commercial": "Caballa"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 72,
+    "scoreRange": [48, 85],
+    "goodAlternatives": ["sardina", "anchoa"],
+    "category": "small_pelagic",
+    "notes_es": "La caballa es rica en omega-3 y sus poblaciones están en buen estado en el Atlántico norte."
+  },
+  {
+    "id": "atun_rojo",
+    "names": {
+      "es": ["Atún rojo", "Atún de aleta azul"],
+      "en": ["Atlantic bluefin tuna", "Bluefin tuna"],
+      "fr": ["Thon rouge", "Thon rouge de l'Atlantique"],
+      "scientific": "Thunnus thynnus",
+      "eu_commercial": "Atún rojo"
+    },
+    "iucnStatus": "EN",
+    "defaultScore": 15,
+    "scoreRange": [0, 30],
+    "goodAlternatives": ["caballa", "sardina"],
+    "category": "large_pelagic",
+    "notes_es": "El atún rojo sigue siendo una especie en peligro. Las cuotas ICCAT mejoran lentamente pero la pesca sigue siendo preocupante."
+  },
+  {
+    "id": "atun_claro",
+    "names": {
+      "es": ["Atún claro", "Atún de aleta amarilla"],
+      "en": ["Yellowfin tuna", "Light tuna"],
+      "fr": ["Thon jaune", "Albacore"],
+      "scientific": "Thunnus albacares",
+      "eu_commercial": "Atún claro"
+    },
+    "iucnStatus": "NT",
+    "defaultScore": 35,
+    "scoreRange": [15, 55],
+    "goodAlternatives": ["bonito_norte", "caballa"],
+    "category": "large_pelagic",
+    "notes_es": "El atún claro tiene mejor estado que el rojo pero sigue bajo presión pesquera global."
+  },
+  {
+    "id": "bonito_norte",
+    "names": {
+      "es": ["Bonito del norte", "Atún blanco", "Albacora"],
+      "en": ["Albacore tuna", "White tuna"],
+      "fr": ["Germon", "Thon blanc"],
+      "scientific": "Thunnus alalunga",
+      "eu_commercial": "Atún blanco"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 55,
+    "scoreRange": [35, 70],
+    "goodAlternatives": ["caballa", "sardina"],
+    "category": "large_pelagic",
+    "notes_es": "El bonito del norte del Atlántico norte es más sostenible que otras especies de atún cuando se pesca con caña."
+  },
+  {
+    "id": "bacalao_atlantico",
+    "names": {
+      "es": ["Bacalao", "Bacalao del Atlántico"],
+      "en": ["Atlantic cod", "Cod"],
+      "fr": ["Morue", "Cabillaud"],
+      "scientific": "Gadus morhua",
+      "eu_commercial": "Bacalao"
+    },
+    "iucnStatus": "VU",
+    "defaultScore": 35,
+    "scoreRange": [15, 60],
+    "goodAlternatives": ["abadejo", "merluza"],
+    "category": "white_fish",
+    "notes_es": "Las poblaciones de bacalao del Atlántico se han recuperado parcialmente pero siguen siendo vulnerables."
+  },
+  {
+    "id": "abadejo",
+    "names": {
+      "es": ["Abadejo", "Carbonero"],
+      "en": ["Saithe", "Pollock", "Coalfish"],
+      "fr": ["Lieu noir", "Colin noir"],
+      "scientific": "Pollachius virens",
+      "eu_commercial": "Abadejo"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 68,
+    "scoreRange": [45, 80],
+    "goodAlternatives": ["merluza", "bacalao_atlantico"],
+    "category": "white_fish",
+    "notes_es": "El abadejo es una excelente alternativa al bacalao con poblaciones en buen estado."
+  },
+  {
+    "id": "gamba_blanca",
+    "names": {
+      "es": ["Gamba blanca", "Gamba de Huelva", "Langostino"],
+      "en": ["White shrimp", "Caramote prawn"],
+      "fr": ["Crevette blanche", "Grosse crevette"],
+      "scientific": "Parapenaeus longirostris",
+      "eu_commercial": "Gamba"
+    },
+    "iucnStatus": "DD",
+    "defaultScore": 30,
+    "scoreRange": [10, 55],
+    "goodAlternatives": ["mejillon", "navaja"],
+    "category": "shellfish",
+    "notes_es": "Las gambas del Mediterráneo se capturan principalmente con arrastre de fondo, muy impactante para el ecosistema."
+  },
+  {
+    "id": "mejillon",
+    "names": {
+      "es": ["Mejillón", "Mejillón mediterráneo"],
+      "en": ["Mediterranean mussel", "Mussel"],
+      "fr": ["Moule", "Moule méditerranéenne"],
+      "scientific": "Mytilus galloprovincialis",
+      "eu_commercial": "Mejillón"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 85,
+    "scoreRange": [70, 95],
+    "goodAlternatives": [],
+    "category": "bivalve",
+    "notes_es": "El mejillón cultivado es una de las proteínas animales más sostenibles. Mejora la calidad del agua y requiere cero alimentación."
+  },
+  {
+    "id": "ostra",
+    "names": {
+      "es": ["Ostra", "Ostra plana", "Ostra rizada"],
+      "en": ["Pacific oyster", "Oyster"],
+      "fr": ["Huître", "Huître creuse"],
+      "scientific": "Crassostrea gigas",
+      "eu_commercial": "Ostra"
+    },
+    "iucnStatus": "NE",
+    "defaultScore": 82,
+    "scoreRange": [68, 92],
+    "goodAlternatives": ["mejillon"],
+    "category": "bivalve",
+    "notes_es": "Las ostras de acuicultura son excelentes para el ecosistema: filtran agua y no requieren pienso."
+  },
+  {
+    "id": "besugo",
+    "names": {
+      "es": ["Besugo", "Pagel"],
+      "en": ["Red sea bream", "Blackspot sea bream"],
+      "fr": ["Dorade rose", "Pageot commun"],
+      "scientific": "Pagellus bogaraveo",
+      "eu_commercial": "Besugo"
+    },
+    "iucnStatus": "VU",
+    "defaultScore": 30,
+    "scoreRange": [15, 50],
+    "goodAlternatives": ["dorada", "lubina"],
+    "category": "white_fish",
+    "notes_es": "El besugo está catalogado como vulnerable. Considera alternativas de acuicultura certificada."
+  },
+  {
+    "id": "pulpo",
+    "names": {
+      "es": ["Pulpo", "Pulpo común"],
+      "en": ["Common octopus", "Octopus"],
+      "fr": ["Poulpe", "Pieuvre"],
+      "scientific": "Octopus vulgaris",
+      "eu_commercial": "Pulpo"
+    },
+    "iucnStatus": "NE",
+    "defaultScore": 48,
+    "scoreRange": [30, 65],
+    "goodAlternatives": ["sepia", "calamar"],
+    "category": "cephalopod",
+    "notes_es": "El pulpo tiene ciclo de vida corto y se recupera bien pero el arrastre con el que se captura es problemático."
+  },
+  {
+    "id": "sepia",
+    "names": {
+      "es": ["Sepia", "Jibia"],
+      "en": ["Common cuttlefish", "Cuttlefish"],
+      "fr": ["Seiche", "Seiche commune"],
+      "scientific": "Sepia officinalis",
+      "eu_commercial": "Sepia"
+    },
+    "iucnStatus": "NE",
+    "defaultScore": 50,
+    "scoreRange": [35, 68],
+    "goodAlternatives": ["calamar", "pulpo"],
+    "category": "cephalopod",
+    "notes_es": "La sepia se pesca principalmente en primavera. Su gestión es local y varía por zona."
+  },
+  {
+    "id": "calamar",
+    "names": {
+      "es": ["Calamar", "Chipirón"],
+      "en": ["European squid", "Squid"],
+      "fr": ["Calmar", "Encornet"],
+      "scientific": "Loligo vulgaris",
+      "eu_commercial": "Calamar"
+    },
+    "iucnStatus": "NE",
+    "defaultScore": 52,
+    "scoreRange": [38, 70],
+    "goodAlternatives": ["sepia", "pulpo"],
+    "category": "cephalopod",
+    "notes_es": "El calamar europeo tiene poblaciones relativamente estables. Prefiere los chiperones pequeños de la temporada local."
+  },
+  {
+    "id": "trucha_arcoiris",
+    "names": {
+      "es": ["Trucha arcoíris", "Trucha"],
+      "en": ["Rainbow trout", "Trout"],
+      "fr": ["Truite arc-en-ciel", "Truite"],
+      "scientific": "Oncorhynchus mykiss",
+      "eu_commercial": "Trucha"
+    },
+    "iucnStatus": "LC",
+    "defaultScore": 65,
+    "scoreRange": [45, 80],
+    "goodAlternatives": ["salmon", "mejillon"],
+    "category": "fatty_fish",
+    "notes_es": "La trucha de acuicultura española es generalmente bien gestionada. Busca certificación ASC."
+  }
+]

@@ -1,0 +1,107 @@
+{
+  "bottom_trawl": {
+    "name": "Arrastre de fondo",
+    "name_en": "Bottom trawl",
+    "modifier": -20,
+    "eu_gear_codes": ["OTB", "PTB", "TBB"],
+    "description": "Daño severo al fondo marino"
+  },
+  "beam_trawl": {
+    "name": "Arrastre de vara",
+    "name_en": "Beam trawl",
+    "modifier": -18,
+    "eu_gear_codes": ["TBB"],
+    "description": "Alto impacto en bentos"
+  },
+  "dredge": {
+    "name": "Draga",
+    "name_en": "Dredge",
+    "modifier": -15,
+    "eu_gear_codes": ["DRB", "DRH"],
+    "description": "Daño significativo al hábitat"
+  },
+  "midwater_trawl": {
+    "name": "Arrastre pelágico",
+    "name_en": "Midwater trawl",
+    "modifier": -8,
+    "eu_gear_codes": ["OTM", "PTM"],
+    "description": "Menor impacto que arrastre de fondo"
+  },
+  "purse_seine": {
+    "name": "Cerco",
+    "name_en": "Purse seine",
+    "modifier": -5,
+    "eu_gear_codes": ["PS"],
+    "description": "Puede incluir capturas accesorias de atún"
+  },
+  "gillnet": {
+    "name": "Trasmallo / Red de enmalle",
+    "name_en": "Gillnet",
+    "modifier": -5,
+    "eu_gear_codes": ["GN", "GNS", "GND"],
+    "description": "Riesgo de capturas accesorias"
+  },
+  "longline_pelagic": {
+    "name": "Palangre pelágico",
+    "name_en": "Pelagic longline",
+    "modifier": 0,
+    "eu_gear_codes": ["LHP", "LL"],
+    "description": "Impacto moderado, selectivo"
+  },
+  "longline_demersal": {
+    "name": "Palangre de fondo",
+    "name_en": "Demersal longline",
+    "modifier": 5,
+    "eu_gear_codes": ["LLD", "LHM"],
+    "description": "Relativamente selectivo y sostenible"
+  },
+  "trap_pot": {
+    "name": "Nasa / Trampa",
+    "name_en": "Trap/Pot",
+    "modifier": 12,
+    "eu_gear_codes": ["FPO", "FYK"],
+    "description": "Muy selectivo, bajo impacto"
+  },
+  "pole_and_line": {
+    "name": "Caña y sedal",
+    "name_en": "Pole and line",
+    "modifier": 15,
+    "eu_gear_codes": ["LTL"],
+    "description": "Captura uno a uno, mínima captura accesoria"
+  },
+  "hook_and_line": {
+    "name": "Anzuelo y sedal",
+    "name_en": "Hook and line",
+    "modifier": 15,
+    "eu_gear_codes": ["LLS", "LHT"],
+    "description": "Selectivo y sostenible"
+  },
+  "handline": {
+    "name": "Liña a mano",
+    "name_en": "Handline",
+    "modifier": 18,
+    "eu_gear_codes": ["LHP"],
+    "description": "El método más selectivo"
+  },
+  "aquaculture_certified": {
+    "name": "Acuicultura certificada (ASC/MSC)",
+    "name_en": "Certified aquaculture (ASC/MSC)",
+    "modifier": 20,
+    "eu_gear_codes": [],
+    "description": "Cumple estándares ambientales más altos"
+  },
+  "aquaculture_standard": {
+    "name": "Acuicultura estándar",
+    "name_en": "Standard aquaculture",
+    "modifier": 10,
+    "eu_gear_codes": [],
+    "description": "Acuicultura regulada sin certificación especial"
+  },
+  "unknown": {
+    "name": "Método desconocido",
+    "name_en": "Unknown method",
+    "modifier": 0,
+    "eu_gear_codes": [],
+    "description": "Sin información sobre el método de captura"
+  }
+}

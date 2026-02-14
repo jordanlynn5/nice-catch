@@ -1,0 +1,30 @@
+{
+  "white_fish": {
+    "recommended": ["merluza", "abadejo", "trucha_arcoiris", "dorada", "lubina"],
+    "description_es": "Pescado blanco de carne magra y sabor suave"
+  },
+  "fatty_fish": {
+    "recommended": ["sardina", "anchoa", "caballa", "trucha_arcoiris", "salmon"],
+    "description_es": "Pescado azul rico en omega-3"
+  },
+  "small_pelagic": {
+    "recommended": ["anchoa", "sardina", "caballa", "boqueron"],
+    "description_es": "Peces pelágicos pequeños, base de la cadena alimentaria"
+  },
+  "large_pelagic": {
+    "recommended": ["bonito_norte", "caballa", "sardina"],
+    "description_es": "Grandes peces pelágicos migratorios"
+  },
+  "shellfish": {
+    "recommended": ["mejillon", "ostra", "navaja", "almejas"],
+    "description_es": "Mariscos y moluscos"
+  },
+  "bivalve": {
+    "recommended": ["mejillon", "ostra"],
+    "description_es": "Bivalvos de acuicultura — los más sostenibles"
+  },
+  "cephalopod": {
+    "recommended": ["calamar", "sepia", "pulpo"],
+    "description_es": "Cefalópodos con ciclo de vida corto"
+  }
+}

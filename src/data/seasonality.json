@@ -1,0 +1,86 @@
+{
+  "merluza": {
+    "mediterranean": { "best": ["Oct", "Nov", "Dec", "Jan"], "avoid": ["Apr", "May", "Jun"] },
+    "atlantic": { "best": ["Sep", "Oct", "Nov", "Dec"], "avoid": ["Mar", "Apr", "May"] }
+  },
+  "dorada": {
+    "mediterranean": { "best": ["Sep", "Oct", "Nov"], "avoid": ["Apr", "May"] },
+    "atlantic": { "best": ["Sep", "Oct", "Nov", "Dec"], "avoid": ["Mar", "Apr"] }
+  },
+  "lubina": {
+    "mediterranean": { "best": ["Oct", "Nov", "Dec", "Jan"], "avoid": ["Apr", "May"] },
+    "atlantic": { "best": ["Sep", "Oct", "Nov"], "avoid": ["Mar", "Apr"] }
+  },
+  "salmon": {
+    "mediterranean": { "best": [], "avoid": [] },
+    "atlantic": { "best": ["Jun", "Jul", "Aug", "Sep"], "avoid": ["Jan", "Feb"] }
+  },
+  "sardina": {
+    "mediterranean": { "best": ["May", "Jun", "Jul", "Aug"], "avoid": ["Jan", "Feb"] },
+    "atlantic": { "best": ["Apr", "May", "Jun", "Jul"], "avoid": ["Dec", "Jan"] }
+  },
+  "anchoa": {
+    "mediterranean": { "best": ["Apr", "May", "Jun", "Jul"], "avoid": ["Nov", "Dec", "Jan"] },
+    "atlantic": { "best": ["Apr", "May", "Jun"], "avoid": ["Dec", "Jan", "Feb"] }
+  },
+  "boqueron": {
+    "mediterranean": { "best": ["Apr", "May", "Jun"], "avoid": ["Nov", "Dec"] },
+    "atlantic": { "best": ["Apr", "May", "Jun"], "avoid": ["Dec", "Jan"] }
+  },
+  "caballa": {
+    "mediterranean": { "best": ["Apr", "May", "Jun", "Jul"], "avoid": ["Nov", "Dec", "Jan"] },
+    "atlantic": { "best": ["Mar", "Apr", "May", "Jun", "Jul"], "avoid": ["Dec", "Jan"] }
+  },
+  "atun_rojo": {
+    "mediterranean": { "best": ["Jun", "Jul", "Aug"], "avoid": ["Nov", "Dec", "Jan", "Feb", "Mar"] },
+    "atlantic": { "best": ["Jun", "Jul"], "avoid": ["Nov", "Dec", "Jan", "Feb"] }
+  },
+  "atun_claro": {
+    "mediterranean": { "best": ["Jun", "Jul", "Aug"], "avoid": ["Nov", "Dec", "Jan"] },
+    "atlantic": { "best": ["May", "Jun", "Jul", "Aug"], "avoid": ["Nov", "Dec", "Jan"] }
+  },
+  "bonito_norte": {
+    "mediterranean": { "best": [], "avoid": [] },
+    "atlantic": { "best": ["Jun", "Jul", "Aug", "Sep"], "avoid": ["Nov", "Dec", "Jan", "Feb"] }
+  },
+  "bacalao_atlantico": {
+    "mediterranean": { "best": [], "avoid": [] },
+    "atlantic": { "best": ["Nov", "Dec", "Jan", "Feb"], "avoid": ["Jun", "Jul"] }
+  },
+  "abadejo": {
+    "mediterranean": { "best": [], "avoid": [] },
+    "atlantic": { "best": ["Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": ["Jun", "Jul"] }
+  },
+  "gamba_blanca": {
+    "mediterranean": { "best": ["May", "Jun", "Jul", "Aug", "Sep"], "avoid": ["Jan", "Feb"] },
+    "atlantic": { "best": ["Apr", "May", "Jun", "Jul", "Aug"], "avoid": ["Dec", "Jan"] }
+  },
+  "mejillon": {
+    "mediterranean": { "best": ["Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": [] },
+    "atlantic": { "best": ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": [] }
+  },
+  "ostra": {
+    "mediterranean": { "best": ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": ["Jun", "Jul", "Aug"] },
+    "atlantic": { "best": ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": ["Jun", "Jul", "Aug"] }
+  },
+  "besugo": {
+    "mediterranean": { "best": ["Oct", "Nov", "Dec", "Jan", "Feb"], "avoid": ["Apr", "May"] },
+    "atlantic": { "best": ["Nov", "Dec", "Jan", "Feb"], "avoid": ["May", "Jun"] }
+  },
+  "pulpo": {
+    "mediterranean": { "best": ["Jul", "Aug", "Sep", "Oct"], "avoid": ["Feb", "Mar"] },
+    "atlantic": { "best": ["Jul", "Aug", "Sep", "Oct"], "avoid": ["Feb", "Mar"] }
+  },
+  "sepia": {
+    "mediterranean": { "best": ["Mar", "Apr", "May", "Jun"], "avoid": ["Nov", "Dec"] },
+    "atlantic": { "best": ["Apr", "May", "Jun"], "avoid": ["Nov", "Dec"] }
+  },
+  "calamar": {
+    "mediterranean": { "best": ["May", "Jun", "Jul", "Aug", "Sep"], "avoid": ["Dec", "Jan"] },
+    "atlantic": { "best": ["Apr", "May", "Jun", "Jul", "Aug"], "avoid": ["Dec", "Jan"] }
+  },
+  "trucha_arcoiris": {
+    "mediterranean": { "best": ["Mar", "Apr", "Oct", "Nov"], "avoid": [] },
+    "atlantic": { "best": ["Mar", "Apr", "Sep", "Oct", "Nov"], "avoid": [] }
+  }
+}

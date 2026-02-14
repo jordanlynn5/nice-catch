@@ -1,0 +1,112 @@
+{
+  "app_name": "Nice Catch",
+  "tagline": "Pesca con conciencia",
+  "nav": {
+    "scan": "Escanear",
+    "history": "Historial",
+    "profile": "Perfil",
+    "about": "Info"
+  },
+  "home": {
+    "title": "¿Qué pescado vas a comprar?",
+    "subtitle": "Escanea la etiqueta o busca la especie",
+    "scan_barcode": "Escanear código de barras",
+    "capture_label": "Fotografiar etiqueta",
+    "manual_search": "Buscar especie",
+    "recent_scans": "Escaneos recientes",
+    "no_recent_scans": "Todavía no has escaneado nada",
+    "start_scanning": "¡Empieza escaneando!"
+  },
+  "scanner": {
+    "scanning": "Escaneando...",
+    "aim_at_barcode": "Apunta al código de barras",
+    "barcode_detected": "Código detectado",
+    "try_camera": "Intentar con cámara",
+    "try_manual": "Búsqueda manual",
+    "camera_permission": "Se necesita acceso a la cámara",
+    "camera_not_available": "Cámara no disponible",
+    "take_photo": "Hacer foto",
+    "analyzing": "Analizando etiqueta...",
+    "search_placeholder": "Ej: merluza, dorada, salmón...",
+    "no_results": "No se encontraron resultados",
+    "searching": "Buscando..."
+  },
+  "result": {
+    "sustainability_score": "Puntuación de sostenibilidad",
+    "best_choice": "Mejor opción",
+    "good_choice": "Buena opción",
+    "think_twice": "Piénsatelo",
+    "avoid": "Evitar",
+    "co2_per_kg": "CO₂/kg",
+    "confidence": "Confianza",
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Baja",
+    "fishing_method": "Método de pesca",
+    "catch_area": "Zona de captura",
+    "production": "Producción",
+    "wild": "Salvaje",
+    "farmed": "Acuicultura",
+    "score_breakdown": "Desglose de puntuación",
+    "iucn_status": "Estado IUCN",
+    "method_impact": "Impacto del método",
+    "area_impact": "Impacto de la zona",
+    "certification": "Certificación",
+    "alternatives": "Alternativas sostenibles",
+    "same_species_better": "Misma especie, mejor método",
+    "better_species": "Especie más sostenible",
+    "no_alternative_title": "Sin alternativa mejor ahora",
+    "reduce_consumption": "Considera reducir el consumo a una vez al mes",
+    "best_season": "Mejor temporada",
+    "avoid_season": "Evitar en",
+    "species_info": "Información de la especie"
+  },
+  "gamification": {
+    "ocean_score": "Puntuación Océano",
+    "your_badges": "Tus badges",
+    "locked": "Bloqueado",
+    "share_badge": "Compartir",
+    "scan_history": "Historial de escaneos",
+    "no_history": "Todavía no hay historial",
+    "points_earned": "+{points} pts",
+    "badge_unlocked": "¡Badge desbloqueado!"
+  },
+  "profile": {
+    "title": "Tu perfil",
+    "total_scans": "Escaneos totales",
+    "high_score_scans": "Puntuaciones altas",
+    "alternatives_chosen": "Alternativas elegidas"
+  },
+  "about": {
+    "title": "Metodología",
+    "how_it_works": "¿Cómo funciona?",
+    "data_sources": "Fuentes de datos",
+    "scoring_explanation": "La puntuación se basa en el estado de conservación IUCN, el método de pesca y la zona de captura FAO.",
+    "iucn_source": "IUCN Red List — Estado de conservación global",
+    "fishbase_source": "FishBase — Biología de especies",
+    "wolfram_source": "Wolfram Alpha — Datos de huella de carbono",
+    "fao_source": "FAO — Zonas de pesca y estadísticas",
+    "off_source": "Open Food Facts — Base de datos de productos"
+  },
+  "errors": {
+    "network": "Error de conexión. Revisa tu internet.",
+    "not_found": "Especie no encontrada",
+    "barcode_failed": "No se pudo leer el código. Intenta con cámara o búsqueda.",
+    "camera_failed": "Error al acceder a la cámara",
+    "generic": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "offline": {
+    "banner": "Sin conexión — usando datos guardados",
+    "cached": "Resultado guardado"
+  },
+  "iucn": {
+    "LC": "Preocupación menor",
+    "NT": "Casi amenazada",
+    "VU": "Vulnerable",
+    "EN": "En peligro",
+    "CR": "En peligro crítico",
+    "EX": "Extinta",
+    "DD": "Datos insuficientes",
+    "NE": "No evaluada"
+  }
+}
