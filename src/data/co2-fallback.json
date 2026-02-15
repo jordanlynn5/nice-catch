@@ -1,5 +1,6 @@
 {
   "_source": "Static fallback values from peer-reviewed lifecycle analyses (kg CO2eq per kg fish at point of sale)",
+  "_iucn_citation": "IUCN 2025. IUCN Red List of Threatened Species. Version 2025-2. <www.iucnredlist.org>",
   "by_method": {
     "bottom_trawl": 4.2,
     "beam_trawl": 4.8,

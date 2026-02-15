@@ -11,11 +11,17 @@ export function AboutPage() {
   ]
 
   const sources = [
-    { icon: '🔴', label: 'IUCN Red List', desc: t('about.iucn_source') },
-    { icon: '🐟', label: 'FishBase', desc: t('about.fishbase_source') },
-    { icon: '🌀', label: 'Wolfram Alpha', desc: t('about.wolfram_source') },
-    { icon: '🎣', label: 'FAO ASFIS', desc: t('about.fao_source') },
-    { icon: '📦', label: 'Open Food Facts', desc: t('about.off_source') },
+    {
+      icon: '🔴',
+      label: 'IUCN Red List',
+      desc: t('about.iucn_source'),
+      citation: t('about.iucn_citation'),
+      url: 'https://www.iucnredlist.org',
+    },
+    { icon: '🐟', label: 'FishBase', desc: t('about.fishbase_source'), citation: null, url: null },
+    { icon: '🌀', label: 'Wolfram Alpha', desc: t('about.wolfram_source'), citation: null, url: null },
+    { icon: '🎣', label: 'FAO ASFIS', desc: t('about.fao_source'), citation: null, url: null },
+    { icon: '📦', label: 'Open Food Facts', desc: t('about.off_source'), citation: null, url: null },
   ]
 
   return (
@@ -44,12 +50,22 @@ export function AboutPage() {
       <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
         <h2 className="font-semibold text-gray-800">{t('about.data_sources')}</h2>
         <div className="space-y-3">
-          {sources.map(({ icon, label, desc }) => (
+          {sources.map(({ icon, label, desc, citation, url }) => (
             <div key={label} className="flex gap-3">
               <span className="text-xl shrink-0">{icon}</span>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-semibold text-gray-800">{label}</p>
                 <p className="text-xs text-gray-500">{desc}</p>
+                {citation && url && (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-primary/80 break-all leading-tight mt-0.5 block hover:underline"
+                  >
+                    {citation}
+                  </a>
+                )}
               </div>
             </div>
           ))}
