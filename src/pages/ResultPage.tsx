@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/store/appStore'
 import { ProductCard } from '@/components/results/ProductCard'
@@ -11,23 +12,22 @@ import confetti from 'canvas-confetti'
 export function ResultPage() {
   const navigate = useNavigate()
   const { t } = useI18n()
-  const { currentResult, setCurrentResult, addToast } = useAppStore((s) => ({
-    currentResult: s.currentResult,
-    setCurrentResult: s.setCurrentResult,
-    addToast: s.addToast,
-  }))
+  const currentResult = useAppStore((s) => s.currentResult)
+  const setCurrentResult = useAppStore((s) => s.setCurrentResult)
+  const addToast = useAppStore((s) => s.addToast)
   const { recordScan } = useGameification()
   const { resolve, loading } = useSustainability()
 
-  if (!currentResult) {
-    navigate('/', { replace: true })
-    return null
-  }
+  // Navigate in an effect — never call navigate() during render
+  useEffect(() => {
+    if (!currentResult) {
+      navigate('/', { replace: true })
+    }
+  }, [currentResult, navigate])
 
   const handleChooseAlternative = async (altSpeciesId: string) => {
     const result = await resolve({ speciesName: altSpeciesId })
     if (result) {
-      // Celebrate with confetti
       confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#309f9b', '#80b8a2', '#106c72'] })
       setCurrentResult(result)
       await recordScan(result, true)
@@ -36,6 +36,7 @@ export function ResultPage() {
   }
 
   const handleShare = async () => {
+    if (!currentResult) return
     const score = currentResult.score.finalScore
     const text = `Acabo de consultar la sostenibilidad de ${currentResult.displayName}: ${score}/100 🌊 #NiceCatch`
 
@@ -50,6 +51,8 @@ export function ResultPage() {
       addToast('Copiado al portapapeles', 'success')
     }
   }
+
+  if (!currentResult) return null
 
   if (loading) {
     return (

@@ -1,10 +1,8 @@
 import { useAppStore } from '@/store/appStore'
 
 export function LanguageToggle() {
-  const { language, setLanguage } = useAppStore((s) => ({
-    language: s.language,
-    setLanguage: s.setLanguage,
-  }))
+  const language = useAppStore((s) => s.language)
+  const setLanguage = useAppStore((s) => s.setLanguage)
 
   return (
     <button

@@ -2,10 +2,8 @@ import { useEffect } from 'react'
 import { useAppStore } from '@/store/appStore'
 
 export function ToastContainer() {
-  const { toasts, removeToast } = useAppStore((s) => ({
-    toasts: s.toasts,
-    removeToast: s.removeToast,
-  }))
+  const toasts = useAppStore((s) => s.toasts)
+  const removeToast = useAppStore((s) => s.removeToast)
 
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 w-80 max-w-[90vw]">

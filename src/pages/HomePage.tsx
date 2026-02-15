@@ -21,10 +21,8 @@ export function HomePage() {
   const navigate = useNavigate()
   const { resolve, loading } = useSustainability()
   const { recordScan } = useGameification()
-  const { setCurrentResult, addToast } = useAppStore((s) => ({
-    setCurrentResult: s.setCurrentResult,
-    addToast: s.addToast,
-  }))
+  const setCurrentResult = useAppStore((s) => s.setCurrentResult)
+  const addToast = useAppStore((s) => s.addToast)
   const profile = useGameification().getProfile()
 
   const handleBarcode = async (barcode: string) => {
