@@ -12,9 +12,11 @@ interface Props {
 type ProductionChoice = 'wild_sea' | 'wild_freshwater' | 'farmed' | 'unknown'
 
 type WizardStep = 1 | 2 | 3
+type PurchaseContext = 'counter' | 'packaged' | 'frozen'
 
 interface WizardData {
   species: Species | null
+  purchaseContext: PurchaseContext | null
   productionChoice: ProductionChoice | null
   faoArea: string | null
   fishingMethod: string | null
@@ -41,15 +43,22 @@ function productionMethodFromChoice(choice: ProductionChoice): ProductionMethod 
 }
 
 export function ManualSearch({ onSelect }: Props) {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
+
+  const displayName = (species: Species) =>
+    (language === 'en' ? species.names.en[0] : undefined) ?? species.names.es[0]
   const [step, setStep] = useState<WizardStep>(1)
   const [data, setData] = useState<WizardData>({
     species: null,
+    purchaseContext: null,
     productionChoice: null,
     faoArea: null,
     fishingMethod: null,
     certifications: [],
   })
+  // Track which optional questions the user has explicitly interacted with
+  // (distinguishes "not answered yet" from "explicitly chose don't know")
+  const [touched, setTouched] = useState({ area: false, gear: false })
 
   // Step 1 — search state
   const [query, setQuery] = useState('')
@@ -105,6 +114,16 @@ export function ManualSearch({ onSelect }: Props) {
     { label: t('wizard.production_wild_freshwater'), value: 'wild_freshwater' },
     { label: t('wizard.production_unknown'), value: 'unknown' },
   ]
+
+  const CONTEXT_OPTIONS: { label: string; value: PurchaseContext }[] = [
+    { label: t('wizard.context_counter'), value: 'counter' },
+    { label: t('wizard.context_packaged'), value: 'packaged' },
+    { label: t('wizard.context_frozen'), value: 'frozen' },
+  ]
+
+  // Returns the context-specific i18n key for "where to find" text, or falls back to the base key
+  const wtf = (base: string) =>
+    t(data.purchaseContext ? `wizard.${base}_${data.purchaseContext}` : `wizard.${base}`)
 
   const selectSpecies = (species: Species) => {
     setData((d) => ({ ...d, species }))
@@ -183,7 +202,7 @@ export function ManualSearch({ onSelect }: Props) {
                 >
                   <span className="text-lg">{getCategoryEmoji(species.category)}</span>
                   <div className="min-w-0">
-                    <p className="font-medium text-gray-800 text-sm">{species.names.es[0]}</p>
+                    <p className="font-medium text-gray-800 text-sm">{displayName(species)}</p>
                     <p className="text-xs text-gray-400 italic truncate">{species.names.scientific}</p>
                   </div>
                 </button>
@@ -207,21 +226,45 @@ export function ManualSearch({ onSelect }: Props) {
     const isUnknown = data.productionChoice === 'unknown'
     const canProceed = data.productionChoice !== null
 
+    const step2Subtitle = data.purchaseContext
+      ? t(`wizard.step2_subtitle_${data.purchaseContext}`)
+      : t('wizard.step2_subtitle')
+
     return (
       <div className="w-full max-w-sm mx-auto space-y-5">
         <StepHeader
           step={2}
           total={3}
           title={t('wizard.step2_title')}
-          subtitle={t('wizard.step2_subtitle')}
+          subtitle={step2Subtitle}
           onBack={() => setStep(1)}
         />
 
         {/* Selected species pill */}
         <div className="flex items-center gap-2 bg-primary/10 rounded-xl px-3 py-2">
           <span>{data.species && getCategoryEmoji(data.species.category)}</span>
-          <span className="font-medium text-primary text-sm">{data.species?.names.es[0]}</span>
+          <span className="font-medium text-primary text-sm">{data.species && displayName(data.species)}</span>
           <span className="text-xs text-primary/60 italic ml-1">{data.species?.names.scientific}</span>
+        </div>
+
+        {/* Purchase context */}
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-gray-700">{t('wizard.purchase_context_label')}</p>
+          <div className="grid grid-cols-3 gap-2">
+            {CONTEXT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setData((d) => ({ ...d, purchaseContext: opt.value }))}
+                className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors leading-snug ${
+                  data.purchaseContext === opt.value
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Production method */}
@@ -231,7 +274,7 @@ export function ManualSearch({ onSelect }: Props) {
             <InfoDrawer
               title={t('wizard.info_production_title')}
               meaning={t('wizard.info_production_meaning')}
-              whereToFind={t('wizard.info_production_where')}
+              whereToFind={wtf('info_production_where')}
               example={t('wizard.info_production_example')}
             />
           </div>
@@ -260,7 +303,7 @@ export function ManualSearch({ onSelect }: Props) {
               <InfoDrawer
                 title={t('wizard.info_area_title')}
                 meaning={t('wizard.info_area_meaning')}
-                whereToFind={t('wizard.info_area_where')}
+                whereToFind={wtf('info_area_where')}
                 example={t('wizard.info_area_example')}
               />
             </div>
@@ -268,7 +311,10 @@ export function ManualSearch({ onSelect }: Props) {
               {AREA_OPTIONS.map((area) => (
                 <button
                   key={area.faoCode}
-                  onClick={() => setData((d) => ({ ...d, faoArea: area.faoCode }))}
+                  onClick={() => {
+                    setData((d) => ({ ...d, faoArea: area.faoCode }))
+                    setTouched((prev) => ({ ...prev, area: true }))
+                  }}
                   className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors ${
                     data.faoArea === area.faoCode
                       ? 'bg-primary text-white border-primary'
@@ -279,15 +325,23 @@ export function ManualSearch({ onSelect }: Props) {
                 </button>
               ))}
               <button
-                onClick={() => setData((d) => ({ ...d, faoArea: null }))}
+                onClick={() => {
+                  setData((d) => ({ ...d, faoArea: null }))
+                  setTouched((prev) => ({ ...prev, area: true }))
+                }}
                 className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors text-gray-500 ${
-                  data.faoArea === null
+                  data.faoArea === null && touched.area
                     ? 'bg-gray-100 border-gray-300'
                     : 'bg-white border-gray-200 hover:border-primary/40'
                 }`}
               >
                 {t('wizard.area_dont_know')}
               </button>
+              {data.faoArea === null && touched.area && (
+                <p className="text-xs text-sky-700 bg-sky-50 border border-sky-100 rounded-xl px-3 py-2 leading-relaxed">
+                  💡 {t('wizard.area_dont_know_hint')}
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -300,7 +354,7 @@ export function ManualSearch({ onSelect }: Props) {
               <InfoDrawer
                 title={t('wizard.info_gear_title')}
                 meaning={t('wizard.info_gear_meaning')}
-                whereToFind={t('wizard.info_gear_where')}
+                whereToFind={wtf('info_gear_where')}
                 example={t('wizard.info_gear_example')}
               />
             </div>
@@ -308,7 +362,10 @@ export function ManualSearch({ onSelect }: Props) {
               {GEAR_OPTIONS.map((gear) => (
                 <button
                   key={gear.key}
-                  onClick={() => setData((d) => ({ ...d, fishingMethod: gear.key }))}
+                  onClick={() => {
+                    setData((d) => ({ ...d, fishingMethod: gear.key }))
+                    setTouched((prev) => ({ ...prev, gear: true }))
+                  }}
                   className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors flex items-center justify-between ${
                     data.fishingMethod === gear.key
                       ? 'bg-primary text-white border-primary'
@@ -326,15 +383,23 @@ export function ManualSearch({ onSelect }: Props) {
                 </button>
               ))}
               <button
-                onClick={() => setData((d) => ({ ...d, fishingMethod: null }))}
+                onClick={() => {
+                  setData((d) => ({ ...d, fishingMethod: null }))
+                  setTouched((prev) => ({ ...prev, gear: true }))
+                }}
                 className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors text-gray-500 ${
-                  data.fishingMethod === null
+                  data.fishingMethod === null && touched.gear
                     ? 'bg-gray-100 border-gray-300'
                     : 'bg-white border-gray-200 hover:border-primary/40'
                 }`}
               >
                 {t('wizard.gear_dont_know')}
               </button>
+              {data.fishingMethod === null && touched.gear && (
+                <p className="text-xs text-sky-700 bg-sky-50 border border-sky-100 rounded-xl px-3 py-2 leading-relaxed">
+                  💡 {t('wizard.gear_dont_know_hint')}
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -390,7 +455,7 @@ export function ManualSearch({ onSelect }: Props) {
 
       {/* Summary of steps 1 & 2 */}
       <div className="bg-gray-50 rounded-xl p-3 text-sm space-y-0.5 border border-gray-100">
-        <p className="font-semibold text-gray-800">{data.species?.names.es[0]}</p>
+        <p className="font-semibold text-gray-800">{data.species && displayName(data.species)}</p>
         <p className="text-xs text-gray-500">
           {productionLabel}
           {areaLabel && ` · ${areaLabel}`}
@@ -404,7 +469,7 @@ export function ManualSearch({ onSelect }: Props) {
           <InfoDrawer
             title={t('wizard.info_cert_title')}
             meaning={t('wizard.info_cert_meaning')}
-            whereToFind={t('wizard.info_cert_where')}
+            whereToFind={wtf('info_cert_where')}
             example={t('wizard.info_cert_example')}
           />
         </div>
