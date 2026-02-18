@@ -69,18 +69,45 @@ export function parseEULabel(text: string): ParsedLabel {
 export function parseBarcodeProduct(productData: Record<string, unknown>): ParsedLabel {
   const result: ParsedLabel = {}
 
-  // Open Food Facts fields
+  // Species name — prefer 'species' field, then localised product name, then generic
   const speciesField =
     (productData.species as string) ||
-    (productData.product_name as string) ||
     (productData['product_name_es'] as string) ||
+    (productData.product_name as string) ||
     ''
   if (speciesField) result.speciesRaw = speciesField
 
-  // Try to extract FAO area from origins_tags or origin
-  const origin = (productData.origin as string) || (productData.origins as string) || ''
-  const areaMatch = origin.match(/(?:FAO\s*)?(\d{2}(?:\.\d+)*)/)
-  if (areaMatch) result.faoArea = areaMatch[1]
+  // Production method from categories_tags (e.g. "en:wild-fish", "en:farmed-fish")
+  const cats = (productData.categories_tags as string[] | undefined) ?? []
+  if (cats.some((c) => /wild|salvaje|silvestre/.test(c))) {
+    result.productionMethod = 'wild'
+  } else if (cats.some((c) => /farmed|aquaculture|acuicultura|cultivo/.test(c))) {
+    result.productionMethod = 'farmed'
+  }
+
+  // Fishing method keywords from product name text
+  const nameText = [
+    (productData.product_name as string) ?? '',
+    (productData['product_name_es'] as string) ?? '',
+  ].join(' ').toLowerCase()
+  for (const [keyword, method] of Object.entries(METHOD_KEYWORDS)) {
+    if (nameText.includes(keyword)) {
+      result.fishingMethod = method
+      break
+    }
+  }
+
+  // FAO area — first try origins_tags (e.g. "en:fao-27"), then origin text
+  const originsTags = (productData.origins_tags as string[] | undefined) ?? []
+  const faoTag = originsTags.find((t) => /fao[-_]?\d+/i.test(t))
+  if (faoTag) {
+    const m = faoTag.match(/fao[-_]?(\d+(?:[._]\d+)*)/i)
+    if (m) result.faoArea = m[1].replace('_', '.')
+  } else {
+    const origin = (productData.origin as string) || (productData.origins as string) || ''
+    const areaMatch = origin.match(/(?:FAO\s*)?(\d{2}(?:\.\d+)*)/)
+    if (areaMatch) result.faoArea = areaMatch[1]
+  }
 
   return result
 }

@@ -6,10 +6,19 @@ import type { Species, ParsedLabel, ProductionMethod } from '@/types/species'
 
 interface Props {
   onSelect: (species: Species, label: ParsedLabel) => void
+  initialSpecies?: Species
+  initialLabel?: ParsedLabel | null
 }
 
 // Separate UI type so we can distinguish wild-sea vs wild-freshwater for highlighting
 type ProductionChoice = 'wild_sea' | 'wild_freshwater' | 'farmed' | 'unknown'
+
+function labelToProductionChoice(label?: ParsedLabel | null): ProductionChoice | null {
+  if (!label?.productionMethod) return null
+  if (label.productionMethod === 'farmed') return 'farmed'
+  if (label.productionMethod === 'wild') return 'wild_sea'
+  return null
+}
 
 type WizardStep = 1 | 2 | 3
 type PurchaseContext = 'counter' | 'packaged' | 'frozen'
@@ -42,23 +51,26 @@ function productionMethodFromChoice(choice: ProductionChoice): ProductionMethod 
   return 'wild'
 }
 
-export function ManualSearch({ onSelect }: Props) {
+export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) {
   const { t, language } = useI18n()
 
   const displayName = (species: Species) =>
     (language === 'en' ? species.names.en[0] : undefined) ?? species.names.es[0]
-  const [step, setStep] = useState<WizardStep>(1)
+  const [step, setStep] = useState<WizardStep>(initialSpecies ? 2 : 1)
   const [data, setData] = useState<WizardData>({
-    species: null,
+    species: initialSpecies ?? null,
     purchaseContext: null,
-    productionChoice: null,
-    faoArea: null,
-    fishingMethod: null,
-    certifications: [],
+    productionChoice: labelToProductionChoice(initialLabel),
+    faoArea: initialLabel?.faoArea ?? null,
+    fishingMethod: initialLabel?.fishingMethod ?? null,
+    certifications: initialLabel?.certifications ?? [],
   })
   // Track which optional questions the user has explicitly interacted with
   // (distinguishes "not answered yet" from "explicitly chose don't know")
-  const [touched, setTouched] = useState({ area: false, gear: false })
+  const [touched, setTouched] = useState({
+    area: !!initialLabel?.faoArea,
+    gear: !!initialLabel?.fishingMethod,
+  })
 
   // Step 1 — search state
   const [query, setQuery] = useState('')

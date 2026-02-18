@@ -9,13 +9,17 @@ import { useSustainability } from '@/hooks/useSustainability'
 import { useGameification } from '@/hooks/useGameification'
 import { getProductCache } from '@/services/cache/productCache'
 import { lookupBarcode } from '@/services/api/openFoodFacts'
+import { resolveSpeciesId, getSpeciesById } from '@/services/parsers/synonymResolver'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import type { Species, ParsedLabel } from '@/types/species'
 
-type ScanMode = 'home' | 'barcode' | 'camera' | 'manual'
+type ScanMode = 'home' | 'barcode' | 'barcode_wizard' | 'camera' | 'manual'
 
 export function HomePage() {
   const [mode, setMode] = useState<ScanMode>('home')
+  const [barcodeSpecies, setBarcodeSpecies] = useState<Species | null>(null)
+  const [barcodeLabel, setBarcodeLabel] = useState<ParsedLabel | null>(null)
+  const [looking, setLooking] = useState(false)
   const { t } = useI18n()
   const navigate = useNavigate()
   const { resolve, loading } = useSustainability()
@@ -25,26 +29,33 @@ export function HomePage() {
   const profile = useGameification().getProfile()
 
   const handleBarcode = async (barcode: string) => {
-    // Check product cache first
-    const { getProductCache: getCache, setProductCache: setCache } = await import('@/services/cache/productCache')
-    const cached = await getCache(barcode)
+    // Return cached result immediately (no wizard needed for repeat scans)
+    const cached = await getProductCache(barcode)
     if (cached) {
       setCurrentResult(cached)
       navigate('/result')
       return
     }
 
-    const label = await lookupBarcode(barcode)
-    const result = await resolve({ label: label ?? undefined, barcode })
-    if (result) {
-      const { setProductCache } = await import('@/services/cache/productCache')
-      await setProductCache(barcode, result)
-      setCurrentResult(result)
-      await recordScan(result)
-      navigate('/result')
-    } else {
-      addToast(t('errors.barcode_failed'), 'error')
-      setMode('manual')
+    // Phase 1: identify species from barcode via Open Food Facts
+    setLooking(true)
+    try {
+      const label = await lookupBarcode(barcode)
+      const speciesRaw = label?.speciesRaw ?? ''
+      const speciesId = resolveSpeciesId(speciesRaw)
+      const species = speciesId ? getSpeciesById(speciesId) : null
+
+      if (species) {
+        // Species identified — hand off to wizard steps 2-3 for context
+        setBarcodeSpecies(species)
+        setBarcodeLabel(label)
+        setMode('barcode_wizard')
+      } else {
+        addToast(t('errors.barcode_failed'), 'error')
+        setMode('manual')
+      }
+    } finally {
+      setLooking(false)
     }
   }
 
@@ -71,10 +82,28 @@ export function HomePage() {
     }
   }
 
-  if (loading) {
+  if (loading || looking) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner message={t('scanner.calculating')} size="lg" />
+        <LoadingSpinner message={looking ? t('scanner.searching') : t('scanner.calculating')} size="lg" />
+      </div>
+    )
+  }
+
+  if (mode === 'barcode_wizard' && barcodeSpecies) {
+    return (
+      <div className="flex-1 flex flex-col p-4">
+        <button
+          onClick={() => { setBarcodeSpecies(null); setBarcodeLabel(null); setMode('barcode') }}
+          className="self-start text-primary mb-4"
+        >
+          {t('common.back')}
+        </button>
+        <ManualSearch
+          onSelect={handleSpeciesSelect}
+          initialSpecies={barcodeSpecies}
+          initialLabel={barcodeLabel}
+        />
       </div>
     )
   }
