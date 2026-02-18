@@ -10,8 +10,7 @@ import { useGameification } from '@/hooks/useGameification'
 import { getProductCache } from '@/services/cache/productCache'
 import { lookupBarcode } from '@/services/api/openFoodFacts'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import type { Species } from '@/types/species'
-import type { ParsedLabel } from '@/types/species'
+import type { Species, ParsedLabel } from '@/types/species'
 
 type ScanMode = 'home' | 'barcode' | 'camera' | 'manual'
 
@@ -61,8 +60,8 @@ export function HomePage() {
     }
   }
 
-  const handleSpeciesSelect = async (species: Species) => {
-    const result = await resolve({ speciesName: species.names.es[0] })
+  const handleSpeciesSelect = async (species: Species, label: ParsedLabel) => {
+    const result = await resolve({ speciesName: species.names.scientific, label })
     if (result) {
       setCurrentResult(result)
       await recordScan(result)
@@ -75,7 +74,7 @@ export function HomePage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner message="Analizando..." size="lg" />
+        <LoadingSpinner message={t('scanner.calculating')} size="lg" />
       </div>
     )
   }
@@ -83,7 +82,7 @@ export function HomePage() {
   if (mode === 'barcode') {
     return (
       <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
+        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
         <BarcodeScanner
           onDetected={handleBarcode}
           onFallbackCamera={() => setMode('camera')}
@@ -96,7 +95,7 @@ export function HomePage() {
   if (mode === 'camera') {
     return (
       <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
+        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
         <CameraCapture
           onResult={handleCameraLabel}
           onFallback={() => setMode('manual')}
@@ -108,7 +107,7 @@ export function HomePage() {
   if (mode === 'manual') {
     return (
       <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
+        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
         <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('home.manual_search')}</h2>
         <ManualSearch onSelect={handleSpeciesSelect} />
       </div>

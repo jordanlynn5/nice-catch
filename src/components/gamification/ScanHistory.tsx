@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function ScanHistory({ history }: Props) {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
 
   if (history.length === 0) {
     return (
@@ -24,7 +24,8 @@ export function ScanHistory({ history }: Props) {
         const band =
           entry.score >= 76 ? 'best' : entry.score >= 51 ? 'good' : entry.score >= 26 ? 'think' : 'avoid'
         const color = getBandColor(band as Parameters<typeof getBandColor>[0])
-        const date = new Date(entry.timestamp).toLocaleDateString('es-ES', {
+        const locale = language === 'en' ? 'en-GB' : 'es-ES'
+        const date = new Date(entry.timestamp).toLocaleDateString(locale, {
           day: 'numeric',
           month: 'short',
         })
@@ -43,7 +44,7 @@ export function ScanHistory({ history }: Props) {
             </div>
             {entry.choseAlternative && (
               <span className="text-xs bg-secondary/20 text-deep px-2 py-0.5 rounded-full shrink-0">
-                ✓ alternativa
+                {t('gamification.alternative_chosen')}
               </span>
             )}
           </div>

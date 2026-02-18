@@ -11,10 +11,12 @@ import co2Fallback from '@/data/co2-fallback.json'
 import type { Species } from '@/types/species'
 import speciesDb from '@/data/species-db.json'
 import { resolveMethodKey } from '@/services/scoring/methodScore'
+import { useI18n } from '@/hooks/useI18n'
 
 export function useSustainability() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t, language } = useI18n()
 
   const resolve = useCallback(
     async (
@@ -29,13 +31,13 @@ export function useSustainability() {
           input.speciesName ?? input.label?.speciesRaw ?? ''
         const speciesId = resolveSpeciesId(rawName)
         if (!speciesId) {
-          setError('Especie no encontrada')
+          setError(t('errors.not_found'))
           return null
         }
 
         const species = getSpeciesById(speciesId)
         if (!species) {
-          setError('Especie no encontrada')
+          setError(t('errors.not_found'))
           return null
         }
 
@@ -75,7 +77,7 @@ export function useSustainability() {
           value: co2Value,
           unit: 'kg_co2_per_kg',
           source: co2Wolfram.status === 'fulfilled' && co2Wolfram.value ? 'wolfram' : 'fallback',
-          comparison: buildCO2Comparison(co2Value),
+          comparison: buildCO2Comparison(co2Value, t),
         }
 
         // Compute score
@@ -93,11 +95,14 @@ export function useSustainability() {
           species,
           scoreBreakdown.finalScore,
           input.label?.fishingMethod,
-          input.label?.productionMethod
+          input.label?.productionMethod,
+          language,
+          t
         )
 
         const displayName =
-          species.names.es[0] ?? species.names.eu_commercial
+          (language === 'en' ? (species.names.en[0] ?? species.names.es[0]) : species.names.es[0]) ??
+          species.names.eu_commercial
 
         const result: SustainabilityResult = {
           speciesId,
@@ -128,36 +133,41 @@ export function useSustainability() {
         await setSpeciesCache(result)
         return result
       } catch (err) {
-        setError('Error al obtener datos')
+        setError(t('errors.fetch_failed'))
         console.error(err)
         return null
       } finally {
         setLoading(false)
       }
     },
-    []
+    [t, language]
   )
 
   return { resolve, loading, error }
 }
 
-function buildCO2Comparison(co2: number): string {
+function buildCO2Comparison(co2: number, t: (key: string, vars?: Record<string, string | number>) => string): string {
   const chicken = 4.5
   const ratio = chicken / co2
-  if (ratio >= 2) return `${ratio.toFixed(1)}× menos que el pollo`
+  if (ratio >= 2) return t('result.co2_vs_chicken', { ratio: ratio.toFixed(1) })
   const beef = 27
   const beefRatio = beef / co2
-  return `${beefRatio.toFixed(0)}× menos que la ternera`
+  return t('result.co2_vs_beef', { ratio: beefRatio.toFixed(0) })
 }
 
 function buildAlternatives(
   species: Species,
   currentScore: number,
   fishingMethod?: string,
-  productionMethod?: string
+  productionMethod?: string,
+  language: string = 'es',
+  t: (key: string) => string = (k) => k
 ): AlternativeOption[] {
   const alts: AlternativeOption[] = []
   const allSpecies = speciesDb as Species[]
+
+  const speciesName =
+    language === 'en' ? (species.names.en[0] ?? species.names.es[0]) : species.names.es[0]
 
   // 1. Same species, better production method
   if (productionMethod === 'farmed') {
@@ -165,7 +175,7 @@ function buildAlternatives(
     if (wildScore - currentScore >= 15) {
       alts.push({
         speciesId: species.id,
-        displayName: `${species.names.es[0]} (salvaje, Atlántico norte)`,
+        displayName: `${speciesName} (${t('result.better_method_wild')})`,
         score: Math.min(wildScore, species.scoreRange[1]),
         reason: 'same_species_better_method',
         productionMethodSuggestion: 'wild',
@@ -178,7 +188,7 @@ function buildAlternatives(
     if (betterScore - currentScore >= 15) {
       alts.push({
         speciesId: species.id,
-        displayName: `${species.names.es[0]} (palangre o anzuelo)`,
+        displayName: `${speciesName} (${t('result.better_method_gear')})`,
         score: Math.min(betterScore, species.scoreRange[1]),
         reason: 'same_species_better_method',
         productionMethodSuggestion: 'wild',
@@ -192,9 +202,11 @@ function buildAlternatives(
     if (!altSpecies) continue
     const altScore = altSpecies.defaultScore
     if (altScore - currentScore >= 15) {
+      const altName =
+        language === 'en' ? (altSpecies.names.en[0] ?? altSpecies.names.es[0]) : altSpecies.names.es[0]
       alts.push({
         speciesId: altId,
-        displayName: altSpecies.names.es[0],
+        displayName: altName,
         score: altScore,
         reason: 'same_category_higher_score',
       })
