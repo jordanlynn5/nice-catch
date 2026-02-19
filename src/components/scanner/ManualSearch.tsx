@@ -20,6 +20,15 @@ function labelToProductionChoice(label?: ParsedLabel | null): ProductionChoice |
   return null
 }
 
+// If barcode data already answers all step-2 questions, start at step 3
+function computeInitialStep(initialSpecies?: Species, initialLabel?: ParsedLabel | null): WizardStep {
+  if (!initialSpecies) return 1
+  if (!initialLabel?.productionMethod) return 2
+  if (initialLabel.productionMethod === 'farmed') return 3
+  if (initialLabel.productionMethod === 'wild' && initialLabel.faoArea && initialLabel.fishingMethod) return 3
+  return 2
+}
+
 type WizardStep = 1 | 2 | 3
 type PurchaseContext = 'counter' | 'packaged' | 'frozen'
 
@@ -56,7 +65,13 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
 
   const displayName = (species: Species) =>
     (language === 'en' ? species.names.en[0] : undefined) ?? species.names.es[0]
-  const [step, setStep] = useState<WizardStep>(initialSpecies ? 2 : 1)
+  const [step, setStep] = useState<WizardStep>(() => computeInitialStep(initialSpecies, initialLabel))
+
+  // Track original barcode values so we can badge pre-filled buttons even if user changes then reverts
+  const barcodeProduction = labelToProductionChoice(initialLabel)
+  const barcodeFaoArea = initialLabel?.faoArea ?? null
+  const barcodeFishingMethod = initialLabel?.fishingMethod ?? null
+  const fromBarcode = !!initialSpecies
   const [data, setData] = useState<WizardData>({
     species: initialSpecies ?? null,
     purchaseContext: null,
@@ -259,25 +274,35 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
           <span className="text-xs text-primary/60 italic ml-1">{data.species?.names.scientific}</span>
         </div>
 
-        {/* Purchase context */}
-        <div className="space-y-2">
-          <p className="text-sm font-semibold text-gray-700">{t('wizard.purchase_context_label')}</p>
-          <div className="grid grid-cols-3 gap-2">
-            {CONTEXT_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setData((d) => ({ ...d, purchaseContext: opt.value }))}
-                className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors leading-snug ${
-                  data.purchaseContext === opt.value
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        {/* Barcode banner — only when species came from a barcode scan */}
+        {fromBarcode && (
+          <div className="bg-teal-50 border border-teal-100 rounded-xl px-3 py-2.5 text-xs text-teal-800 flex items-start gap-2">
+            <span className="shrink-0">📱</span>
+            <span>{t('wizard.barcode_banner')}</span>
           </div>
-        </div>
+        )}
+
+        {/* Purchase context — only shown for manual search, not barcode path */}
+        {!fromBarcode && (
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-gray-700">{t('wizard.purchase_context_label')}</p>
+            <div className="grid grid-cols-3 gap-2">
+              {CONTEXT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setData((d) => ({ ...d, purchaseContext: opt.value }))}
+                  className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors leading-snug ${
+                    data.purchaseContext === opt.value
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Production method */}
         <div className="space-y-2">
@@ -291,19 +316,26 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {PRODUCTION_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setData((d) => ({ ...d, productionChoice: opt.value }))}
-                className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors ${
-                  data.productionChoice === opt.value
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+            {PRODUCTION_OPTIONS.map((opt) => {
+              const isSelected = data.productionChoice === opt.value
+              const isFromBarcode = fromBarcode && opt.value === barcodeProduction && isSelected
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => setData((d) => ({ ...d, productionChoice: opt.value }))}
+                  className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors ${
+                    isSelected
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
+                  }`}
+                >
+                  {opt.label}
+                  {isFromBarcode && (
+                    <span className="block text-[10px] mt-0.5 opacity-75">{t('wizard.from_barcode')}</span>
+                  )}
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -320,22 +352,29 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               />
             </div>
             <div className="space-y-1.5">
-              {AREA_OPTIONS.map((area) => (
-                <button
-                  key={area.faoCode}
-                  onClick={() => {
-                    setData((d) => ({ ...d, faoArea: area.faoCode }))
-                    setTouched((prev) => ({ ...prev, area: true }))
-                  }}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors ${
-                    data.faoArea === area.faoCode
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                  }`}
-                >
-                  {area.label}
-                </button>
-              ))}
+              {AREA_OPTIONS.map((area) => {
+                const isSelected = data.faoArea === area.faoCode
+                const isFromBarcode = fromBarcode && area.faoCode === barcodeFaoArea && isSelected
+                return (
+                  <button
+                    key={area.faoCode}
+                    onClick={() => {
+                      setData((d) => ({ ...d, faoArea: area.faoCode }))
+                      setTouched((prev) => ({ ...prev, area: true }))
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors flex items-center justify-between ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
+                    }`}
+                  >
+                    <span>{area.label}</span>
+                    {isFromBarcode && (
+                      <span className="text-[10px] opacity-75 shrink-0 ml-2">{t('wizard.from_barcode')}</span>
+                    )}
+                  </button>
+                )
+              })}
               <button
                 onClick={() => {
                   setData((d) => ({ ...d, faoArea: null }))
@@ -371,29 +410,29 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               />
             </div>
             <div className="space-y-1.5">
-              {GEAR_OPTIONS.map((gear) => (
-                <button
-                  key={gear.key}
-                  onClick={() => {
-                    setData((d) => ({ ...d, fishingMethod: gear.key }))
-                    setTouched((prev) => ({ ...prev, gear: true }))
-                  }}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors flex items-center justify-between ${
-                    data.fishingMethod === gear.key
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                  }`}
-                >
-                  <span>{gear.label}</span>
-                  <span
-                    className={`text-xs ml-2 shrink-0 ${
-                      data.fishingMethod === gear.key ? 'text-white/70' : 'text-gray-400'
+              {GEAR_OPTIONS.map((gear) => {
+                const isSelected = data.fishingMethod === gear.key
+                const isFromBarcode = fromBarcode && gear.key === barcodeFishingMethod && isSelected
+                return (
+                  <button
+                    key={gear.key}
+                    onClick={() => {
+                      setData((d) => ({ ...d, fishingMethod: gear.key }))
+                      setTouched((prev) => ({ ...prev, gear: true }))
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors flex items-center justify-between ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
                     }`}
                   >
-                    {gear.impact}
-                  </span>
-                </button>
-              ))}
+                    <span>{gear.label}</span>
+                    <span className={`text-xs ml-2 shrink-0 ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
+                      {isFromBarcode ? t('wizard.from_barcode') : gear.impact}
+                    </span>
+                  </button>
+                )
+              })}
               <button
                 onClick={() => {
                   setData((d) => ({ ...d, fishingMethod: null }))

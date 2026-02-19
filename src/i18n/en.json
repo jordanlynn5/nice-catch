@@ -101,6 +101,8 @@
     "info_cert_meaning": "Certified labels mean an independent body has verified the fishery meets sustainability standards. MSC is for wild-caught fish, ASC is for aquaculture.",
     "info_cert_where": "On the packaging or on the counter sign. Sometimes printed directly on the price label.",
     "info_cert_example": "Blue MSC fish logo, green ASC logo, \"Dolphin Safe\" label",
+    "barcode_banner": "Details read from barcode scan — review and adjust if needed.",
+    "from_barcode": "· barcode",
     "purchase_context_label": "Where are you buying it?",
     "context_counter": "🐟 Fresh, from the fish counter",
     "context_packaged": "📦 Fresh, pre-packaged",
