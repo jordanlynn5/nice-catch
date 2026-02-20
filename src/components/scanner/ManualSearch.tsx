@@ -274,11 +274,22 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
           <span className="text-xs text-primary/60 italic ml-1">{data.species?.names.scientific}</span>
         </div>
 
-        {/* Barcode banner — only when species came from a barcode scan */}
+        {/* Barcode detection summary — shows what was found vs what's missing */}
         {fromBarcode && (
-          <div className="bg-teal-50 border border-teal-100 rounded-xl px-3 py-2.5 text-xs text-teal-800 flex items-start gap-2">
-            <span className="shrink-0">📱</span>
-            <span>{t('wizard.barcode_banner')}</span>
+          <div className="bg-teal-50 border border-teal-100 rounded-xl px-3 py-2.5 text-xs text-teal-800">
+            <p className="font-semibold mb-1.5 flex items-center gap-1.5">
+              <span>📱</span>
+              <span>{t('wizard.barcode_detected')}</span>
+            </p>
+            <ul className="space-y-0.5 ml-5">
+              <li>✓ {t('wizard.step1_title')} {data.species && displayName(data.species)}</li>
+              {barcodeProduction && <li>✓ {t('wizard.production_label')} {PRODUCTION_OPTIONS.find(o => o.value === barcodeProduction)?.label}</li>}
+              {barcodeFaoArea && <li>✓ {t('wizard.area_label')} {AREA_OPTIONS.find(a => a.faoCode === barcodeFaoArea)?.label}</li>}
+              {barcodeFishingMethod && <li>✓ {t('wizard.gear_label')} {GEAR_OPTIONS.find(g => g.key === barcodeFishingMethod)?.label}</li>}
+            </ul>
+            {(!barcodeProduction || (!barcodeFaoArea && !barcodeFishingMethod)) && (
+              <p className="font-semibold mt-2 mb-0.5">{t('wizard.barcode_missing')}</p>
+            )}
           </div>
         )}
 

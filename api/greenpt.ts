@@ -12,12 +12,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(503).json({ error: 'GreenPT API key not configured' })
   }
 
-  const { action, image, prompt, message, system } = req.body as {
+  const { action, image, prompt, message, system, messages } = req.body as {
     action: 'vision' | 'chat'
     image?: string
     prompt?: string
     message?: string
     system?: string
+    messages?: Array<{ role: string; content: string }>
   }
 
   try {
@@ -59,10 +60,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json(parsed)
     }
 
-    if (action === 'chat' && message) {
-      const messages: Array<{ role: string; content: string }> = []
-      if (system) messages.push({ role: 'system', content: system })
-      messages.push({ role: 'user', content: message })
+    if (action === 'chat') {
+      let chatMessages: Array<{ role: string; content: string }> = []
+
+      // Support both new (messages array) and old (single message) formats
+      if (messages && messages.length > 0) {
+        chatMessages = messages
+      } else if (message) {
+        if (system) chatMessages.push({ role: 'system', content: system })
+        chatMessages.push({ role: 'user', content: message })
+      } else {
+        return res.status(400).json({ error: 'No messages provided' })
+      }
 
       const response = await fetch(`${GREENPT_BASE}/chat/completions`, {
         method: 'POST',
@@ -70,7 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ model: 'greenpt-chat', messages }),
+        body: JSON.stringify({ model: 'greenpt-chat', messages: chatMessages }),
         signal: AbortSignal.timeout(15000),
       })
 

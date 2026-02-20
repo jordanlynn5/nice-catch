@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { BarcodeScanner } from '@/components/scanner/BarcodeScanner'
 import { CameraCapture } from '@/components/scanner/CameraCapture'
 import { ManualSearch } from '@/components/scanner/ManualSearch'
+import { ChatAssistant } from '@/components/ai/ChatAssistant'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/store/appStore'
 import { useSustainability } from '@/hooks/useSustainability'
@@ -13,7 +14,7 @@ import { resolveSpeciesId, getSpeciesById } from '@/services/parsers/synonymReso
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import type { Species, ParsedLabel } from '@/types/species'
 
-type ScanMode = 'home' | 'barcode' | 'barcode_wizard' | 'camera' | 'manual'
+type ScanMode = 'home' | 'barcode' | 'barcode_wizard' | 'camera' | 'manual' | 'ai_assistant'
 
 export function HomePage() {
   const [mode, setMode] = useState<ScanMode>('home')
@@ -143,6 +144,15 @@ export function HomePage() {
     )
   }
 
+  if (mode === 'ai_assistant') {
+    return (
+      <ChatAssistant
+        onComplete={handleCameraLabel}
+        onBack={() => setMode('home')}
+      />
+    )
+  }
+
   // Home screen
   return (
     <div className="flex-1 flex flex-col p-5 space-y-6">
@@ -178,6 +188,15 @@ export function HomePage() {
           {t('home.manual_search')}
         </button>
       </div>
+
+      {/* AI Assistant - prominent placement */}
+      <button
+        onClick={() => setMode('ai_assistant')}
+        className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-98 transition-transform"
+      >
+        <span className="text-xl">🤖</span>
+        Ask AI Assistant
+      </button>
 
       {/* Recent scans */}
       {profile.history.length > 0 && (
