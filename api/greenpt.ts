@@ -9,8 +9,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const apiKey = process.env.GREENPT_API_KEY
   if (!apiKey) {
+    console.error('GREENPT_API_KEY environment variable is not set')
     return res.status(503).json({ error: 'GreenPT API key not configured' })
   }
+  console.log('GreenPT API key loaded, length:', apiKey.length)
 
   const { action, image, prompt, message, system, messages } = req.body as {
     action: 'vision' | 'chat'
@@ -96,7 +98,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(400).json({ error: 'Invalid action' })
   } catch (err) {
-    console.error('GreenPT error:', err)
-    return res.status(500).json({ error: 'Internal error', message: '' })
+    console.error('GreenPT API error:', err)
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    return res.status(500).json({
+      error: 'GreenPT API request failed',
+      message: errorMessage,
+      details: String(err)
+    })
   }
 }
