@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'greenpt-vision',
+          model: 'mistral-small-3.2-24b-instruct-2506',
           messages: [
             {
               role: 'user',
@@ -51,7 +51,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
 
       if (!response.ok) {
-        throw new Error(`GreenPT vision error: ${response.status}`)
+        const errorBody = await response.text()
+        console.error('GreenPT vision error response:', errorBody)
+        throw new Error(`GreenPT vision error: ${response.status} - ${errorBody}`)
       }
 
       const data = await response.json() as {
@@ -81,12 +83,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ model: 'greenpt-chat', messages: chatMessages }),
+        body: JSON.stringify({
+          model: 'mistral-small-3.2-24b-instruct-2506',
+          messages: chatMessages,
+        }),
         signal: AbortSignal.timeout(15000),
       })
 
       if (!response.ok) {
-        throw new Error(`GreenPT chat error: ${response.status}`)
+        const errorBody = await response.text()
+        console.error('GreenPT chat error response:', errorBody)
+        throw new Error(`GreenPT chat error: ${response.status} - ${errorBody}`)
       }
 
       const data = await response.json() as {
