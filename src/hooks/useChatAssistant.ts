@@ -48,9 +48,10 @@ export function useChatAssistant() {
 
         setMessages([...newMessages, { role: 'assistant', content: response }])
       } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error)
         setMessages([
           ...newMessages,
-          { role: 'assistant', content: 'Sorry, I had trouble processing that. Can you try again?' },
+          { role: 'assistant', content: `Sorry, I encountered an error: ${errorMsg}` },
         ])
         console.error('Chat error:', error)
       } finally {
@@ -88,11 +89,12 @@ export function useChatAssistant() {
 
         setMessages([...newMessages, { role: 'assistant', content: followUp }])
       } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error)
         setMessages((prev) => [
           ...prev,
           {
             role: 'assistant',
-            content: 'I couldn\'t analyze that photo. Can you describe what you see on the label?',
+            content: `I couldn't analyze that photo. Error: ${errorMsg}`,
           },
         ])
         console.error('Photo analysis error:', error)

@@ -9,8 +9,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const apiKey = process.env.GREENPT_API_KEY
   if (!apiKey) {
+    console.error('GREENPT_API_KEY environment variable is not set')
     return res.status(503).json({ error: 'GreenPT API key not configured' })
   }
+  console.log('GreenPT API key loaded, length:', apiKey.length)
 
   const { action, image, prompt, message, system, messages } = req.body as {
     action: 'vision' | 'chat'
@@ -30,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'greenpt-vision',
+          model: 'mistral-small-3.2-24b-instruct-2506',
           messages: [
             {
               role: 'user',
@@ -49,7 +51,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
 
       if (!response.ok) {
-        throw new Error(`GreenPT vision error: ${response.status}`)
+        const errorBody = await response.text()
+        console.error('GreenPT vision error response:', errorBody)
+        throw new Error(`GreenPT vision error: ${response.status} - ${errorBody}`)
       }
 
       const data = await response.json() as {
@@ -79,12 +83,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ model: 'greenpt-chat', messages: chatMessages }),
+        body: JSON.stringify({
+          model: 'mistral-small-3.2-24b-instruct-2506',
+          messages: chatMessages,
+        }),
         signal: AbortSignal.timeout(15000),
       })
 
       if (!response.ok) {
-        throw new Error(`GreenPT chat error: ${response.status}`)
+        const errorBody = await response.text()
+        console.error('GreenPT chat error response:', errorBody)
+        throw new Error(`GreenPT chat error: ${response.status} - ${errorBody}`)
       }
 
       const data = await response.json() as {
@@ -96,7 +105,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(400).json({ error: 'Invalid action' })
   } catch (err) {
-    console.error('GreenPT error:', err)
-    return res.status(500).json({ error: 'Internal error', message: '' })
+    console.error('GreenPT API error:', err)
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    return res.status(500).json({
+      error: 'GreenPT API request failed',
+      message: errorMessage,
+      details: String(err)
+    })
   }
 }
