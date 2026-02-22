@@ -32,7 +32,7 @@ export function BadgeGrid({ earnedBadges }: Props) {
       }
     } else {
       await navigator.clipboard.writeText(text)
-      addToast('Copiado al portapapeles', 'success')
+      addToast(t('common.copied'), 'success')
       recordShare()
     }
   }

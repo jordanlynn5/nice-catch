@@ -31,14 +31,14 @@ export function ResultPage() {
       confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#309f9b', '#80b8a2', '#106c72'] })
       setCurrentResult(result)
       await recordScan(result, true)
-      addToast('¡Buena elección! +25 pts', 'success')
+      addToast(t('result.good_choice_toast'), 'success')
     }
   }
 
   const handleShare = async () => {
     if (!currentResult) return
     const score = currentResult.score.finalScore
-    const text = `Acabo de consultar la sostenibilidad de ${currentResult.displayName}: ${score}/100 🌊 #NiceCatch`
+    const text = t('result.share_text', { name: currentResult.displayName, score: String(score) })
 
     if (navigator.share) {
       try {
@@ -48,7 +48,7 @@ export function ResultPage() {
       }
     } else {
       await navigator.clipboard.writeText(text)
-      addToast('Copiado al portapapeles', 'success')
+      addToast(t('common.copied'), 'success')
     }
   }
 
@@ -57,7 +57,7 @@ export function ResultPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner message="Cargando alternativa..." size="lg" />
+        <LoadingSpinner message={t('result.loading_alternative')} size="lg" />
       </div>
     )
   }
@@ -73,7 +73,7 @@ export function ResultPage() {
           ← {t('nav.scan')}
         </button>
         <button onClick={handleShare} className="text-primary text-sm font-medium">
-          Compartir ↗
+          {t('result.share')}
         </button>
       </div>
 
