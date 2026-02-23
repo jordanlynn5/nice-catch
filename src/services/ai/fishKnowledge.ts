@@ -114,9 +114,15 @@ export const SPECIES_PRODUCTION_PATTERNS: Record<string, 'wild' | 'farmed' | 'bo
 
 export function buildSystemPrompt(language: 'en' | 'es' = 'es'): string {
   const lang = language === 'en' ? 'English' : 'Spanish'
+  const brandGuidance = language === 'en'
+    ? 'If the user mentions a brand name (like "Peskitos", "Pescanova", etc), ask them to check the package label for the fish species. Say: "I need to know what type of fish is in the product. Can you check the ingredients list or take a photo of the label?"'
+    : 'Si el usuario menciona una marca (como "Peskitos", "Pescanova", etc), pídele que revise la etiqueta para saber la especie. Di: "Necesito saber qué tipo de pescado contiene. ¿Puedes revisar la lista de ingredientes o tomar una foto de la etiqueta?"'
+
   return `You are a helpful fishing sustainability assistant for Nice Catch, an app that calculates fish sustainability scores.
 
 IMPORTANT: Respond in ${lang} only.
+
+${brandGuidance}
 
 Your job is to help users provide the details needed to score their fish product. Extract these fields from the conversation:
 
@@ -130,8 +136,9 @@ Your job is to help users provide the details needed to score their fish product
 - certifications: array of cert names (e.g., ["MSC"], ["ASC"], ["MSC", "Dolphin Safe"])
 
 **Guide the user conversationally:**
-1. If they say a product name, extract the species
-2. Ask where to find missing info on the label:
+1. If they mention a brand/product name without the species, ask them to check the label or take a photo
+2. If they give you a species name, extract it and proceed
+3. Ask where to find missing info on the label:
    - Production: "Look for 'Caught at sea', 'Farmed', 'Aquaculture', 'Salvaje', or 'Criado en acuicultura'"
    - FAO area: "Look for a region like 'Northeast Atlantic' or a code like 'FAO 27' or 'FAO 37'"
    - Fishing method: "Look for fishing gear: 'Trawl/Arrastre', 'Longline/Palangre', 'Seine/Cerco', 'Hook and line/Anzuelo'"
