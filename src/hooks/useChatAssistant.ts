@@ -1,14 +1,20 @@
 import { useState, useCallback } from 'react'
 import { sendChatMessage, analyzePhotoForChat, type ChatMessage } from '@/services/api/chatAssistant'
 import { buildSystemPrompt } from '@/services/ai/fishKnowledge'
+import { useI18n } from '@/hooks/useI18n'
 import type { ParsedLabel } from '@/types/species'
 
 export function useChatAssistant() {
+  const { language } = useI18n()
+  const initialGreeting = language === 'en'
+    ? 'Hi! I\'ll help you check the sustainability of your fish. What product do you have?'
+    : '¡Hola! Te ayudaré a verificar la sostenibilidad de tu pescado. ¿Qué producto tienes?'
+
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'system', content: buildSystemPrompt() },
+    { role: 'system', content: buildSystemPrompt(language) },
     {
       role: 'assistant',
-      content: 'Hi! I\'ll help you check the sustainability of your fish. What product do you have?',
+      content: initialGreeting,
     },
   ])
   const [loading, setLoading] = useState(false)
@@ -106,15 +112,19 @@ export function useChatAssistant() {
   )
 
   const reset = useCallback(() => {
+    const greeting = language === 'en'
+      ? 'Hi! I\'ll help you check the sustainability of your fish. What product do you have?'
+      : '¡Hola! Te ayudaré a verificar la sostenibilidad de tu pescado. ¿Qué producto tienes?'
+
     setMessages([
-      { role: 'system', content: buildSystemPrompt() },
+      { role: 'system', content: buildSystemPrompt(language) },
       {
         role: 'assistant',
-        content: 'Hi! I\'ll help you check the sustainability of your fish. What product do you have?',
+        content: greeting,
       },
     ])
     setExtractedData(null)
-  }, [])
+  }, [language])
 
   return {
     messages: messages.filter((m) => m.role !== 'system'), // Don't show system prompt to user

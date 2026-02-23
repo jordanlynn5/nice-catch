@@ -86,6 +86,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: JSON.stringify({
           model: 'mistral-small-3.2-24b-instruct-2506',
           messages: chatMessages,
+          temperature: 0.7,
+          max_tokens: 500,
         }),
         signal: AbortSignal.timeout(15000),
       })

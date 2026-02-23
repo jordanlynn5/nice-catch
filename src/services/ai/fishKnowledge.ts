@@ -112,8 +112,11 @@ export const SPECIES_PRODUCTION_PATTERNS: Record<string, 'wild' | 'farmed' | 'bo
   'calamar': 'wild',
 }
 
-export function buildSystemPrompt(): string {
+export function buildSystemPrompt(language: 'en' | 'es' = 'es'): string {
+  const lang = language === 'en' ? 'English' : 'Spanish'
   return `You are a helpful fishing sustainability assistant for Nice Catch, an app that calculates fish sustainability scores.
+
+IMPORTANT: Respond in ${lang} only.
 
 Your job is to help users provide the details needed to score their fish product. Extract these fields from the conversation:
 
@@ -158,5 +161,5 @@ Examples:
 }
 \`\`\`
 
-**Until ready, respond naturally** with helpful questions. Be friendly, supportive, and brief. Respond in the user's language (Spanish or English).`
+**Until ready, respond naturally** with helpful questions. Be friendly, supportive, and brief.`
 }
