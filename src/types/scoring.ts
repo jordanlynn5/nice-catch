@@ -14,6 +14,21 @@ export interface ScoreBreakdown {
   confidence: ConfidenceLevel
 }
 
+export interface GuidanceItem {
+  type: 'fao_area' | 'fishing_method' | 'certification' | 'production_method' | 'seasonality'
+  priority: number
+  icon: string
+  lookFor: string[] // i18n keys
+  avoid?: string[]
+  potentialImpact: number
+}
+
+export interface BuyingGuidance {
+  items: GuidanceItem[]
+  currentScore: number
+  targetScore: number
+}
+
 export interface SustainabilityResult {
   speciesId: string
   scientificName: string
@@ -25,8 +40,11 @@ export interface SustainabilityResult {
   fishingMethod?: string
   certifications?: string[]
   iucnStatus: IUCNStatus
+  /** @deprecated Use buyingGuidance instead */
   alternatives: AlternativeOption[]
+  /** @deprecated Use buyingGuidance instead */
   hasAlternative: boolean
+  buyingGuidance?: BuyingGuidance
   seasonality?: SeasonalityInfo
   fishBaseData?: Partial<FishBaseEnrichment>
   timestamp: number

@@ -3,7 +3,7 @@ import { SustainabilityGauge } from './SustainabilityGauge'
 import { CO2Badge } from './CO2Badge'
 import { ScoreBreakdown } from './ScoreBreakdown'
 import { ScoreExplanation } from './ScoreExplanation'
-import { AlternativesList } from './AlternativesList'
+import { BuyingGuidance } from './BuyingGuidance'
 import { ReduceMessage } from './ReduceMessage'
 import { SpeciesDetail } from './SpeciesDetail'
 import { useI18n } from '@/hooks/useI18n'
@@ -13,7 +13,7 @@ import { getAreaName } from '@/services/scoring/areaScore'
 
 interface Props {
   result: SustainabilityResult
-  onChooseAlternative?: (altSpeciesId: string) => void
+  onChooseAlternative?: (altSpeciesId: string) => void // deprecated
 }
 
 export function ProductCard({ result, onChooseAlternative }: Props) {
@@ -101,13 +101,14 @@ export function ProductCard({ result, onChooseAlternative }: Props) {
         faoArea={result.faoArea}
       />
 
-      {/* Alternatives or reduce message */}
-      {result.hasAlternative ? (
-        <AlternativesList
-          alternatives={result.alternatives}
-          onChoose={(alt) => onChooseAlternative?.(alt.speciesId)}
+      {/* Buying guidance or reduce message */}
+      {result.buyingGuidance && result.buyingGuidance.items.length > 0 ? (
+        <BuyingGuidance
+          guidance={result.buyingGuidance}
+          species={species!}
+          region="mediterranean"
         />
-      ) : species ? (
+      ) : result.score.finalScore >= 75 && species ? (
         <ReduceMessage species={species} />
       ) : null}
 

@@ -12,6 +12,7 @@ import type { Species } from '@/types/species'
 import speciesDb from '@/data/species-db.json'
 import { resolveMethodKey } from '@/services/scoring/methodScore'
 import { useI18n } from '@/hooks/useI18n'
+import { buildBuyingGuidance } from '@/services/guidance/buildGuidance'
 
 export function useSustainability() {
   const [loading, setLoading] = useState(false)
@@ -91,7 +92,7 @@ export function useSustainability() {
           productionMethod: input.label?.productionMethod,
         })
 
-        // Alternatives
+        // Alternatives (deprecated - kept for backward compatibility)
         const alternatives = buildAlternatives(
           species,
           scoreBreakdown.finalScore,
@@ -99,6 +100,18 @@ export function useSustainability() {
           input.label?.productionMethod,
           language,
           t
+        )
+
+        // Buying guidance (new)
+        const buyingGuidance = buildBuyingGuidance(
+          species,
+          scoreBreakdown,
+          {
+            fishingMethod: input.label?.fishingMethod,
+            faoArea: input.label?.faoArea,
+            certifications: input.label?.certifications,
+            productionMethod: input.label?.productionMethod,
+          }
         )
 
         const displayName =
@@ -118,6 +131,7 @@ export function useSustainability() {
           iucnStatus,
           alternatives,
           hasAlternative: alternatives.length > 0,
+          buyingGuidance,
           fishBaseData: fishBase
             ? {
                 family: fishBase.family,

@@ -4,19 +4,13 @@ import { useAppStore } from '@/store/appStore'
 import { ProductCard } from '@/components/results/ProductCard'
 import { GreenPTChat } from '@/components/chat/GreenPTChat'
 import { useI18n } from '@/hooks/useI18n'
-import { useGameification } from '@/hooks/useGameification'
-import { useSustainability } from '@/hooks/useSustainability'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import confetti from 'canvas-confetti'
 
 export function ResultPage() {
   const navigate = useNavigate()
   const { t } = useI18n()
   const currentResult = useAppStore((s) => s.currentResult)
-  const setCurrentResult = useAppStore((s) => s.setCurrentResult)
   const addToast = useAppStore((s) => s.addToast)
-  const { recordScan } = useGameification()
-  const { resolve, loading } = useSustainability()
 
   // Navigate in an effect — never call navigate() during render
   useEffect(() => {
@@ -24,16 +18,6 @@ export function ResultPage() {
       navigate('/', { replace: true })
     }
   }, [currentResult, navigate])
-
-  const handleChooseAlternative = async (altSpeciesId: string) => {
-    const result = await resolve({ speciesName: altSpeciesId })
-    if (result) {
-      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }, colors: ['#309f9b', '#80b8a2', '#106c72'] })
-      setCurrentResult(result)
-      await recordScan(result, true)
-      addToast(t('result.good_choice_toast'), 'success')
-    }
-  }
 
   const handleShare = async () => {
     if (!currentResult) return
@@ -54,14 +38,6 @@ export function ResultPage() {
 
   if (!currentResult) return null
 
-  if (loading) {
-    return (
-      <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner message={t('result.loading_alternative')} size="lg" />
-      </div>
-    )
-  }
-
   return (
     <div className="flex-1 flex flex-col">
       {/* Top bar */}
@@ -79,10 +55,7 @@ export function ResultPage() {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-4">
-        <ProductCard
-          result={currentResult}
-          onChooseAlternative={handleChooseAlternative}
-        />
+        <ProductCard result={currentResult} />
       </div>
 
       {/* Floating chat */}
