@@ -45,22 +45,23 @@ test.describe('Phase 1.4 — End-to-End Smoke Tests', () => {
     // Click first result
     await page.locator('text=Dorada').first().click()
 
-    // Wait for wizard to appear
+    // Wait for wizard Step 2 to appear
     await page.waitForTimeout(1000)
 
-    // Step 1: Where are you buying it?
+    // STEP 2: Origin & Method
+    // Purchase context
     await page.locator('button', { hasText: 'Fresco, del mostrador' }).click()
-
-    // Step 2: Production method
+    // Production method (farmed)
     await page.locator('button', { hasText: 'Criado en acuicultura' }).click()
 
-    // Step 3: FAO area (choose Mediterranean)
-    await page.locator('button', { hasText: 'Mediterráneo' }).click()
+    // Click arrow button to advance to Step 3
+    await page.locator('button', { hasText: '→' }).click()
+    await page.waitForTimeout(500)
 
-    // Step 4: Certifications
+    // STEP 3: Certifications
     await page.locator('button', { hasText: 'Sin sellos visibles' }).click()
 
-    // Submit
+    // Final submit
     await page.locator('button', { hasText: 'Calcular sostenibilidad' }).click()
 
     // Wait for result page
@@ -78,19 +79,25 @@ test.describe('Phase 1.4 — End-to-End Smoke Tests', () => {
     await page.waitForTimeout(500)
     await page.locator('text=Merluza').first().click()
 
-    // Choose worst-case scenario
+    // STEP 2: Origin & Method (worst-case scenario)
     await page.waitForTimeout(1000)
-    // Step 1: Where buying
+    // Purchase context
     await page.locator('button', { hasText: 'Fresco, del mostrador' }).click()
-    // Step 2: Production
+    // Production method (wild)
     await page.locator('button', { hasText: 'Pescado en el mar' }).click()
-    // Step 3: FAO area
+    // FAO area (Mediterranean - worst for most species)
     await page.locator('button', { hasText: 'Mediterráneo' }).click()
-    // Step 4: Fishing method
+    // Fishing method (bottom trawl - worst impact)
     await page.locator('button', { hasText: 'Arrastre de fondo' }).click()
-    // Step 5: Certifications
+
+    // Advance to Step 3
+    await page.locator('button', { hasText: '→' }).click()
+    await page.waitForTimeout(500)
+
+    // STEP 3: Certifications (none)
     await page.locator('button', { hasText: 'Sin sellos visibles' }).click()
-    // Submit
+
+    // Final submit
     await page.locator('button', { hasText: 'Calcular sostenibilidad' }).click()
 
     // Wait for result
