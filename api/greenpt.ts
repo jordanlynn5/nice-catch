@@ -87,9 +87,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           model: 'mistral-small-3.2-24b-instruct-2506',
           messages: chatMessages,
           temperature: 0.7,
-          max_tokens: 500,
+          max_tokens: 800, // Increased for longer, more detailed responses
         }),
-        signal: AbortSignal.timeout(15000),
+        signal: AbortSignal.timeout(30000), // Increased to 30s for longer system prompt processing
       })
 
       if (!response.ok) {

@@ -33,9 +33,26 @@ export function useChatAssistant() {
         const response = await sendChatMessage(newMessages)
 
         // Check if AI is ready with extracted data (JSON response)
-        if (response.trim().startsWith('{') || response.includes('"ready"')) {
+        if (response.includes('"ready"')) {
           try {
-            const parsed = JSON.parse(response.replace(/```json\n?|```/g, '').trim())
+            // Extract JSON from response (handle markdown code blocks and surrounding text)
+            let jsonStr = response
+
+            // Try to extract from markdown code block first
+            const codeBlockMatch = response.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)
+            if (codeBlockMatch) {
+              jsonStr = codeBlockMatch[1]
+            } else {
+              // Try to find JSON object in the text
+              const jsonMatch = response.match(/\{[\s\S]*"ready"[\s\S]*\}/)
+              if (jsonMatch) {
+                jsonStr = jsonMatch[0]
+              }
+            }
+
+            const parsed = JSON.parse(jsonStr.trim())
+            console.log('🐟 AI returned JSON:', parsed)
+            console.log('🐟 Extracted data:', parsed.data)
             if (parsed.ready && parsed.data) {
               setExtractedData(parsed.data)
               setMessages([
@@ -47,8 +64,9 @@ export function useChatAssistant() {
               ])
               return
             }
-          } catch {
+          } catch (err) {
             // Not valid JSON, treat as normal message
+            console.error('Failed to parse AI JSON response:', err)
           }
         }
 
