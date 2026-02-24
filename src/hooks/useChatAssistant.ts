@@ -31,28 +31,31 @@ export function useChatAssistant() {
 
       try {
         const response = await sendChatMessage(newMessages)
+        console.log('🤖 AI response:', response)
 
         // Check if AI is ready with extracted data (JSON response)
-        if (response.includes('"ready"')) {
+        if (response.includes('"ready"') || response.includes('```json')) {
           try {
             // Extract JSON from response (handle markdown code blocks and surrounding text)
             let jsonStr = response
 
             // Try to extract from markdown code block first
-            const codeBlockMatch = response.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)
+            const codeBlockMatch = response.match(/```(?:json)?\s*([\s\S]+?)\s*```/)
             if (codeBlockMatch) {
-              jsonStr = codeBlockMatch[1]
+              jsonStr = codeBlockMatch[1].trim()
+              console.log('📦 Extracted from code block:', jsonStr)
             } else {
               // Try to find JSON object in the text
               const jsonMatch = response.match(/\{[\s\S]*"ready"[\s\S]*\}/)
               if (jsonMatch) {
                 jsonStr = jsonMatch[0]
+                console.log('📦 Extracted from text:', jsonStr)
               }
             }
 
             const parsed = JSON.parse(jsonStr.trim())
-            console.log('🐟 AI returned JSON:', parsed)
-            console.log('🐟 Extracted data:', parsed.data)
+            console.log('✅ Parsed JSON successfully:', parsed)
+
             if (parsed.ready && parsed.data) {
               setExtractedData(parsed.data)
               setMessages([
@@ -62,11 +65,15 @@ export function useChatAssistant() {
                   content: 'Perfect! I have all the details. Tap "Calculate Score" to see the sustainability rating.',
                 },
               ])
+              console.log('🎯 Data extracted, showing Calculate button')
               return
+            } else {
+              console.warn('⚠️ JSON missing ready or data fields:', parsed)
             }
           } catch (err) {
             // Not valid JSON, treat as normal message
-            console.error('Failed to parse AI JSON response:', err)
+            console.error('❌ Failed to parse AI JSON response:', err)
+            console.error('❌ Attempted to parse:', response)
           }
         }
 

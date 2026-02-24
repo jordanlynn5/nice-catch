@@ -15,12 +15,20 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
   const [input, setInput] = useState('')
   const [showCamera, setShowCamera] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { t } = useI18n()
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // Auto-focus input after messages change and loading stops
+  useEffect(() => {
+    if (!loading && !showCamera) {
+      inputRef.current?.focus()
+    }
+  }, [loading, messages, showCamera])
 
   const handleSend = () => {
     if (!input.trim() || loading) return
@@ -107,6 +115,7 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
             📷
           </button>
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

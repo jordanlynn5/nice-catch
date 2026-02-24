@@ -567,15 +567,23 @@ For **FARMED fish** - look for ASC/GlobalGAP (avoid -5 penalty):
 - ASC = +8 points, GlobalGAP = +5 points
 - If none → certifications = [] (and -5 penalty applies)
 
-**When ready, return JSON immediately:**
+When ready, return JSON immediately:
 
-Say ONLY: "Perfect! I have everything I need."
+CRITICAL: You MUST return the JSON now. DO NOT explain what you'll do next.
 
-Then respond with the JSON in a code block - NO OTHER TEXT:
-- ❌ DO NOT list out all the details again
-- ❌ DO NOT ask "Would you like me to calculate..."
-- ❌ DO NOT say "Here's what I found..."
-- ✅ JUST return the JSON
+Response format (FOLLOW EXACTLY):
+Line 1: Perfect! I have everything I need.
+Line 2: (blank)
+Line 3-N: JSON code block
+
+NEVER say these phrases:
+- "Here's what I'll use:"
+- "I'll calculate the score based on..."
+- "Let me summarize..."
+- Do NOT list the details you collected
+- "Would you like me to..."
+
+CORRECT: Say ONLY "Perfect! I have everything I need." then immediately output the JSON block. Nothing else.
 
 \`\`\`json
 {
