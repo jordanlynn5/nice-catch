@@ -3,7 +3,9 @@
   "tagline": "Fish with conscience",
   "common": {
     "back": "← Back",
-    "copied": "Copied to clipboard"
+    "copied": "Copied to clipboard",
+    "learn_more": "Learn more",
+    "less": "Less"
   },
   "nav": {
     "scan": "Scan",
@@ -161,6 +163,8 @@
     "species_info": "Species information",
     "share": "Share ↗",
     "share_text": "I just checked the sustainability of {name}: {score}/100 🌊 #NiceCatch",
+    "why_this_score": "Why this score?",
+    "population_status": "Population Status",
     "good_choice_toast": "Great choice! +25 pts",
     "loading_alternative": "Loading alternative...",
     "choose": "Choose →",

@@ -2,6 +2,7 @@ import type { SustainabilityResult } from '@/types/scoring'
 import { SustainabilityGauge } from './SustainabilityGauge'
 import { CO2Badge } from './CO2Badge'
 import { ScoreBreakdown } from './ScoreBreakdown'
+import { ScoreExplanation } from './ScoreExplanation'
 import { AlternativesList } from './AlternativesList'
 import { ReduceMessage } from './ReduceMessage'
 import { SpeciesDetail } from './SpeciesDetail'
@@ -82,6 +83,15 @@ export function ProductCard({ result, onChooseAlternative }: Props) {
           )}
         </div>
       )}
+
+      {/* Score explanation */}
+      <ScoreExplanation
+        breakdown={result.score}
+        iucnStatus={result.iucnStatus}
+        fishingMethod={result.fishingMethod}
+        faoArea={result.faoArea}
+        band={result.score.band}
+      />
 
       {/* Score breakdown */}
       <ScoreBreakdown

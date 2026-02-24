@@ -3,7 +3,9 @@
   "tagline": "Pesca con conciencia",
   "common": {
     "back": "← Atrás",
-    "copied": "Copiado al portapapeles"
+    "copied": "Copiado al portapapeles",
+    "learn_more": "Ver más",
+    "less": "Menos"
   },
   "nav": {
     "scan": "Escanear",
@@ -161,6 +163,8 @@
     "species_info": "Información de la especie",
     "share": "Compartir ↗",
     "share_text": "Acabo de consultar la sostenibilidad de {name}: {score}/100 🌊 #NiceCatch",
+    "why_this_score": "¿Por qué esta puntuación?",
+    "population_status": "Estado de la población",
     "good_choice_toast": "¡Buena elección! +25 pts",
     "loading_alternative": "Cargando alternativa...",
     "choose": "Elegir →",

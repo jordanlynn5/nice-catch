@@ -13,6 +13,7 @@
   "21": { "name": "Atlántico noroccidental", "modifier": 5, "description": "Algunos stocks recuperados" },
   "31": { "name": "Atlántico centro-occidental", "modifier": -5, "description": "Presión pesquera moderada-alta" },
   "34": { "name": "Atlántico centro-oriental", "modifier": -8, "description": "Sobreexplotación en muchas zonas" },
+  "41": { "name": "Atlántico sudoccidental", "modifier": 2, "description": "Argentina, Brasil, Uruguay - gestión variable" },
   "47": { "name": "Atlántico suroriental", "modifier": -8, "description": "Zonas con pesca no regulada" },
   "51": { "name": "Océano Índico occidental", "modifier": -6, "description": "Presión variable" },
   "57": { "name": "Océano Índico oriental", "modifier": -5, "description": "Datos limitados" },

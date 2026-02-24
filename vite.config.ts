@@ -6,7 +6,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    basicSsl(),
+    // basicSsl(), // Disabled for vercel dev compatibility
     react(),
     VitePWA({
       registerType: 'autoUpdate',

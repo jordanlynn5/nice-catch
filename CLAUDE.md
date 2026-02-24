@@ -37,6 +37,12 @@ Vercel serverless functions in `/api/` are automatically deployed — test them 
 
 ---
 
+## Development Workflow
+
+This project uses TypeScript as the primary language. Always ensure `tsc --noEmit` passes with zero errors before considering a change complete. Run type checks after every multi-file edit.
+
+---
+
 ## Architecture
 
 ### Request flow

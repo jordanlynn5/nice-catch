@@ -41,12 +41,13 @@ export function useSustainability() {
           return null
         }
 
-        // Check cache (use species+method+area as compound key for now, just species id)
-        const cached = await getSpeciesCache(speciesId)
-        if (cached) {
-          setLoading(false)
-          return cached
-        }
+        // CACHE DISABLED - it was returning wrong results because it only cached by species ID
+        // TODO: Fix cache to include production method, FAO area, and fishing method in key
+        // const cached = await getSpeciesCache(speciesId)
+        // if (cached) {
+        //   setLoading(false)
+        //   return cached
+        // }
 
         // Run API calls in parallel (non-fatal failures)
         const [liveIUCN, fishBaseData, co2Wolfram] = await Promise.allSettled([
