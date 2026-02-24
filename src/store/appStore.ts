@@ -34,7 +34,11 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  language: (navigator.language?.startsWith('en') ? 'en' : 'es') as Language,
+  language: (() => {
+    const stored = localStorage.getItem('language')
+    if (stored === 'en' || stored === 'es') return stored
+    return (navigator.language?.startsWith('en') ? 'en' : 'es') as Language
+  })(),
   currentPage: 'home',
   inputMode: 'barcode',
   isLoading: false,
@@ -44,7 +48,10 @@ export const useAppStore = create<AppState>((set) => ({
   toasts: [],
   scannerActive: false,
 
-  setLanguage: (language) => set({ language }),
+  setLanguage: (language) => {
+    localStorage.setItem('language', language)
+    set({ language })
+  },
   setCurrentPage: (currentPage) => set({ currentPage }),
   setInputMode: (inputMode) => set({ inputMode }),
   setLoading: (isLoading, loadingMessage = '') => set({ isLoading, loadingMessage }),
