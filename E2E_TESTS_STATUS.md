@@ -11,37 +11,41 @@
 
 ## 📊 Current Test Results
 
-**Last run:** 8 tests, 3 passed, 5 failed
+**Last run:** 8 tests, 7 passed, 1 failed ✅
 
-### ✅ Passing Tests (3)
-1. **PWA - App loads without JS errors** - Critical errors filtered
-2. **PWA - Main assets load** - HTTP 200 status confirmed
-3. **AI Assistant button visible** - Button renders and is clickable
+### ✅ Passing Tests (7)
+1. **Home page loads with all main buttons** - Spanish language working
+2. **Manual search flow: dorada with full wizard** - 3-step wizard completed
+3. **Buying Guidance shows for low-scoring fish** - Worst-case merluza flow works
+4. **AI Assistant button visible** - Button renders and is clickable
+5. **Navigation back button** - Spanish navigation working
+6. **PWA - App loads without JS errors** - Critical errors filtered
+7. **PWA - Main assets load** - HTTP 200 status confirmed
 
-### ❌ Failing Tests (5)
-1. **Home page buttons** - Language mismatch (expects Spanish, got English)
-2. **Manual search flow** - Language mismatch in button text
-3. **Buying Guidance** - Timeout finding Spanish text
-4. **Navigation back button** - Language mismatch
-5. **Service worker registration** - SW not registering in test environment
+### ❌ Failing Tests (1)
+1. **Service worker registration** - SW not registering in dev mode (expected)
 
-## 🔧 Issues to Fix
+## 🔧 Issues (Resolved ✅)
 
-### 1. Language Detection
+### 1. Language Detection - ✅ FIXED
 **Problem:** App loads in English, tests expect Spanish
-**Solutions:**
-- ✅ Make tests language-agnostic (use regex `/Text|Texto/`)
-- ✅ Use button indices instead of text (`nth(2)`)
-- ✅ Force Spanish in test environment (set localStorage before load) - IMPLEMENTED
+**Solution Implemented:**
+- ✅ appStore reads language from localStorage on init
+- ✅ Tests set localStorage + override navigator.language
+- ✅ Language persists across sessions
 
-### 2. Service Worker
+### 2. Wizard Flow - ✅ FIXED
+**Problem:** Tests tried to select certifications on Step 2
+**Solution:** Click → button to advance Step 2 → Step 3 before certifications
+
+### 3. Service Worker - ⚠️ KNOWN ISSUE
 **Problem:** SW not registering during Playwright tests
 **Cause:** Dev mode service worker behavior
-**Solution:** Skip SW test in dev, or test in production build
+**Solution:** Expected failure in dev mode, will work in production
 
-### 3. Mobile Tests
+### 4. Mobile Tests - ⬜ DEFERRED
 **Problem:** WebKit browser not installed
-**Solution:** Run `npx playwright install webkit` (deferred)
+**Solution:** Run `npx playwright install webkit` when needed
 
 ## 🎯 Next Steps
 
