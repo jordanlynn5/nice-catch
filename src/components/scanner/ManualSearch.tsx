@@ -148,6 +148,15 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
     { label: t('wizard.context_frozen'), value: 'frozen' },
   ]
 
+  const ORIGIN_OPTIONS = [
+    { label: t('wizard.origin_spain'), code: 'ES' },
+    { label: t('wizard.origin_greece'), code: 'GR' },
+    { label: t('wizard.origin_norway'), code: 'NO' },
+    { label: t('wizard.origin_turkey'), code: 'TR' },
+    { label: t('wizard.origin_eu_other'), code: 'EU' },
+    { label: t('wizard.origin_non_eu'), code: 'NON_EU' },
+  ]
+
   // Returns the context-specific i18n key for "where to find" text, or falls back to the base key
   const wtf = (base: string) =>
     t(data.purchaseContext ? `wizard.${base}_${data.purchaseContext}` : `wizard.${base}`)
@@ -462,6 +471,55 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                   💡 {t('wizard.gear_dont_know_hint')}
                 </p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Farmed: origin/country */}
+        {isFarmed && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-gray-700">{t('wizard.origin_label')}</p>
+              <InfoDrawer
+                title={t('wizard.info_origin_title')}
+                meaning={t('wizard.info_origin_meaning')}
+                whereToFind={wtf('info_origin_where')}
+                example={t('wizard.info_origin_example')}
+              />
+            </div>
+            <div className="space-y-1.5">
+              {ORIGIN_OPTIONS.map((origin) => {
+                const isSelected = data.faoArea === origin.code
+                return (
+                  <button
+                    key={origin.code}
+                    onClick={() => {
+                      setData((d) => ({ ...d, faoArea: origin.code }))
+                      setTouched((prev) => ({ ...prev, area: true }))
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors ${
+                      isSelected
+                        ? 'bg-primary text-white border-primary'
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
+                    }`}
+                  >
+                    {origin.label}
+                  </button>
+                )
+              })}
+              <button
+                onClick={() => {
+                  setData((d) => ({ ...d, faoArea: null }))
+                  setTouched((prev) => ({ ...prev, area: true }))
+                }}
+                className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors text-gray-500 ${
+                  data.faoArea === null && touched.area
+                    ? 'bg-gray-100 border-gray-300'
+                    : 'bg-white border-gray-200 hover:border-primary/40'
+                }`}
+              >
+                {t('wizard.origin_dont_know')}
+              </button>
             </div>
           </div>
         )}
