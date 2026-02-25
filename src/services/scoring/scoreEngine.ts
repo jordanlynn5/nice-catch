@@ -25,8 +25,8 @@ function getOriginModifier(
     )
     if (key) mod += CERTIFICATION_MODIFIERS[key]
   }
-  if (productionMethod === 'farmed' && certifications.length === 0) mod -= 5
-  return Math.max(-10, Math.min(10, mod))
+  if (productionMethod === 'farmed' && certifications.length === 0) mod -= 15
+  return Math.max(-15, Math.min(10, mod))
 }
 
 function getScoreBand(score: number): ScoreBand {
