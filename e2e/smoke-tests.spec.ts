@@ -48,14 +48,16 @@ test.describe('Phase 1.4 — End-to-End Smoke Tests', () => {
     // Wait for wizard Step 2 to appear
     await page.waitForTimeout(1000)
 
-    // STEP 2: Origin & Method
-    // Purchase context
-    await page.locator('button', { hasText: 'Fresco, del mostrador' }).click()
-    // Production method (farmed)
+    // STEP 2: Production method (farmed)
     await page.locator('button', { hasText: 'Criado en acuicultura' }).click()
+    await page.waitForTimeout(500)
 
-    // Click arrow button to advance to Step 3
-    await page.locator('button', { hasText: '→' }).click()
+    // Select country of origin for farmed fish
+    await page.locator('button', { hasText: 'España' }).click()
+    await page.waitForTimeout(500)
+
+    // Advance to step 3 (certifications)
+    await page.locator('button', { hasText: 'Calcular sostenibilidad' }).first().click()
     await page.waitForTimeout(500)
 
     // STEP 3: Certifications
@@ -79,19 +81,20 @@ test.describe('Phase 1.4 — End-to-End Smoke Tests', () => {
     await page.waitForTimeout(500)
     await page.locator('text=Merluza').first().click()
 
-    // STEP 2: Origin & Method (worst-case scenario)
+    // STEP 2: Production method and details (worst-case scenario)
     await page.waitForTimeout(1000)
-    // Purchase context
-    await page.locator('button', { hasText: 'Fresco, del mostrador' }).click()
     // Production method (wild)
     await page.locator('button', { hasText: 'Pescado en el mar' }).click()
+    await page.waitForTimeout(500)
     // FAO area (Mediterranean - worst for most species)
     await page.locator('button', { hasText: 'Mediterráneo' }).click()
+    await page.waitForTimeout(500)
     // Fishing method (bottom trawl - worst impact)
     await page.locator('button', { hasText: 'Arrastre de fondo' }).click()
+    await page.waitForTimeout(500)
 
-    // Advance to Step 3
-    await page.locator('button', { hasText: '→' }).click()
+    // Advance to step 3 (certifications)
+    await page.locator('button', { hasText: 'Calcular sostenibilidad' }).first().click()
     await page.waitForTimeout(500)
 
     // STEP 3: Certifications (none)
