@@ -102,32 +102,59 @@ function buildAreaGuidance(
 
   const areaData = faoAreas as Record<string, { modifier: number; name: string }>
 
-  // Best FAO areas for EU consumers (Atlantic)
-  const bestAreas = ['27.4', '27.6', '27.8', '48', '58']
-  const bestModifier = Math.max(...bestAreas.map(a => areaData[a]?.modifier || 0))
+  // Check if this is an origin code (farmed fish) vs FAO area (wild fish)
+  const isOriginCode = ['ES', 'GR', 'NO', 'TR', 'EU', 'NON_EU'].includes(currentArea || '')
 
-  const potentialImpact = bestModifier - currentModifier
+  if (isOriginCode) {
+    // Farmed fish origin guidance
+    const bestOrigins = ['ES', 'GR', 'EU']
+    const bestModifier = Math.max(...bestOrigins.map(o => areaData[o]?.modifier || 0))
+    const potentialImpact = bestModifier - currentModifier
 
-  if (potentialImpact < 8) return null
+    if (potentialImpact < 8) return null
 
-  // Determine what to avoid
-  const avoid: string[] = []
-  if (currentArea?.startsWith('37')) {
-    // Mediterranean
-    avoid.push('guidance.avoid_mediterranean')
-  }
+    const avoid: string[] = []
+    if (currentArea === 'NON_EU') {
+      avoid.push('guidance.avoid_non_eu_farmed')
+    }
 
-  return {
-    type: 'fao_area',
-    priority: potentialImpact,
-    icon: '🌊',
-    lookFor: [
-      'guidance.lookfor_fao_27',
-      'guidance.lookfor_atlantic_ne',
-      'guidance.lookfor_cantabrico'
-    ],
-    avoid: avoid.length > 0 ? avoid : undefined,
-    potentialImpact
+    return {
+      type: 'fao_area',
+      priority: potentialImpact,
+      icon: '🇪🇺',
+      lookFor: [
+        'guidance.lookfor_spain_farmed',
+        'guidance.lookfor_greece_farmed',
+        'guidance.lookfor_eu_farmed'
+      ],
+      avoid: avoid.length > 0 ? avoid : undefined,
+      potentialImpact
+    }
+  } else {
+    // Wild fish FAO area guidance
+    const bestAreas = ['27.4', '27.6', '27.8', '48', '58']
+    const bestModifier = Math.max(...bestAreas.map(a => areaData[a]?.modifier || 0))
+    const potentialImpact = bestModifier - currentModifier
+
+    if (potentialImpact < 8) return null
+
+    const avoid: string[] = []
+    if (currentArea?.startsWith('37')) {
+      avoid.push('guidance.avoid_mediterranean')
+    }
+
+    return {
+      type: 'fao_area',
+      priority: potentialImpact,
+      icon: '🌊',
+      lookFor: [
+        'guidance.lookfor_fao_27',
+        'guidance.lookfor_atlantic_ne',
+        'guidance.lookfor_cantabrico'
+      ],
+      avoid: avoid.length > 0 ? avoid : undefined,
+      potentialImpact
+    }
   }
 }
 

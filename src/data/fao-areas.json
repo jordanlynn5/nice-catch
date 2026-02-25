@@ -26,5 +26,11 @@
   "81": { "name": "Pacífico Suroccidental (general)", "modifier": 4, "description": "Menor presión pesquera" },
   "87": { "name": "Pacífico Suroriental (general)", "modifier": 0, "description": "Gestión variable (Chile, Perú)" },
   "48": { "name": "Atlántico Antártico", "modifier": 10, "description": "Gestión CCAMLR estricta" },
-  "58": { "name": "Índico Antártico", "modifier": 10, "description": "Gestión CCAMLR estricta" }
+  "58": { "name": "Índico Antártico", "modifier": 10, "description": "Gestión CCAMLR estricta" },
+  "ES": { "name": "España (acuicultura)", "modifier": 8, "description": "Estándares UE estrictos, transporte mínimo, regulación local" },
+  "GR": { "name": "Grecia (acuicultura)", "modifier": 5, "description": "Estándares UE, transporte regional moderado" },
+  "NO": { "name": "Noruega (acuicultura)", "modifier": 3, "description": "Excelentes estándares (no UE), transporte largo" },
+  "TR": { "name": "Turquía (acuicultura)", "modifier": 0, "description": "Candidato UE, estándares variables, cercano" },
+  "EU": { "name": "Otro país UE (acuicultura)", "modifier": 5, "description": "Estándares UE, transporte variable" },
+  "NON_EU": { "name": "Fuera de la UE (acuicultura)", "modifier": -8, "description": "Regulación variable, transporte largo, impacto alto" }
 }
