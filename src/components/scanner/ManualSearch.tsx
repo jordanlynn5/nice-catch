@@ -30,11 +30,9 @@ function computeInitialStep(initialSpecies?: Species, initialLabel?: ParsedLabel
 }
 
 type WizardStep = 1 | 2 | 3
-type PurchaseContext = 'counter' | 'packaged' | 'frozen'
 
 interface WizardData {
   species: Species | null
-  purchaseContext: PurchaseContext | null
   productionChoice: ProductionChoice | null
   faoArea: string | null
   fishingMethod: string | null
@@ -74,7 +72,6 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
   const fromBarcode = !!initialSpecies
   const [data, setData] = useState<WizardData>({
     species: initialSpecies ?? null,
-    purchaseContext: null,
     productionChoice: labelToProductionChoice(initialLabel),
     faoArea: initialLabel?.faoArea ?? null,
     fishingMethod: initialLabel?.fishingMethod ?? null,
@@ -142,12 +139,6 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
     { label: t('wizard.production_unknown'), value: 'unknown' },
   ]
 
-  const CONTEXT_OPTIONS: { label: string; value: PurchaseContext }[] = [
-    { label: t('wizard.context_counter'), value: 'counter' },
-    { label: t('wizard.context_packaged'), value: 'packaged' },
-    { label: t('wizard.context_frozen'), value: 'frozen' },
-  ]
-
   const ORIGIN_OPTIONS = [
     { label: t('wizard.origin_spain'), code: 'ES' },
     { label: t('wizard.origin_greece'), code: 'GR' },
@@ -157,9 +148,6 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
     { label: t('wizard.origin_non_eu'), code: 'NON_EU' },
   ]
 
-  // Returns the context-specific i18n key for "where to find" text, or falls back to the base key
-  const wtf = (base: string) =>
-    t(data.purchaseContext ? `wizard.${base}_${data.purchaseContext}` : `wizard.${base}`)
 
   const selectSpecies = (species: Species) => {
     setData((d) => ({ ...d, species }))
@@ -262,17 +250,13 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
     const isUnknown = data.productionChoice === 'unknown'
     const canProceed = data.productionChoice !== null
 
-    const step2Subtitle = data.purchaseContext
-      ? t(`wizard.step2_subtitle_${data.purchaseContext}`)
-      : t('wizard.step2_subtitle')
-
     return (
       <div className="w-full max-w-sm mx-auto space-y-5">
         <StepHeader
           step={2}
           total={3}
           title={t('wizard.step2_title')}
-          subtitle={step2Subtitle}
+          subtitle={t('wizard.step2_subtitle')}
           onBack={() => setStep(1)}
         />
 
@@ -302,28 +286,6 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
           </div>
         )}
 
-        {/* Purchase context — only shown for manual search, not barcode path */}
-        {!fromBarcode && (
-          <div className="space-y-2">
-            <p className="text-sm font-semibold text-gray-700">{t('wizard.purchase_context_label')}</p>
-            <div className="grid grid-cols-3 gap-2">
-              {CONTEXT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => setData((d) => ({ ...d, purchaseContext: opt.value }))}
-                  className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors leading-snug ${
-                    data.purchaseContext === opt.value
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Production method */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -331,7 +293,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
             <InfoDrawer
               title={t('wizard.info_production_title')}
               meaning={t('wizard.info_production_meaning')}
-              whereToFind={wtf('info_production_where')}
+              whereToFind={t('wizard.info_production_where')}
               example={t('wizard.info_production_example')}
             />
           </div>
@@ -367,7 +329,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               <InfoDrawer
                 title={t('wizard.info_area_title')}
                 meaning={t('wizard.info_area_meaning')}
-                whereToFind={wtf('info_area_where')}
+                whereToFind={t('wizard.info_area_where')}
                 example={t('wizard.info_area_example')}
               />
             </div>
@@ -425,7 +387,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               <InfoDrawer
                 title={t('wizard.info_gear_title')}
                 meaning={t('wizard.info_gear_meaning')}
-                whereToFind={wtf('info_gear_where')}
+                whereToFind={t('wizard.info_gear_where')}
                 example={t('wizard.info_gear_example')}
               />
             </div>
@@ -483,7 +445,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               <InfoDrawer
                 title={t('wizard.info_origin_title')}
                 meaning={t('wizard.info_origin_meaning')}
-                whereToFind={wtf('info_origin_where')}
+                whereToFind={t('wizard.info_origin_where')}
                 example={t('wizard.info_origin_example')}
               />
             </div>
@@ -589,7 +551,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
           <InfoDrawer
             title={t('wizard.info_cert_title')}
             meaning={t('wizard.info_cert_meaning')}
-            whereToFind={wtf('info_cert_where')}
+            whereToFind={t('wizard.info_cert_where')}
             example={t('wizard.info_cert_example')}
           />
         </div>
