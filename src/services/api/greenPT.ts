@@ -27,13 +27,19 @@ export async function analyzeLabel(imageBlob: Blob): Promise<ParsedLabel | null>
             'Extract from this EU fish label:\n' +
             '1. species name (common or scientific name)\n' +
             '2. FAO catch area code (e.g., "FAO 27", "FAO 37")\n' +
-            '3. fishing method if wild-caught (e.g., "trawl", "longline", "seine")\n' +
+            '3. fishing method (ONLY the GEAR TYPE used to catch the fish):\n' +
+            '   - VALID methods: "trawl" (arrastre), "longline" (palangre), "seine" (cerco), "gillnet" (enmalle), "trap" (trampa), "hook and line" (anzuelo), "dredge" (draga)\n' +
+            '   - IGNORE these (NOT fishing methods): "gutted", "eviscerado", "filleted", "frozen", "congelado", "fresh", "fresco", "skinless", "descabezado"\n' +
+            '   - If no fishing gear is mentioned, leave method empty or null\n' +
             '4. production_method: Look carefully for these keywords:\n' +
             '   - If you see "acuicultura", "criado", "farmed", "aquaculture", "de cría", or similar → return "farmed"\n' +
-            '   - If you see "pescado", "salvaje", "wild", "caught", "capturado" or fishing methods → return "wild"\n' +
+            '   - If you see "pescado", "salvaje", "wild", "caught", "capturado" or fishing gear terms → return "wild"\n' +
             '   - If unclear, return "unknown"\n' +
             '5. certifications (MSC, ASC, etc.)\n\n' +
-            'IMPORTANT: production_method is REQUIRED. Check the label text carefully for farming/aquaculture keywords.\n\n' +
+            'IMPORTANT: \n' +
+            '- production_method is REQUIRED\n' +
+            '- "method" should ONLY contain fishing GEAR types, not fish preparation/processing terms\n' +
+            '- Check the label text carefully for farming/aquaculture keywords\n\n' +
             'Respond as JSON: {"species": "...", "area": "...", "method": "...", "production_method": "farmed|wild|unknown", "certifications": [...]}',
         },
         timeout: 10000,
