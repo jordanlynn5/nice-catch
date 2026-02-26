@@ -53,4 +53,13 @@ export interface ParsedLabel {
   origin?: string
   productionMethod?: ProductionMethod
   certifications?: string[]
+  price?: {
+    value: number           // Price in euros
+    pricePerKg: number      // Normalized to per-kg
+    currency: string        // 'EUR'
+    quantity: number
+    quantityUnit: string    // 'kg', 'g', etc.
+    source: 'openfoodfacts' | 'user_reported'
+    date?: string
+  }
 }

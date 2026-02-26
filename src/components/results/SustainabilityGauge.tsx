@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ScoreBand } from '@/types/scoring'
 import { getBandColor, getBandLabel } from '@/services/scoring/scoreEngine'
+import { useI18n } from '@/hooks/useI18n'
 
 interface Props {
   score: number
@@ -41,36 +42,51 @@ function describeArc(cx: number, cy: number, r: number, startAngle: number, endA
 }
 
 export function SustainabilityGauge({ score, band, size = 260, animate = true }: Props) {
+  const { language } = useI18n()
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const shouldAnimate = animate && !prefersReducedMotion
-  const [displayScore, setDisplayScore] = useState(shouldAnimate ? 0 : score)
-  const [labelVisible, setLabelVisible] = useState(false)
+  const [displayScore, setDisplayScore] = useState(score)
+  const [labelVisible, setLabelVisible] = useState(!shouldAnimate)
   const animRef = useRef<number | null>(null)
+  const prevScoreRef = useRef<number>(score)
+  const initialMountRef = useRef<boolean>(true)
 
   useEffect(() => {
-    if (!shouldAnimate) {
+    // Skip animation if no animation needed or score hasn't changed
+    if (!shouldAnimate || prevScoreRef.current === score) {
       setDisplayScore(score)
       setLabelVisible(true)
+      prevScoreRef.current = score
       return
     }
 
-    const start = performance.now()
-    const duration = 1200
-    const from = 0
+    // Determine animation parameters
+    const isFirstLoad = initialMountRef.current
+    const from = isFirstLoad ? 0 : prevScoreRef.current
     const to = score
+    const duration = isFirstLoad ? 1200 : 600 // Faster for subsequent changes
+
+    initialMountRef.current = false
+    prevScoreRef.current = score
+
+    const start = performance.now()
 
     const step = (now: number) => {
       const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3.5)
+      const eased = 1 - Math.pow(1 - progress, 3)
       setDisplayScore(Math.round(from + (to - from) * eased))
-      if (progress > 0.7 && !labelVisible) {
+
+      if (isFirstLoad && progress > 0.6 && !labelVisible) {
         setLabelVisible(true)
       }
+
       if (progress < 1) {
         animRef.current = requestAnimationFrame(step)
+      } else {
+        setLabelVisible(true)
       }
     }
 
@@ -78,10 +94,10 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current)
     }
-  }, [score, shouldAnimate, labelVisible])
+  }, [score, shouldAnimate])
 
   const cx = size / 2
-  const cy = size * 0.52
+  const cy = size * 0.42  // Moved up to prevent clipping
   const r = size * 0.38
   const strokeWidth = size * 0.1
   const color = MEDITERRANEAN_BANDS[band]
@@ -102,8 +118,9 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
 
         <svg
           width={size}
-          height={size * 0.65}
-          viewBox={`0 0 ${size} ${size * 0.65}`}
+          height={size * 0.6}
+          viewBox={`0 0 ${size} ${size * 0.9}`}
+          preserveAspectRatio="xMidYMin meet"
           aria-label={`Puntuación de sostenibilidad: ${displayScore}`}
           role="img"
         >
@@ -122,34 +139,19 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
                 stroke={seg.color}
                 strokeWidth={strokeWidth}
                 strokeLinecap="round"
-                opacity={0.15}
+                opacity={0.08}
               />
             )
           })}
 
-          {/* Active score arc — elegant with gradient */}
-          <defs>
-            <linearGradient id={`scoreGradient-${band}`} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor={color} stopOpacity="0.8" />
-              <stop offset="100%" stopColor={color} stopOpacity="1" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-
-          {/* Active score arc — bold and clear */}
+          {/* Active score arc — bold and prominent */}
           <path
             d={describeArc(cx, cy, r, -180, -180 + (displayScore / 100) * 180)}
             fill="none"
             stroke={color}
-            strokeWidth={strokeWidth}
+            strokeWidth={strokeWidth * 1.05}
             strokeLinecap="round"
-            opacity={0.95}
+            style={{ filter: 'drop-shadow(0 0 3px rgba(0,0,0,0.15))' }}
           />
 
           {/* Score display — editorial typography, centered */}
@@ -171,7 +173,7 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
 
           <text
             x={cx}
-            y={cy + r * 0.05}
+            y={cy + r * 0.2}
             textAnchor="middle"
             dominantBaseline="middle"
             style={{
@@ -199,7 +201,7 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
               border: `2px solid ${color}25`
             }}
           >
-            {getBandLabel(band, 'es')}
+            {getBandLabel(band, language as 'es' | 'en')}
           </div>
         </div>
       </div>

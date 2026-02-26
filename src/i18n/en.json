@@ -2,7 +2,7 @@
   "app_name": "Nice Catch",
   "tagline": "Fish with conscience",
   "common": {
-    "back": "← Back",
+    "back": "Back",
     "copied": "Copied to clipboard",
     "learn_more": "Learn more",
     "less": "Less"
@@ -182,7 +182,11 @@
     "population_status": "Population Status",
     "good_choice_toast": "Great choice! +25 pts",
     "loading_alternative": "Loading alternative...",
+    "alternative_chosen": "Alternative chosen! +25 points",
     "choose": "Choose →",
+    "price_premium": "+{amount}/kg more expensive",
+    "price_cheaper": "{amount}/kg cheaper",
+    "price_estimated": "estimated",
     "species_family": "Family",
     "species_habitat": "Habitat",
     "species_max_length": "Max length",
@@ -222,6 +226,14 @@
     "fao_source": "FAO — Fishing areas and statistics",
     "off_source": "Open Food Facts — Product database",
     "disclaimer": "Built for an environmental hackathon. Data updated periodically. The score is indicative — it's always best to ask the fishmonger."
+  },
+  "chat": {
+    "assistant_name": "GreenPT Assistant",
+    "about": "About:",
+    "placeholder": "Type your question...",
+    "empty_message": "Ask me about the sustainability of this species",
+    "error_message": "Sorry, the assistant is not available right now.",
+    "open_chat": "Open sustainability chat"
   },
   "errors": {
     "network": "Connection error. Check your internet.",

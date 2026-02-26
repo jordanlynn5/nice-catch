@@ -49,6 +49,12 @@ export interface SustainabilityResult {
   fishBaseData?: Partial<FishBaseEnrichment>
   timestamp: number
   barcode?: string
+  price?: {
+    value: number
+    pricePerKg: number
+    currency: string
+    source: string
+  }
 }
 
 export interface CO2Data {
@@ -64,6 +70,12 @@ export interface AlternativeOption {
   score: number
   reason: AlternativeReason
   productionMethodSuggestion?: ProductionMethod
+  price?: {
+    pricePerKg: number
+    priceDelta: number      // Difference from current (negative = cheaper)
+    percentDelta: number
+    available: boolean      // true = real data, false = estimated
+  }
 }
 
 export type AlternativeReason =

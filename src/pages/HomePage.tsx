@@ -21,7 +21,7 @@ export function HomePage() {
   const [barcodeSpecies, setBarcodeSpecies] = useState<Species | null>(null)
   const [barcodeLabel, setBarcodeLabel] = useState<ParsedLabel | null>(null)
   const [looking, setLooking] = useState(false)
-  const { t } = useI18n()
+  const { t, language } = useI18n()
   const navigate = useNavigate()
   const { resolve, loading } = useSustainability()
   const { recordScan } = useGameification()
@@ -304,10 +304,13 @@ export function HomePage() {
                         {entry.displayName}
                       </p>
                       <p className="text-sm" style={{ color: '#1e3a5f99' }}>
-                        {new Date(entry.timestamp).toLocaleDateString('es-ES', {
-                          day: 'numeric',
-                          month: 'long'
-                        })}
+                        {new Date(entry.timestamp).toLocaleDateString(
+                          language === 'en' ? 'en-GB' : 'es-ES',
+                          {
+                            day: 'numeric',
+                            month: 'long'
+                          }
+                        )}
                       </p>
                     </div>
                   </div>

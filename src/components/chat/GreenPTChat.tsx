@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { chatWithContext } from '@/services/api/greenPT'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { useI18n } from '@/hooks/useI18n'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function GreenPTChat({ speciesContext }: Props) {
+  const { t, language } = useI18n()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -30,12 +32,12 @@ export function GreenPTChat({ speciesContext }: Props) {
     setMessages((prev) => [...prev, { role: 'user', text }])
     setLoading(true)
 
-    const response = await chatWithContext(text, speciesContext)
+    const response = await chatWithContext(text, speciesContext, language)
     setMessages((prev) => [
       ...prev,
       {
         role: 'assistant',
-        text: response ?? 'Lo siento, el asistente no está disponible ahora mismo.',
+        text: response ?? t('chat.error_message'),
       },
     ])
     setLoading(false)
@@ -53,7 +55,7 @@ export function GreenPTChat({ speciesContext }: Props) {
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-20 right-4 w-12 h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center text-xl hover:bg-deep transition-colors z-40"
-        aria-label="Abrir chat de sostenibilidad"
+        aria-label={t('chat.open_chat')}
       >
         💬
       </button>
@@ -65,9 +67,9 @@ export function GreenPTChat({ speciesContext }: Props) {
       {/* Header */}
       <div className="bg-primary text-white px-4 py-3 flex items-center justify-between">
         <div>
-          <p className="font-semibold text-sm">Asistente GreenPT</p>
+          <p className="font-semibold text-sm">{t('chat.assistant_name')}</p>
           {speciesContext && (
-            <p className="text-xs opacity-75 truncate">Sobre: {speciesContext}</p>
+            <p className="text-xs opacity-75 truncate">{t('chat.about')} {speciesContext}</p>
           )}
         </div>
         <button onClick={() => setOpen(false)} className="opacity-70 hover:opacity-100">✕</button>
@@ -77,7 +79,7 @@ export function GreenPTChat({ speciesContext }: Props) {
       <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-64">
         {messages.length === 0 && (
           <p className="text-xs text-gray-400 text-center py-4">
-            Pregúntame sobre la sostenibilidad de esta especie
+            {t('chat.empty_message')}
           </p>
         )}
         {messages.map((msg, i) => (
@@ -109,7 +111,7 @@ export function GreenPTChat({ speciesContext }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Escribe tu pregunta..."
+          placeholder={t('chat.placeholder')}
           className="flex-1 text-sm px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary/50"
           disabled={loading}
         />

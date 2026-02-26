@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { BuyingGuidance as BuyingGuidanceType, GuidanceItem } from '@/types/scoring'
 import type { Species } from '@/types/species'
 import { useI18n } from '@/hooks/useI18n'
@@ -6,40 +7,64 @@ interface BuyingGuidanceProps {
   guidance: BuyingGuidanceType
   species: Species
   region: 'mediterranean' | 'atlantic'
+  defaultCollapsed?: boolean
 }
 
-export function BuyingGuidance({ guidance, species, region }: BuyingGuidanceProps) {
+export function BuyingGuidance({ guidance, species, region, defaultCollapsed = false }: BuyingGuidanceProps) {
   const { t } = useI18n()
+  const [isExpanded, setIsExpanded] = useState(!defaultCollapsed)
 
   if (guidance.items.length === 0) return null
 
   return (
-    <div className="mt-6 space-y-4">
-      <h3 className="text-lg font-semibold text-deep">
-        {t('guidance.title')}
-      </h3>
-      <p className="text-sm text-gray-600">
-        {t('guidance.subtitle')}
-      </p>
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      {/* Collapsible header */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between text-left"
+      >
+        <div>
+          <h3 className="text-base font-semibold" style={{ color: '#1e3a5f' }}>
+            {t('guidance.title')}
+          </h3>
+          {!isExpanded && (
+            <p className="text-xs mt-1" style={{ color: '#1e3a5f99' }}>
+              {t('guidance.subtitle')}
+            </p>
+          )}
+        </div>
+        <span className="text-xl shrink-0" style={{ color: '#0891b2' }}>
+          {isExpanded ? '−' : '+'}
+        </span>
+      </button>
 
-      <div className="space-y-3">
-        {guidance.items.map((item, index) => (
-          item.type === 'seasonality' ? (
-            <SeasonalityGuidanceCard
-              key={index}
-              item={item}
-              species={species}
-              region={region}
-            />
-          ) : (
-            <GuidanceCard key={index} item={item} />
-          )
-        ))}
-      </div>
+      {/* Expandable content */}
+      {isExpanded && (
+        <div className="mt-4 space-y-4">
+          <p className="text-sm text-gray-600">
+            {t('guidance.subtitle')}
+          </p>
 
-      <p className="mt-4 text-xs text-gray-500 italic">
-        {t('guidance.footer_legal')}
-      </p>
+          <div className="space-y-3">
+            {guidance.items.map((item, index) => (
+              item.type === 'seasonality' ? (
+                <SeasonalityGuidanceCard
+                  key={index}
+                  item={item}
+                  species={species}
+                  region={region}
+                />
+              ) : (
+                <GuidanceCard key={index} item={item} />
+              )
+            ))}
+          </div>
+
+          <p className="mt-4 text-xs text-gray-500 italic">
+            {t('guidance.footer_legal')}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

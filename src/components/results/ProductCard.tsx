@@ -6,6 +6,7 @@ import { ScoreExplanation } from './ScoreExplanation'
 import { BuyingGuidance } from './BuyingGuidance'
 import { ReduceMessage } from './ReduceMessage'
 import { SpeciesDetail } from './SpeciesDetail'
+import { AlternativesList } from './AlternativesList'
 import { useI18n } from '@/hooks/useI18n'
 import { getSpeciesById } from '@/services/parsers/synonymResolver'
 import { getBandColor } from '@/services/scoring/scoreEngine'
@@ -13,7 +14,7 @@ import { getAreaName } from '@/services/scoring/areaScore'
 
 interface Props {
   result: SustainabilityResult
-  onChooseAlternative?: (altSpeciesId: string) => void // deprecated
+  onChooseAlternative?: (altSpeciesId: string) => void
 }
 
 export function ProductCard({ result, onChooseAlternative }: Props) {
@@ -101,16 +102,31 @@ export function ProductCard({ result, onChooseAlternative }: Props) {
         faoArea={result.faoArea}
       />
 
-      {/* Buying guidance or reduce message */}
-      {result.buyingGuidance && result.buyingGuidance.items.length > 0 ? (
+      {/* Alternatives */}
+      {result.alternatives.length > 0 && (
+        <AlternativesList
+          alternatives={result.alternatives}
+          onChoose={(alt) => onChooseAlternative?.(alt.speciesId)}
+        />
+      )}
+
+      {/* Buying guidance - always show, collapsed when alternatives exist */}
+      {result.buyingGuidance && result.buyingGuidance.items.length > 0 && (
         <BuyingGuidance
           guidance={result.buyingGuidance}
           species={species!}
           region="mediterranean"
+          defaultCollapsed={result.alternatives.length > 0}
         />
-      ) : result.score.finalScore >= 75 && species ? (
+      )}
+
+      {/* Reduce message - only show if no alternatives and no guidance */}
+      {result.alternatives.length === 0 &&
+       (!result.buyingGuidance || result.buyingGuidance.items.length === 0) &&
+       result.score.finalScore >= 75 &&
+       species && (
         <ReduceMessage species={species} />
-      ) : null}
+      )}
 
       {/* Species detail */}
       <SpeciesDetail

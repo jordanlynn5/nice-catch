@@ -204,11 +204,6 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
             autoCapitalize="none"
             autoCorrect="off"
           />
-          {searching && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#1e3a5f99' }}>
-              {t('scanner.searching')}
-            </span>
-          )}
         </div>
 
         {results.length > 0 && (
@@ -339,16 +334,23 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                       setData((d) => ({ ...d, faoArea: area.faoCode }))
                       setTouched((prev) => ({ ...prev, area: true }))
                     }}
-                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors flex items-center justify-between ${
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-colors ${
                       isSelected
                         ? 'bg-primary text-white border-primary'
                         : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
                     }`}
                   >
-                    <span>{area.label}</span>
-                    {isFromBarcode && (
-                      <span className="text-[10px] opacity-75 shrink-0 ml-2">{t('wizard.from_barcode')}</span>
-                    )}
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <span className="block font-medium">{area.label}</span>
+                        <span className={`block text-xs mt-0.5 ${isSelected ? 'opacity-75' : 'text-gray-500'}`}>
+                          FAO {area.faoCode}
+                        </span>
+                      </div>
+                      {isFromBarcode && (
+                        <span className="text-[10px] opacity-75 shrink-0 ml-2">{t('wizard.from_barcode')}</span>
+                      )}
+                    </div>
                   </button>
                 )
               })}

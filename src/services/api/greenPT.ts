@@ -54,12 +54,14 @@ export async function analyzeLabel(imageBlob: Blob): Promise<ParsedLabel | null>
 
 export async function chatWithContext(
   message: string,
-  speciesContext?: string
+  speciesContext?: string,
+  language: string = 'es'
 ): Promise<string | null> {
   try {
+    const langName = language === 'es' ? 'Spanish' : 'English'
     const systemPrompt = speciesContext
-      ? `You are a seafood sustainability assistant. The user is asking about: ${speciesContext}. Answer concisely in the user's language.`
-      : 'You are a seafood sustainability assistant. Answer concisely.'
+      ? `You are a seafood sustainability assistant. The user is asking about: ${speciesContext}. Answer concisely in ${langName}.`
+      : `You are a seafood sustainability assistant. Answer concisely in ${langName}.`
 
     const data = await ky
       .post('/api/greenpt', {

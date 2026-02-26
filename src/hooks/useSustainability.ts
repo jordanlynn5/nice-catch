@@ -92,7 +92,7 @@ export function useSustainability() {
           productionMethod: input.label?.productionMethod,
         })
 
-        // Alternatives (deprecated - kept for backward compatibility)
+        // Alternatives
         const alternatives = buildAlternatives(
           species,
           scoreBreakdown.finalScore,
