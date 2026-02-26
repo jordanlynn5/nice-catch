@@ -12,16 +12,16 @@ export function AboutPage() {
 
   const sources = [
     {
-      icon: '🔴',
+      icon: '•',
       label: 'IUCN Red List',
       desc: t('about.iucn_source'),
       citation: t('about.iucn_citation'),
       url: 'https://www.iucnredlist.org',
     },
-    { icon: '🐟', label: 'FishBase', desc: t('about.fishbase_source'), citation: null, url: null },
-    { icon: '🌀', label: 'Wolfram Alpha', desc: t('about.wolfram_source'), citation: null, url: null },
-    { icon: '🎣', label: 'FAO ASFIS', desc: t('about.fao_source'), citation: null, url: null },
-    { icon: '📦', label: 'Open Food Facts', desc: t('about.off_source'), citation: null, url: null },
+    { icon: '•', label: 'FishBase', desc: t('about.fishbase_source'), citation: null, url: null },
+    { icon: '•', label: 'Wolfram Alpha', desc: t('about.wolfram_source'), citation: null, url: null },
+    { icon: '•', label: 'FAO ASFIS', desc: t('about.fao_source'), citation: null, url: null },
+    { icon: '•', label: 'Open Food Facts', desc: t('about.off_source'), citation: null, url: null },
   ]
 
   return (

@@ -4,15 +4,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#309f9b',
-        secondary: '#80b8a2',
-        warm: '#f3cfa4',
-        deep: '#106c72',
-        earth: '#b97f5f',
-        danger: '#ef4444',
+        // Mediterranean Editorial Palette
+        azure: '#2563eb',        // Deep Mediterranean blue
+        ocean: '#0891b2',        // Coastal teal
+        sand: '#f5e6d3',         // Sun-bleached sand
+        terracotta: '#dc6b4a',   // Spanish roof tiles
+        olive: '#6b7c59',        // Mediterranean olive
+        navy: '#1e3a5f',         // Deep sea navy
+        cream: '#faf8f5',        // Warm white
+        coral: '#ff6b6b',        // Vibrant accent
+        // Legacy colors for compatibility
+        primary: '#0891b2',
+        secondary: '#6b7c59',
+        warm: '#f5e6d3',
+        deep: '#1e3a5f',
+        earth: '#dc6b4a',
+        danger: '#ff6b6b',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'system-ui', 'sans-serif'],
+        serif: ['Lora', 'Baskerville', 'Garamond', 'Georgia', 'serif'],
+        display: ['Lora', 'Baskerville', 'Garamond', 'serif'],
       },
       animation: {
         'needle-sweep': 'needle-sweep 0.8s ease-out forwards',

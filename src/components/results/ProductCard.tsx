@@ -22,61 +22,61 @@ export function ProductCard({ result, onChooseAlternative }: Props) {
   const bandColor = getBandColor(result.score.band)
 
   return (
-    <div className="space-y-3 pb-8">
-      {/* Header card */}
+    <div className="space-y-5 pb-8">
+      {/* Header card — elegant and spacious */}
       <div
-        className="rounded-2xl p-5 text-white space-y-1"
+        className="rounded-2xl p-8 text-white"
         style={{ background: `linear-gradient(135deg, ${bandColor}dd, ${bandColor})` }}
       >
-        <p className="text-xs font-medium uppercase tracking-wide opacity-80">
+        <p className="text-sm font-medium uppercase tracking-wider mb-3" style={{ opacity: 0.9 }}>
           {t('result.sustainability_score')}
         </p>
-        <h2 className="text-2xl font-bold">{result.displayName}</h2>
-        <p className="text-sm opacity-75 italic">{result.scientificName}</p>
+        <h2 className="font-serif text-3xl mb-2">{result.displayName}</h2>
+        <p className="text-base font-serif italic" style={{ opacity: 0.85 }}>{result.scientificName}</p>
       </div>
 
-      {/* Gauge */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center">
+      {/* Gauge — clean and centered */}
+      <div className="bg-white rounded-2xl p-8 shadow-md flex flex-col items-center">
         <SustainabilityGauge
           score={result.score.finalScore}
           band={result.score.band}
-          size={240}
+          size={260}
         />
-        <div className="flex gap-3 flex-wrap justify-center mt-2">
+        <div className="flex gap-3 flex-wrap justify-center mt-6">
           <CO2Badge co2={result.co2} />
           {result.iucnStatus && (
-            <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-gray-200 text-sm">
-              <span className="text-gray-500 text-xs">IUCN</span>
-              <span className="font-semibold text-gray-800">{t(`iucn.${result.iucnStatus}`)}</span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 text-base" style={{ borderColor: '#f5e6d3' }}>
+              <span className="text-sm" style={{ color: '#1e3a5f99' }}>IUCN</span>
+              <span className="font-semibold" style={{ color: '#1e3a5f' }}>{t(`iucn.${result.iucnStatus}`)}</span>
             </span>
           )}
         </div>
       </div>
 
-      {/* Key facts */}
+      {/* Key facts — larger text, better spacing */}
       {(result.fishingMethod || result.faoArea || result.productionMethod !== 'unknown') && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm grid grid-cols-2 gap-3">
+        <div className="bg-white rounded-2xl p-6 shadow-md grid grid-cols-2 gap-4">
           {result.productionMethod !== 'unknown' && (
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t('result.production')}</p>
-              <p className="text-sm font-semibold text-gray-800 mt-0.5">
+            <div className="rounded-xl p-4" style={{ backgroundColor: '#faf8f5' }}>
+              <p className="text-sm uppercase tracking-wider mb-2" style={{ color: '#1e3a5f99' }}>{t('result.production')}</p>
+              <p className="text-base font-semibold" style={{ color: '#1e3a5f' }}>
                 {result.productionMethod === 'farmed' ? t('result.farmed') : t('result.wild')}
               </p>
             </div>
           )}
           {result.faoArea && (
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t('result.catch_area')}</p>
-              <p className="text-sm font-semibold text-gray-800 mt-0.5">
+            <div className="rounded-xl p-4" style={{ backgroundColor: '#faf8f5' }}>
+              <p className="text-sm uppercase tracking-wider mb-2" style={{ color: '#1e3a5f99' }}>{t('result.catch_area')}</p>
+              <p className="text-base font-semibold mb-1" style={{ color: '#1e3a5f' }}>
                 FAO {result.faoArea}
               </p>
-              <p className="text-[10px] text-gray-500">{getAreaName(result.faoArea)}</p>
+              <p className="text-sm" style={{ color: '#1e3a5f99' }}>{getAreaName(result.faoArea)}</p>
             </div>
           )}
           {result.fishingMethod && (
-            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
-              <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t('result.fishing_method')}</p>
-              <p className="text-sm font-semibold text-gray-800 mt-0.5">
+            <div className="rounded-xl p-4 col-span-2" style={{ backgroundColor: '#faf8f5' }}>
+              <p className="text-sm uppercase tracking-wider mb-2" style={{ color: '#1e3a5f99' }}>{t('result.fishing_method')}</p>
+              <p className="text-base font-semibold" style={{ color: '#1e3a5f' }}>
                 {result.fishingMethod.replace(/_/g, ' ')}
               </p>
             </div>

@@ -40,16 +40,8 @@ interface WizardData {
 }
 
 function getCategoryEmoji(category: string): string {
-  const map: Record<string, string> = {
-    white_fish: '🐟',
-    fatty_fish: '🐠',
-    small_pelagic: '🐟',
-    large_pelagic: '🐡',
-    shellfish: '🦐',
-    bivalve: '🦪',
-    cephalopod: '🦑',
-  }
-  return map[category] ?? '🐟'
+  // Emojis removed for professional appearance
+  return ''
 }
 
 function productionMethodFromChoice(choice: ProductionChoice): ProductionMethod {
@@ -198,36 +190,39 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         />
 
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('scanner.search_placeholder')}
-            className="w-full pl-9 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 text-gray-800 bg-white text-sm"
+            className="w-full px-5 py-4 rounded-xl border-2 focus:outline-none focus:ring-2 bg-white text-base"
+            style={{
+              borderColor: '#f5e6d3',
+              color: '#1e3a5f'
+            }}
             autoFocus
             autoCapitalize="none"
             autoCorrect="off"
           />
           {searching && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#1e3a5f99' }}>
               {t('scanner.searching')}
             </span>
           )}
         </div>
 
         {results.length > 0 && (
-          <ul className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+          <ul className="bg-white rounded-xl shadow-md border-2 overflow-hidden" style={{ borderColor: '#f5e6d3' }}>
             {results.map((species) => (
               <li key={species.id}>
                 <button
                   onClick={() => selectSpecies(species)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-left border-b last:border-b-0 border-gray-50"
+                  className="w-full flex items-center gap-4 px-5 py-4 text-left border-b last:border-b-0 transition-colors hover:bg-cream"
+                  style={{ borderColor: '#f5e6d350' }}
                 >
-                  <span className="text-lg">{getCategoryEmoji(species.category)}</span>
-                  <div className="min-w-0">
-                    <p className="font-medium text-gray-800 text-sm">{displayName(species)}</p>
-                    <p className="text-xs text-gray-400 italic truncate">{species.names.scientific}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-serif text-lg mb-1" style={{ color: '#1e3a5f' }}>{displayName(species)}</p>
+                    <p className="text-sm italic truncate" style={{ color: '#1e3a5f99' }}>{species.names.scientific}</p>
                   </div>
                 </button>
               </li>
@@ -236,7 +231,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         )}
 
         {query.length >= 2 && !searching && results.length === 0 && (
-          <p className="text-center text-sm text-gray-500 py-4">{t('scanner.no_results')}</p>
+          <p className="text-center text-base py-6" style={{ color: '#1e3a5f99' }}>{t('scanner.no_results')}</p>
         )}
       </div>
     )
@@ -269,19 +264,18 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
 
         {/* Barcode detection summary — shows what was found vs what's missing */}
         {fromBarcode && (
-          <div className="bg-teal-50 border border-teal-100 rounded-xl px-3 py-2.5 text-xs text-teal-800">
-            <p className="font-semibold mb-1.5 flex items-center gap-1.5">
-              <span>📱</span>
-              <span>{t('wizard.barcode_detected')}</span>
+          <div className="border-2 rounded-xl px-4 py-3 text-sm" style={{ backgroundColor: '#0891b215', borderColor: '#0891b240' }}>
+            <p className="font-semibold mb-2" style={{ color: '#0891b2' }}>
+              {t('wizard.barcode_detected')}
             </p>
-            <ul className="space-y-0.5 ml-5">
-              <li>✓ {t('wizard.step1_title')} {data.species && displayName(data.species)}</li>
-              {barcodeProduction && <li>✓ {t('wizard.production_label')} {PRODUCTION_OPTIONS.find(o => o.value === barcodeProduction)?.label}</li>}
-              {barcodeFaoArea && <li>✓ {t('wizard.area_label')} {AREA_OPTIONS.find(a => a.faoCode === barcodeFaoArea)?.label}</li>}
-              {barcodeFishingMethod && <li>✓ {t('wizard.gear_label')} {GEAR_OPTIONS.find(g => g.key === barcodeFishingMethod)?.label}</li>}
+            <ul className="space-y-1" style={{ color: '#0891b2' }}>
+              <li>• {t('wizard.step1_title')} {data.species && displayName(data.species)}</li>
+              {barcodeProduction && <li>• {t('wizard.production_label')} {PRODUCTION_OPTIONS.find(o => o.value === barcodeProduction)?.label}</li>}
+              {barcodeFaoArea && <li>• {t('wizard.area_label')} {AREA_OPTIONS.find(a => a.faoCode === barcodeFaoArea)?.label}</li>}
+              {barcodeFishingMethod && <li>• {t('wizard.gear_label')} {GEAR_OPTIONS.find(g => g.key === barcodeFishingMethod)?.label}</li>}
             </ul>
             {(!barcodeProduction || (!barcodeFaoArea && !barcodeFishingMethod)) && (
-              <p className="font-semibold mt-2 mb-0.5">{t('wizard.barcode_missing')}</p>
+              <p className="font-semibold mt-2">{t('wizard.barcode_missing')}</p>
             )}
           </div>
         )}
@@ -297,7 +291,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               example={t('wizard.info_production_example')}
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {PRODUCTION_OPTIONS.map((opt) => {
               const isSelected = data.productionChoice === opt.value
               const isFromBarcode = fromBarcode && opt.value === barcodeProduction && isSelected
@@ -305,15 +299,16 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                 <button
                   key={opt.value}
                   onClick={() => setData((d) => ({ ...d, productionChoice: opt.value }))}
-                  className={`py-3 px-2 rounded-xl border text-xs font-medium text-center transition-colors ${
-                    isSelected
-                      ? 'bg-primary text-white border-primary'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary/40'
-                  }`}
+                  className="py-4 px-3 rounded-xl border-2 text-sm font-medium text-center transition-all active:scale-95"
+                  style={{
+                    backgroundColor: isSelected ? '#0891b2' : 'white',
+                    color: isSelected ? 'white' : '#1e3a5f',
+                    borderColor: isSelected ? '#0891b2' : '#f5e6d3'
+                  }}
                 >
                   {opt.label}
                   {isFromBarcode && (
-                    <span className="block text-[10px] mt-0.5 opacity-75">{t('wizard.from_barcode')}</span>
+                    <span className="block text-xs mt-1" style={{ opacity: 0.8 }}>{t('wizard.from_barcode')}</span>
                   )}
                 </button>
               )
@@ -505,7 +500,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
             onClick={() => setStep(3)}
             className="w-full bg-primary text-white py-3.5 rounded-xl font-semibold text-sm"
           >
-            {t('wizard.submit').replace('🌊', '').trim()} →
+            {t('wizard.submit').replace('🌊', '').replace('🏞️', '').trim()} →
           </button>
         )}
       </div>
@@ -574,7 +569,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                     selected ? 'border-white/60 bg-white/20 text-white' : 'border-gray-300 text-transparent'
                   }`}
                 >
-                  ✓
+                  •
                 </span>
                 <div>
                   <p className="font-semibold">{cert.label}</p>
@@ -601,7 +596,10 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
 
       <button
         onClick={handleSubmit}
-        className="w-full bg-gradient-to-r from-primary to-deep text-white py-4 rounded-xl font-semibold"
+        className="w-full text-white py-5 rounded-xl font-semibold text-lg shadow-lg active:scale-[0.98] transition-all"
+        style={{
+          background: 'linear-gradient(to right, #0891b2, #1e3a5f)'
+        }}
       >
         {t('wizard.submit')}
       </button>
@@ -626,29 +624,31 @@ function StepHeader({
   const { t } = useI18n()
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center gap-3">
+    <div className="space-y-4 mb-6">
+      <div className="flex items-center gap-4">
         {onBack ? (
-          <button type="button" onClick={onBack} className="text-primary text-sm font-medium">
-            {t('common.back')}
+          <button type="button" onClick={onBack} className="text-base font-medium" style={{ color: '#0891b2' }}>
+            ← {t('common.back')}
           </button>
         ) : (
           <div />
         )}
-        <div className="flex gap-1 ml-auto">
+        <div className="flex gap-2 ml-auto">
           {Array.from({ length: total }).map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i < step ? 'bg-primary w-6' : 'bg-gray-200 w-3'
-              }`}
+              className={`h-2 rounded-full transition-all duration-300`}
+              style={{
+                backgroundColor: i < step ? '#0891b2' : '#f5e6d3',
+                width: i < step ? '32px' : '16px'
+              }}
             />
           ))}
         </div>
       </div>
       <div>
-        <h2 className="text-lg font-bold text-gray-800">{title}</h2>
-        {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+        <h2 className="font-serif text-2xl mb-2" style={{ color: '#1e3a5f' }}>{title}</h2>
+        {subtitle && <p className="text-base" style={{ color: '#1e3a5f99' }}>{subtitle}</p>}
       </div>
     </div>
   )

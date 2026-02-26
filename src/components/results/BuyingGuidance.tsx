@@ -76,7 +76,7 @@ function GuidanceCard({ item }: { item: GuidanceItem }) {
           <ul className="space-y-1">
             {item.lookFor.map((key, index) => (
               <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
-                <span className="text-green-600 font-bold">✓</span>
+                <span className="text-green-600 font-bold text-xs">+</span>
                 <span>{t(key)}</span>
               </li>
             ))}
@@ -93,7 +93,7 @@ function GuidanceCard({ item }: { item: GuidanceItem }) {
           <ul className="space-y-1">
             {item.avoid.map((key, index) => (
               <li key={index} className="text-sm text-gray-700 flex items-start gap-2">
-                <span className="text-red-600 font-bold">✗</span>
+                <span className="text-red-600 font-bold text-xs">-</span>
                 <span>{t(key)}</span>
               </li>
             ))}

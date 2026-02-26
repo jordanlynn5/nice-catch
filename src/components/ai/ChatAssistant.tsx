@@ -55,7 +55,7 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
           {t('common.back')}
         </button>
         <div className="flex-1">
-          <h2 className="font-semibold text-gray-800">🤖 AI Assistant</h2>
+          <h2 className="font-semibold text-gray-800">AI Assistant</h2>
           <p className="text-xs text-gray-500">Fish sustainability helper</p>
         </div>
       </div>
@@ -99,7 +99,7 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
             onClick={() => onComplete(extractedData)}
             className="w-full bg-gradient-to-r from-primary to-deep text-white py-3.5 rounded-xl font-semibold"
           >
-            Calculate Score 🌊
+            Calculate Score
           </button>
         </div>
       )}
@@ -109,10 +109,13 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
         <div className="flex gap-2">
           <button
             onClick={() => setShowCamera(true)}
-            className="shrink-0 w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-lg active:scale-95 transition-transform"
+            className="shrink-0 w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center active:scale-95 transition-transform"
             disabled={loading}
           >
-            📷
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-600">
+              <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+            </svg>
           </button>
           <input
             ref={inputRef}

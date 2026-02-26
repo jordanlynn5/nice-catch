@@ -10,9 +10,9 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { useI18n } from '@/hooks/useI18n'
 
 const NAV_ITEMS = [
-  { path: '/', label_key: 'nav.scan', icon: '📷' },
-  { path: '/profile', label_key: 'nav.profile', icon: '🏆' },
-  { path: '/about', label_key: 'nav.about', icon: 'ℹ️' },
+  { path: '/', label_key: 'nav.scan', icon: '' },
+  { path: '/profile', label_key: 'nav.profile', icon: '' },
+  { path: '/about', label_key: 'nav.about', icon: '' },
 ] as const
 
 function BottomNav() {
@@ -26,20 +26,27 @@ function BottomNav() {
   }
 
   return (
-    <nav className="bg-white border-t border-gray-100 safe-area-inset-bottom">
-      <div className="flex items-center justify-around">
-        {NAV_ITEMS.map(({ path, label_key, icon }) => (
-          <button
-            key={path}
-            onClick={() => navigate(path)}
-            className={`flex flex-col items-center gap-0.5 py-3 px-5 text-xs font-medium transition-colors ${
-              isActive(path) ? 'text-primary' : 'text-gray-400'
-            }`}
-          >
-            <span className="text-xl leading-none">{icon}</span>
-            <span>{t(label_key)}</span>
-          </button>
-        ))}
+    <nav className="bg-white border-t safe-area-inset-bottom px-4 py-3" style={{ borderColor: '#f5e6d3' }}>
+      <div className="flex items-center justify-center gap-3">
+        {NAV_ITEMS.map(({ path, label_key }) => {
+          const active = isActive(path)
+          return (
+            <button
+              key={path}
+              onClick={() => navigate(path)}
+              className="flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all active:scale-95 shadow-sm"
+              style={{
+                backgroundColor: active ? '#0891b2' : 'white',
+                color: active ? 'white' : '#1e3a5f',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                borderColor: active ? '#0891b2' : '#f5e6d3'
+              }}
+            >
+              {t(label_key)}
+            </button>
+          )
+        })}
       </div>
     </nav>
   )
@@ -51,7 +58,6 @@ function TopBar() {
   return (
     <header className="bg-gradient-to-r from-deep to-primary text-white px-4 py-3 flex items-center justify-between safe-area-inset-top">
       <div className="flex items-center gap-2">
-        <span className="text-xl">🐟</span>
         <span className="font-bold text-base">{t('app_name')}</span>
       </div>
       <LanguageToggle />

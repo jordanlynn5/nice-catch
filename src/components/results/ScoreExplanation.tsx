@@ -115,26 +115,22 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
   const { t, language } = useI18n()
   const [expanded, setExpanded] = useState(false)
 
-  const bandExplanations: Record<string, { en: string; es: string; icon: string }> = {
+  const bandExplanations: Record<string, { en: string; es: string }> = {
     avoid: {
       en: 'This fish should be avoided. The environmental cost of consuming it is too high.',
       es: 'Este pescado debe evitarse. El costo ambiental de consumirlo es demasiado alto.',
-      icon: '🚫',
     },
     think_twice: {
       en: 'Consider alternatives. This choice has significant environmental concerns.',
       es: 'Considera alternativas. Esta elección tiene importantes preocupaciones ambientales.',
-      icon: '⚠️',
     },
     good_choice: {
       en: 'This is a reasonable choice with moderate environmental impact.',
       es: 'Esta es una elección razonable con impacto ambiental moderado.',
-      icon: '👍',
     },
     best_choice: {
       en: 'Excellent choice! This is one of the most sustainable options available.',
       es: '¡Excelente elección! Esta es una de las opciones más sostenibles disponibles.',
-      icon: '🌟',
     },
   }
 
@@ -148,7 +144,6 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
     <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-4 shadow-sm space-y-3">
       {/* Header */}
       <div className="flex items-start gap-3">
-        <span className="text-2xl">{bandInfo.icon}</span>
         <div className="flex-1">
           <h3 className="font-semibold text-gray-800 text-sm mb-1">
             {t('result.why_this_score')}
@@ -171,7 +166,6 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
           {/* IUCN explanation */}
           <div className="bg-white/60 rounded-xl p-3">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">🐟</span>
               <h4 className="font-semibold text-xs text-gray-700">
                 {t('result.population_status')}
               </h4>
@@ -181,9 +175,9 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
             </p>
             {breakdown.iucnBase < 30 && (
               <p className="text-xs text-danger font-medium mt-1">
-                {language === 'en'
-                  ? '⚠️ This species is under pressure - choose alternatives when possible.'
-                  : '⚠️ Esta especie está bajo presión - elige alternativas cuando sea posible.'}
+                <span className="font-bold">Warning:</span> {language === 'en'
+                  ? 'This species is under pressure - choose alternatives when possible.'
+                  : 'Esta especie está bajo presión - elige alternativas cuando sea posible.'}
               </p>
             )}
           </div>
@@ -192,9 +186,7 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
           {methodExplanation && (
             <div className="bg-white/60 rounded-xl p-3">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">
-                  {methodExplanation.impact === 'positive' ? '✅' : methodExplanation.impact === 'negative' ? '❌' : '⚖️'}
-                </span>
+                <div className={`w-3 h-3 rounded-full ${methodExplanation.impact === 'positive' ? 'bg-green-500' : methodExplanation.impact === 'negative' ? 'bg-red-500' : 'bg-gray-400'}`} />
                 <h4 className="font-semibold text-xs text-gray-700">
                   {t('result.fishing_method')}
                 </h4>
@@ -209,7 +201,6 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
           {faoArea && breakdown.areaModifier !== 0 && (
             <div className="bg-white/60 rounded-xl p-3">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">🌊</span>
                 <h4 className="font-semibold text-xs text-gray-700">
                   {t('result.catch_area')}
                 </h4>
@@ -229,9 +220,9 @@ export function ScoreExplanation({ breakdown, iucnStatus, fishingMethod, faoArea
           {/* Bottom line */}
           <div className="bg-white/80 rounded-xl p-3 border-l-4 border-primary">
             <p className="text-xs font-medium text-gray-800">
-              {language === 'en'
-                ? '💡 Your choices matter! Each sustainable purchase supports responsible fishing and healthy oceans.'
-                : '💡 ¡Tus elecciones importan! Cada compra sostenible apoya la pesca responsable y océanos saludables.'}
+              <span className="font-bold">Tip:</span> {language === 'en'
+                ? 'Your choices matter! Each sustainable purchase supports responsible fishing and healthy oceans.'
+                : '¡Tus elecciones importan! Cada compra sostenible apoya la pesca responsable y océanos saludables.'}
             </p>
           </div>
         </div>

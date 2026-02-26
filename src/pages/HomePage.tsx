@@ -30,7 +30,6 @@ export function HomePage() {
   const profile = useGameification().getProfile()
 
   const handleBarcode = async (barcode: string) => {
-    // Return cached result immediately (no wizard needed for repeat scans)
     const cached = await getProductCache(barcode)
     if (cached) {
       setCurrentResult(cached)
@@ -38,7 +37,6 @@ export function HomePage() {
       return
     }
 
-    // Phase 1: identify species from barcode via Open Food Facts
     setLooking(true)
     try {
       const label = await lookupBarcode(barcode)
@@ -47,7 +45,6 @@ export function HomePage() {
       const species = speciesId ? getSpeciesById(speciesId) : null
 
       if (species) {
-        // Species identified — hand off to wizard steps 2-3 for context
         setBarcodeSpecies(species)
         setBarcodeLabel(label)
         setMode('barcode_wizard')
@@ -85,7 +82,7 @@ export function HomePage() {
 
   if (loading || looking) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center bg-cream">
         <LoadingSpinner message={looking ? t('scanner.searching') : t('scanner.calculating')} size="lg" />
       </div>
     )
@@ -93,10 +90,10 @@ export function HomePage() {
 
   if (mode === 'barcode_wizard' && barcodeSpecies) {
     return (
-      <div className="flex-1 flex flex-col p-4">
+      <div className="flex-1 flex flex-col p-6 bg-cream">
         <button
           onClick={() => { setBarcodeSpecies(null); setBarcodeLabel(null); setMode('barcode') }}
-          className="self-start text-primary mb-4"
+          className="self-start text-ocean mb-4 font-serif italic"
         >
           {t('common.back')}
         </button>
@@ -111,8 +108,8 @@ export function HomePage() {
 
   if (mode === 'barcode') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
+      <div className="flex-1 flex flex-col p-6 bg-cream">
+        <button onClick={() => setMode('home')} className="self-start text-ocean mb-4 font-serif italic">{t('common.back')}</button>
         <BarcodeScanner
           onDetected={handleBarcode}
           onFallbackCamera={() => setMode('camera')}
@@ -124,8 +121,8 @@ export function HomePage() {
 
   if (mode === 'camera') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
+      <div className="flex-1 flex flex-col p-6 bg-cream">
+        <button onClick={() => setMode('home')} className="self-start text-ocean mb-4 font-serif italic">{t('common.back')}</button>
         <CameraCapture
           onResult={handleCameraLabel}
           onFallback={() => setMode('manual')}
@@ -136,9 +133,9 @@ export function HomePage() {
 
   if (mode === 'manual') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">{t('common.back')}</button>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('home.manual_search')}</h2>
+      <div className="flex-1 flex flex-col p-6 bg-cream">
+        <button onClick={() => setMode('home')} className="self-start text-ocean mb-4 font-serif italic">{t('common.back')}</button>
+        <h2 className="text-2xl font-serif text-navy mb-6">{t('home.manual_search')}</h2>
         <ManualSearch onSelect={handleSpeciesSelect} />
       </div>
     )
@@ -153,88 +150,189 @@ export function HomePage() {
     )
   }
 
-  // Home screen
+  // ═══════════════════════════════════════════════════════════════
+  // HOME SCREEN — MINIMALIST MEDITERRANEAN
+  // Clean hierarchy, maximum legibility, elegant spacing
+  // ═══════════════════════════════════════════════════════════════
   return (
-    <div className="flex-1 flex flex-col p-5 space-y-6">
-      {/* Hero */}
-      <div className="text-center space-y-2 pt-4">
-        <h1 className="text-2xl font-bold text-deep">{t('home.title')}</h1>
-        <p className="text-sm text-gray-500">{t('home.subtitle')}</p>
+    <div className="flex-1 flex flex-col bg-cream">
+      {/* Simplified header — clean gradient */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#1e3a5f] to-[#0891b2] pt-10 pb-10 px-8">
+        {/* Subtle wave decoration */}
+        <div className="absolute inset-0 opacity-10">
+          <svg className="absolute bottom-0 w-full h-24" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,60 C300,90 600,30 900,60 L900,120 L0,120 Z" fill="white" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 max-w-md">
+          <h1 className="font-display text-4xl text-white leading-tight mb-3">
+            {t('home.title')}
+          </h1>
+          <p className="text-white/95 text-lg leading-relaxed">
+            {t('home.subtitle')}
+          </p>
+        </div>
       </div>
 
-      {/* Main scan button */}
-      <button
-        onClick={() => setMode('barcode')}
-        className="w-full bg-gradient-to-r from-primary to-deep text-white py-5 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 shadow-lg active:scale-98 transition-transform"
-      >
-        <span className="text-2xl">📷</span>
-        {t('home.scan_barcode')}
-      </button>
+      {/* Main content — generous spacing */}
+      <div className="flex-1 px-6 pt-6 pb-8 space-y-5">
 
-      {/* Secondary actions */}
-      <div className="grid grid-cols-2 gap-3">
+        {/* Primary action — prominent and clear */}
         <button
-          onClick={() => setMode('camera')}
-          className="bg-secondary/20 text-deep py-4 rounded-xl font-medium text-sm flex flex-col items-center gap-1"
+          onClick={() => setMode('barcode')}
+          className="w-full bg-white rounded-2xl shadow-xl p-8 active:scale-[0.98] transition-all hover:shadow-2xl group"
         >
-          <span className="text-xl">🏷️</span>
-          {t('home.capture_label')}
-        </button>
-        <button
-          onClick={() => setMode('manual')}
-          className="bg-warm text-deep py-4 rounded-xl font-medium text-sm flex flex-col items-center gap-1"
-        >
-          <span className="text-xl">🔍</span>
-          {t('home.manual_search')}
-        </button>
-      </div>
-
-      {/* AI Assistant - prominent placement */}
-      <button
-        onClick={() => setMode('ai_assistant')}
-        className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md active:scale-98 transition-transform"
-      >
-        <span className="text-xl">🤖</span>
-        Ask AI Assistant
-      </button>
-
-      {/* Recent scans */}
-      {profile.history.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700 text-sm">{t('home.recent_scans')}</h2>
-          <div className="space-y-2">
-            {profile.history.slice(0, 3).map((entry, i) => (
-              <div key={i} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                  style={{
-                    backgroundColor:
-                      entry.score >= 76 ? '#106c72' :
-                      entry.score >= 51 ? '#80b8a2' :
-                      entry.score >= 26 ? '#b97f5f' : '#ef4444',
-                  }}
-                >
-                  {entry.score}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{entry.displayName}</p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(entry.timestamp).toLocaleDateString('es-ES')}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0" style={{
+              background: 'linear-gradient(to bottom right, #0891b2, #2563eb)'
+            }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="2"/>
+                <circle cx="12" cy="12" r="3" stroke="white" strokeWidth="2"/>
+              </svg>
+            </div>
+            <div className="text-left flex-1">
+              <h3 className="font-serif text-2xl mb-2 transition-colors" style={{ color: '#1e3a5f' }}>
+                {t('home.scan_barcode')}
+              </h3>
+              <p className="text-base" style={{ color: '#1e3a5fb3' }}>Quick sustainability check</p>
+            </div>
+            <div className="text-3xl group-hover:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#0891b2' }}>→</div>
           </div>
-        </div>
-      )}
+        </button>
 
-      {profile.history.length === 0 && (
-        <div className="text-center py-6">
-          <p className="text-4xl mb-2">🌊</p>
-          <p className="text-sm text-gray-500">{t('home.no_recent_scans')}</p>
-          <p className="text-sm font-medium text-primary mt-1">{t('home.start_scanning')}</p>
+        {/* Secondary actions — balanced grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={() => setMode('camera')}
+            className="bg-white rounded-xl p-6 text-left border-2 active:scale-95 transition-all hover:shadow-lg group"
+            style={{ borderColor: '#f5e6d3' }}
+          >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#dc6b4a26' }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M3 8 L3 18 C3 19 4 20 5 20 L19 20 C20 20 21 19 21 18 L21 8 C21 7 20 6 19 6 L17 6 L16 4 L8 4 L7 6 L5 6 C4 6 3 7 3 8 Z" stroke="#dc6b4a" strokeWidth="2"/>
+                <circle cx="12" cy="13" r="3" stroke="#dc6b4a" strokeWidth="2"/>
+              </svg>
+            </div>
+            <h4 className="font-serif text-lg mb-2 leading-tight" style={{ color: '#1e3a5f' }}>
+              {t('home.capture_label')}
+            </h4>
+            <p className="text-sm" style={{ color: '#1e3a5fb3' }}>Photo analysis</p>
+          </button>
+
+          <button
+            onClick={() => setMode('manual')}
+            className="bg-white rounded-xl p-6 text-left border-2 active:scale-95 transition-all hover:shadow-lg group"
+            style={{ borderColor: '#f5e6d3' }}
+          >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#0891b226' }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="#0891b2" strokeWidth="2"/>
+                <path d="M16 16 L21 21" stroke="#0891b2" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h4 className="font-serif text-lg mb-2 leading-tight" style={{ color: '#1e3a5f' }}>
+              {t('home.manual_search')}
+            </h4>
+            <p className="text-sm" style={{ color: '#1e3a5fb3' }}>Search by name</p>
+          </button>
         </div>
-      )}
+
+        {/* AI Assistant — clear accent */}
+        <button
+          onClick={() => setMode('ai_assistant')}
+          className="w-full text-white rounded-xl p-6 active:scale-[0.98] transition-all shadow-lg hover:shadow-xl"
+          style={{
+            background: 'linear-gradient(to right, #2563eb, #0891b2)'
+          }}
+        >
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="7" cy="12" r="2" fill="white"/>
+                <circle cx="17" cy="12" r="2" fill="white"/>
+                <path d="M8 16 Q12 18, 16 16" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/>
+              </svg>
+            </div>
+            <span className="font-serif text-xl">Ask AI Assistant</span>
+          </div>
+        </button>
+
+        {/* Recent scans — clean list */}
+        {profile.history.length > 0 && (
+          <div className="bg-white rounded-2xl p-6 shadow-md mt-8">
+            <h2 className="font-serif text-xl mb-5" style={{ color: '#1e3a5f' }}>Recent Scans</h2>
+
+            <div className="space-y-4">
+              {profile.history.slice(0, 3).map((entry, i) => {
+                const scoreColor =
+                  entry.score >= 76 ? '#1e3a5f' :
+                  entry.score >= 51 ? '#6b7c59' :
+                  entry.score >= 26 ? '#dc6b4a' : '#ff6b6b'
+
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center gap-5 pb-4 border-b border-sand/50 last:border-0"
+                  >
+                    {/* Score badge — clear and bold */}
+                    <div
+                      className="w-16 h-16 rounded-xl flex items-center justify-center relative flex-shrink-0"
+                      style={{
+                        background: `linear-gradient(135deg, ${scoreColor}20, ${scoreColor}10)`
+                      }}
+                    >
+                      <div
+                        className="absolute inset-2 rounded-lg border-2"
+                        style={{ borderColor: scoreColor }}
+                      />
+                      <span
+                        className="font-display text-2xl font-medium relative z-10"
+                        style={{ color: scoreColor }}
+                      >
+                        {entry.score}
+                      </span>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <p className="font-serif text-lg truncate mb-1" style={{ color: '#1e3a5f' }}>
+                        {entry.displayName}
+                      </p>
+                      <p className="text-sm" style={{ color: '#1e3a5f99' }}>
+                        {new Date(entry.timestamp).toLocaleDateString('es-ES', {
+                          day: 'numeric',
+                          month: 'long'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Empty state — clean and minimal */}
+        {profile.history.length === 0 && (
+          <div className="text-center py-16 bg-white rounded-2xl shadow-sm mt-8">
+            <div className="inline-flex w-24 h-24 rounded-2xl items-center justify-center mb-6" style={{
+              background: 'linear-gradient(to bottom right, #0891b21a, #2563eb1a)'
+            }}>
+              <svg width="48" height="48" viewBox="0 0 40 40" fill="none">
+                <path d="M6 20 Q12 16, 18 20 T30 20" stroke="#0891b2" strokeWidth="3" strokeLinecap="round" fill="none"/>
+                <path d="M6 26 Q12 22, 18 26 T30 26" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.6"/>
+              </svg>
+            </div>
+            <p className="font-serif text-xl mb-2" style={{ color: '#1e3a5f' }}>
+              {t('home.no_recent_scans')}
+            </p>
+            <p className="text-base" style={{ color: '#1e3a5f99' }}>
+              {t('home.start_scanning')}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

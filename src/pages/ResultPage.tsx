@@ -39,22 +39,23 @@ export function ResultPage() {
   if (!currentResult) return null
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+    <div className="flex-1 flex flex-col bg-cream">
+      {/* Clean header bar */}
+      <div className="flex items-center justify-between px-6 py-5 bg-white border-b" style={{ borderColor: '#f5e6d3' }}>
         <button
           onClick={() => navigate('/')}
-          className="text-primary text-sm font-medium"
+          className="text-base font-medium flex items-center gap-2"
+          style={{ color: '#0891b2' }}
         >
           ← {t('nav.scan')}
         </button>
-        <button onClick={handleShare} className="text-primary text-sm font-medium">
+        <button onClick={handleShare} className="text-base font-medium" style={{ color: '#0891b2' }}>
           {t('result.share')}
         </button>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4">
+      <div className="flex-1 overflow-y-auto px-6 py-6">
         <ProductCard result={currentResult} />
       </div>
 

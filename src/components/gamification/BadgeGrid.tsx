@@ -20,8 +20,8 @@ export function BadgeGrid({ earnedBadges }: Props) {
 
     const text =
       language === 'es'
-        ? `¡Acabo de ganar el badge "${badge.name_es}" en Nice Catch! 🌊🐟 #NiceCatch #Sostenibilidad`
-        : `Just earned the "${badge.name_en}" badge in Nice Catch! 🌊🐟 #NiceCatch #Sustainability`
+        ? `¡Acabo de ganar el badge "${badge.name_es}" en Nice Catch! #NiceCatch #Sostenibilidad`
+        : `Just earned the "${badge.name_en}" badge in Nice Catch! #NiceCatch #Sustainability`
 
     if (navigator.share) {
       try {

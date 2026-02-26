@@ -12,7 +12,9 @@ export function ScanHistory({ history }: Props) {
   if (history.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-3xl mb-2">🐟</p>
+        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
+          <span className="text-gray-400 text-xl font-bold">0</span>
+        </div>
         <p className="text-sm text-gray-500">{t('gamification.no_history')}</p>
       </div>
     )

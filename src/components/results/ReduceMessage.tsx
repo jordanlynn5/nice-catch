@@ -27,7 +27,7 @@ export function ReduceMessage({ species, region = 'mediterranean' }: Props) {
   return (
     <div className="bg-earth/10 border border-earth/30 rounded-2xl p-4 space-y-3">
       <div className="flex items-start gap-2">
-        <span className="text-xl">⚠️</span>
+        <div className="w-5 h-5 rounded-full bg-earth/20 flex items-center justify-center text-earth font-bold text-xs shrink-0">!</div>
         <div>
           <h3 className="font-semibold text-earth text-sm">{t('result.no_alternative_title')}</h3>
           <p className="text-xs text-gray-600 mt-1">{species.notes_es}</p>
@@ -37,7 +37,7 @@ export function ReduceMessage({ species, region = 'mediterranean' }: Props) {
       {seasonal && seasonal.best.length > 0 && (
         <div className="border-t border-earth/20 pt-3">
           <p className="text-xs font-medium text-gray-700 mb-1">
-            🗓️ {t('result.best_season')}
+            {t('result.best_season')}
           </p>
           <div className="flex flex-wrap gap-1">
             {seasonal.best.map((m) => (
@@ -59,7 +59,7 @@ export function ReduceMessage({ species, region = 'mediterranean' }: Props) {
       {seasonal && seasonal.avoid.length > 0 && (
         <div>
           <p className="text-xs font-medium text-gray-700 mb-1">
-            🚫 {t('result.avoid_season')}
+            {t('result.avoid_season')}
           </p>
           <div className="flex flex-wrap gap-1">
             {seasonal.avoid.map((m) => (
@@ -80,7 +80,7 @@ export function ReduceMessage({ species, region = 'mediterranean' }: Props) {
 
       <div className="bg-white/60 rounded-xl p-3 border border-earth/20">
         <p className="text-xs text-gray-700">
-          💡 {t('result.reduce_consumption')}
+          <span className="font-bold">Tip:</span> {t('result.reduce_consumption')}
         </p>
       </div>
     </div>
