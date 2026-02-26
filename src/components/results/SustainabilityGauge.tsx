@@ -81,15 +81,10 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
   }, [score, shouldAnimate, labelVisible])
 
   const cx = size / 2
-  const cy = size * 0.58
+  const cy = size * 0.52
   const r = size * 0.38
-  const strokeWidth = size * 0.08
+  const strokeWidth = size * 0.1
   const color = MEDITERRANEAN_BANDS[band]
-  const needleAngle = scoreToAngle(displayScore)
-
-  const needleTip = polarToXY(needleAngle - 90, r + 8, cx, cy)
-  const needleBase1 = polarToXY(needleAngle - 90 + 92, strokeWidth * 0.15, cx, cy)
-  const needleBase2 = polarToXY(needleAngle - 90 - 92, strokeWidth * 0.15, cx, cy)
 
   // ═══════════════════════════════════════════════════════════════
   // MEDITERRANEAN EDITORIAL GAUGE — Refined & Elegant
@@ -107,23 +102,30 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
 
         <svg
           width={size}
-          height={size * 0.7}
-          viewBox={`0 0 ${size} ${size * 0.7}`}
+          height={size * 0.65}
+          viewBox={`0 0 ${size} ${size * 0.65}`}
           aria-label={`Puntuación de sostenibilidad: ${displayScore}`}
           role="img"
         >
-          {/* Background arcs — subtle and refined */}
-          {BAND_SEGMENTS.map((seg) => (
-            <path
-              key={seg.band}
-              d={describeArc(cx, cy, r, -180 + (seg.start / 100) * 180, -180 + (seg.end / 100) * 180)}
-              fill="none"
-              stroke={seg.color}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              opacity={0.12}
-            />
-          ))}
+          {/* Background arcs — subtle and refined with gaps */}
+          {BAND_SEGMENTS.map((seg, idx) => {
+            const startAngle = -180 + (seg.start / 100) * 180
+            const endAngle = -180 + (seg.end / 100) * 180
+            // Add small gap between segments (1.5 degrees)
+            const gapAdjustStart = idx > 0 ? 0.75 : 0
+            const gapAdjustEnd = idx < BAND_SEGMENTS.length - 1 ? -0.75 : 0
+            return (
+              <path
+                key={seg.band}
+                d={describeArc(cx, cy, r, startAngle + gapAdjustStart, endAngle + gapAdjustEnd)}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth={strokeWidth}
+                strokeLinecap="round"
+                opacity={0.15}
+              />
+            )
+          })}
 
           {/* Active score arc — elegant with gradient */}
           <defs>
@@ -140,35 +142,20 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
             </filter>
           </defs>
 
+          {/* Active score arc — bold and clear */}
           <path
             d={describeArc(cx, cy, r, -180, -180 + (displayScore / 100) * 180)}
             fill="none"
-            stroke={`url(#scoreGradient-${band})`}
+            stroke={color}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
-            filter="url(#glow)"
+            opacity={0.95}
           />
 
-          {/* Refined needle — slender and elegant */}
-          <line
-            x1={cx}
-            y1={cy}
-            x2={needleTip.x}
-            y2={needleTip.y}
-            stroke={color}
-            strokeWidth={3}
-            strokeLinecap="round"
-            opacity={0.9}
-          />
-
-          {/* Center hub — double circle */}
-          <circle cx={cx} cy={cy} r={strokeWidth * 0.5} fill="white" stroke={color} strokeWidth={2} />
-          <circle cx={cx} cy={cy} r={strokeWidth * 0.25} fill={color} />
-
-          {/* Score display — editorial typography */}
+          {/* Score display — editorial typography, centered */}
           <text
             x={cx}
-            y={cy - r * 0.4}
+            y={cy - r * 0.2}
             textAnchor="middle"
             dominantBaseline="middle"
             className="font-display"
@@ -184,13 +171,13 @@ export function SustainabilityGauge({ score, band, size = 260, animate = true }:
 
           <text
             x={cx}
-            y={cy - r * 0.15}
+            y={cy + r * 0.05}
             textAnchor="middle"
             dominantBaseline="middle"
             style={{
               fontSize: size * 0.05,
               fill: color,
-              opacity: 0.5,
+              opacity: 0.6,
               letterSpacing: '0.15em'
             }}
           >

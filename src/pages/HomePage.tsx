@@ -178,27 +178,29 @@ export function HomePage() {
       {/* Main content — generous spacing */}
       <div className="flex-1 px-6 pt-6 pb-8 space-y-5">
 
-        {/* Primary action — prominent and clear */}
+        {/* AI Assistant — primary action, prominent */}
         <button
-          onClick={() => setMode('barcode')}
-          className="w-full bg-white rounded-2xl shadow-xl p-8 active:scale-[0.98] transition-all hover:shadow-2xl group"
+          onClick={() => setMode('ai_assistant')}
+          className="w-full text-white rounded-2xl p-8 active:scale-[0.98] transition-all shadow-xl hover:shadow-2xl"
+          style={{
+            background: 'linear-gradient(to right, #2563eb, #0891b2)'
+          }}
         >
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0" style={{
-              background: 'linear-gradient(to bottom right, #0891b2, #2563eb)'
-            }}>
+            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0 shadow-lg">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="2"/>
-                <circle cx="12" cy="12" r="3" stroke="white" strokeWidth="2"/>
+                <circle cx="7" cy="12" r="2.5" fill="white"/>
+                <circle cx="17" cy="12" r="2.5" fill="white"/>
+                <path d="M8 16 Q12 18, 16 16" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
               </svg>
             </div>
             <div className="text-left flex-1">
-              <h3 className="font-serif text-2xl mb-2 transition-colors" style={{ color: '#1e3a5f' }}>
-                {t('home.scan_barcode')}
+              <h3 className="font-serif text-2xl text-white mb-2">
+                Ask AI Assistant
               </h3>
-              <p className="text-base" style={{ color: '#1e3a5fb3' }}>Quick sustainability check</p>
+              <p className="text-base text-white/90">Conversational fish identification</p>
             </div>
-            <div className="text-3xl group-hover:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#0891b2' }}>→</div>
+            <div className="text-3xl text-white group-hover:translate-x-1 transition-transform flex-shrink-0">→</div>
           </div>
         </button>
 
@@ -239,23 +241,25 @@ export function HomePage() {
           </button>
         </div>
 
-        {/* AI Assistant — clear accent */}
+        {/* Scan barcode — tertiary option, less prominent */}
         <button
-          onClick={() => setMode('ai_assistant')}
-          className="w-full text-white rounded-xl p-6 active:scale-[0.98] transition-all shadow-lg hover:shadow-xl"
-          style={{
-            background: 'linear-gradient(to right, #2563eb, #0891b2)'
-          }}
+          onClick={() => setMode('barcode')}
+          className="w-full bg-white rounded-xl p-5 border-2 active:scale-95 transition-all hover:shadow-md group"
+          style={{ borderColor: '#f5e6d3' }}
         >
-          <div className="flex items-center justify-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0891b226' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="7" cy="12" r="2" fill="white"/>
-                <circle cx="17" cy="12" r="2" fill="white"/>
-                <path d="M8 16 Q12 18, 16 16" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="#0891b2" strokeWidth="2"/>
+                <circle cx="12" cy="12" r="3" stroke="#0891b2" strokeWidth="2"/>
               </svg>
             </div>
-            <span className="font-serif text-xl">Ask AI Assistant</span>
+            <div className="text-left flex-1">
+              <h4 className="font-serif text-lg mb-1" style={{ color: '#1e3a5f' }}>
+                {t('home.scan_barcode')}
+              </h4>
+              <p className="text-sm" style={{ color: '#1e3a5f99' }}>Quick barcode scan</p>
+            </div>
           </div>
         </button>
 
