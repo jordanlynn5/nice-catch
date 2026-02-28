@@ -34,7 +34,7 @@ function BottomNav() {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className="flex-1 py-3 px-4 rounded-xl font-medium text-sm transition-all active:scale-95 shadow-sm"
+              className="flex-1 py-3 px-2 sm:px-4 rounded-xl font-medium text-xs sm:text-sm transition-all active:scale-95 shadow-sm"
               style={{
                 backgroundColor: active ? '#0891b2' : 'white',
                 color: active ? 'white' : '#1e3a5f',
@@ -66,11 +66,14 @@ function TopBar() {
 }
 
 export function App() {
+  const location = useLocation()
+  const isHomePage = location.pathname === '/'
+
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50 flex flex-col max-w-lg mx-auto">
+      <div className="min-h-dvh bg-gray-50 flex flex-col responsive-container">
         <OfflineBanner />
-        <TopBar />
+        {!isHomePage && <TopBar />}
         <main className="flex-1 flex flex-col overflow-hidden">
           <ErrorBoundary>
             <Routes>
@@ -81,7 +84,7 @@ export function App() {
             </Routes>
           </ErrorBoundary>
         </main>
-        <BottomNav />
+        {!isHomePage && <BottomNav />}
         <ToastContainer />
       </div>
     </ErrorBoundary>

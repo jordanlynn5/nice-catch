@@ -1,3 +1,6 @@
+/* Ocean Theme Design System */
+@import './styles/ocean-theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,6 +19,18 @@
   * {
     box-sizing: border-box;
   }
+
+  :root {
+    --page-px: 1rem;
+    --page-py: 1.5rem;
+    --card-p: 1rem;
+  }
+  @media (min-width: 768px) {
+    :root { --page-px: 2rem; --page-py: 2rem; --card-p: 1.5rem; }
+  }
+  @media (min-width: 1280px) {
+    :root { --page-px: 3rem; --page-py: 2.5rem; --card-p: 2rem; }
+  }
 }
 
 @layer utilities {
@@ -26,4 +41,14 @@
   .safe-area-inset-bottom {
     padding-bottom: max(env(safe-area-inset-bottom), 0px);
   }
+
+  .responsive-container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media (min-width: 768px) { .responsive-container { max-width: 720px; } }
+  @media (min-width: 1024px) { .responsive-container { max-width: 960px; } }
+  @media (min-width: 1280px) { .responsive-container { max-width: 1140px; } }
 }

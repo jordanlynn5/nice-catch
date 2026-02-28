@@ -21,7 +21,15 @@ export function OceanScore({ score }: Props) {
   }, [score])
 
   return (
-    <div className="bg-gradient-to-br from-deep to-primary text-white rounded-2xl p-5 text-center space-y-1">
+    <div
+      className="text-white rounded-2xl p-5 text-center space-y-1"
+      style={{
+        background: 'var(--glass-primary-bg)',
+        backdropFilter: 'var(--glass-primary-blur)',
+        border: '2px solid var(--glass-primary-border)',
+        boxShadow: 'var(--glass-primary-shadow)'
+      }}
+    >
       <p className="text-xs font-medium uppercase tracking-wider opacity-75">{t('gamification.ocean_score')}</p>
       <p className="text-5xl font-bold">{displayed.toLocaleString()}</p>
       <p className="text-xs opacity-60">{t('gamification.ocean_points')}</p>

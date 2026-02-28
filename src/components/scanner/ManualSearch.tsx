@@ -181,7 +181,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
   // ── Step 1: Species search ───────────────────────────────────────────────
   if (step === 1) {
     return (
-      <div className="w-full max-w-sm mx-auto space-y-4">
+      <div className="w-full max-w-sm md:max-w-lg lg:max-w-xl mx-auto space-y-4">
         <StepHeader
           step={1}
           total={3}
@@ -226,7 +226,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         )}
 
         {query.length >= 2 && !searching && results.length === 0 && (
-          <p className="text-center text-base py-6" style={{ color: '#1e3a5f99' }}>{t('scanner.no_results')}</p>
+          <p className="text-center text-base py-6 text-white/90">{t('scanner.no_results')}</p>
         )}
       </div>
     )
@@ -241,7 +241,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
     const canProceed = data.productionChoice !== null
 
     return (
-      <div className="w-full max-w-sm mx-auto space-y-5">
+      <div className="w-full max-w-sm md:max-w-lg lg:max-w-xl mx-auto space-y-5">
         <StepHeader
           step={2}
           total={3}
@@ -278,7 +278,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         {/* Production method */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-gray-700">{t('wizard.production_label')}</p>
+            <p className="text-sm font-semibold text-white">{t('wizard.production_label')}</p>
             <InfoDrawer
               title={t('wizard.info_production_title')}
               meaning={t('wizard.info_production_meaning')}
@@ -286,7 +286,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
               example={t('wizard.info_production_example')}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {PRODUCTION_OPTIONS.map((opt) => {
               const isSelected = data.productionChoice === opt.value
               const isFromBarcode = fromBarcode && opt.value === barcodeProduction && isSelected
@@ -315,7 +315,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         {isWild && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-700">{t('wizard.area_label')}</p>
+              <p className="text-sm font-semibold text-white">{t('wizard.area_label')}</p>
               <InfoDrawer
                 title={t('wizard.info_area_title')}
                 meaning={t('wizard.info_area_meaning')}
@@ -380,7 +380,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         {isWild && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-700">{t('wizard.gear_label')}</p>
+              <p className="text-sm font-semibold text-white">{t('wizard.gear_label')}</p>
               <InfoDrawer
                 title={t('wizard.info_gear_title')}
                 meaning={t('wizard.info_gear_meaning')}
@@ -406,7 +406,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                     }`}
                   >
                     <span>{gear.label}</span>
-                    <span className={`text-xs ml-2 shrink-0 ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
+                    <span className={`text-xs ml-2 shrink-0 ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
                       {isFromBarcode ? t('wizard.from_barcode') : gear.impact}
                     </span>
                   </button>
@@ -438,7 +438,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
         {isFarmed && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-gray-700">{t('wizard.origin_label')}</p>
+              <p className="text-sm font-semibold text-white">{t('wizard.origin_label')}</p>
               <InfoDrawer
                 title={t('wizard.info_origin_title')}
                 meaning={t('wizard.info_origin_meaning')}
@@ -523,7 +523,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
       : t('wizard.summary_unknown')
 
   return (
-    <div className="w-full max-w-sm mx-auto space-y-5">
+    <div className="w-full max-w-sm md:max-w-lg lg:max-w-xl mx-auto space-y-5">
       <StepHeader
         step={3}
         total={3}
@@ -544,7 +544,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
       {/* Certifications */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-gray-700">{t('wizard.cert_label')}</p>
+          <p className="text-sm font-semibold text-white">{t('wizard.cert_label')}</p>
           <InfoDrawer
             title={t('wizard.info_cert_title')}
             meaning={t('wizard.info_cert_meaning')}
@@ -575,7 +575,7 @@ export function ManualSearch({ onSelect, initialSpecies, initialLabel }: Props) 
                 </span>
                 <div>
                   <p className="font-semibold">{cert.label}</p>
-                  <p className={`text-xs ${selected ? 'text-white/70' : 'text-gray-400'}`}>
+                  <p className={`text-xs ${selected ? 'text-white/80' : 'text-gray-400'}`}>
                     {cert.sublabel}
                   </p>
                 </div>
@@ -629,7 +629,7 @@ function StepHeader({
     <div className="space-y-4 mb-6">
       <div className="flex items-center gap-4">
         {onBack ? (
-          <button type="button" onClick={onBack} className="text-base font-medium" style={{ color: '#0891b2' }}>
+          <button type="button" onClick={onBack} className="text-base font-medium text-white/90 hover:text-white transition-colors">
             ← {t('common.back')}
           </button>
         ) : (
@@ -641,7 +641,7 @@ function StepHeader({
               key={i}
               className={`h-2 rounded-full transition-all duration-300`}
               style={{
-                backgroundColor: i < step ? '#0891b2' : '#f5e6d3',
+                backgroundColor: i < step ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.3)',
                 width: i < step ? '32px' : '16px'
               }}
             />
@@ -649,8 +649,8 @@ function StepHeader({
         </div>
       </div>
       <div>
-        <h2 className="font-serif text-2xl mb-2" style={{ color: '#1e3a5f' }}>{title}</h2>
-        {subtitle && <p className="text-base" style={{ color: '#1e3a5f99' }}>{subtitle}</p>}
+        <h2 className="font-serif text-xl sm:text-2xl mb-2 text-white">{title}</h2>
+        {subtitle && <p className="text-base text-white/80">{subtitle}</p>}
       </div>
     </div>
   )

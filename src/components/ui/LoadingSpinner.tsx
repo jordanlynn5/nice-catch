@@ -9,11 +9,15 @@ export function LoadingSpinner({ message, size = 'md' }: Props) {
   return (
     <div className="flex flex-col items-center justify-center gap-3">
       <div
-        className={`${sizes[size]} border-4 border-primary/30 border-t-primary rounded-full animate-spin`}
+        className={`${sizes[size]} rounded-full animate-spin`}
+        style={{
+          border: '4px solid rgba(255, 255, 255, 0.2)',
+          borderTopColor: 'rgba(255, 255, 255, 0.9)'
+        }}
         role="status"
         aria-label="Cargando"
       />
-      {message && <p className="text-sm text-gray-600 text-center">{message}</p>}
+      {message && <p className="text-sm text-white/80 text-center">{message}</p>}
     </div>
   )
 }

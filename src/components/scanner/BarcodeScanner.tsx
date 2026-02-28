@@ -33,21 +33,31 @@ export function BarcodeScanner({ onDetected, onFallbackCamera, onFallbackManual 
   if (error) {
     return (
       <div className="flex flex-col items-center gap-4 p-6 text-center">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-gray-400">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-white/50">
           <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
           <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
         </svg>
-        <p className="text-gray-700">{t(`errors.${error === 'camera_permission' ? 'camera_failed' : 'barcode_failed'}`)}</p>
+        <p className="text-white/90">{t(`errors.${error === 'camera_permission' ? 'camera_failed' : 'barcode_failed'}`)}</p>
         <div className="flex flex-col gap-2 w-full max-w-xs">
           <button
             onClick={onFallbackCamera}
-            className="w-full bg-primary text-white py-3 rounded-xl font-medium"
+            className="w-full text-white py-3 rounded-xl font-medium"
+            style={{
+              background: 'rgba(255, 255, 255, 0.2)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.3)'
+            }}
           >
             {t('scanner.try_camera')}
           </button>
           <button
             onClick={onFallbackManual}
-            className="w-full border border-primary text-primary py-3 rounded-xl font-medium"
+            className="w-full text-white py-3 rounded-xl font-medium"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.25)'
+            }}
           >
             {t('scanner.try_manual')}
           </button>
@@ -58,7 +68,7 @@ export function BarcodeScanner({ onDetected, onFallbackCamera, onFallbackManual 
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="relative w-full max-w-sm aspect-[3/4] bg-black rounded-2xl overflow-hidden">
+      <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md aspect-[3/4] bg-black rounded-2xl overflow-hidden">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
@@ -68,7 +78,7 @@ export function BarcodeScanner({ onDetected, onFallbackCamera, onFallbackManual 
         />
         {/* Scan overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-56 h-36 border-2 border-white/80 rounded-xl relative">
+          <div className="border-2 border-white/80 rounded-xl relative" style={{ width: 'min(14rem, 70vw)', height: 'min(9rem, 45vw)' }}>
             {/* Corner marks */}
             {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map((pos) => (
               <div key={pos} className={`absolute w-4 h-4 ${pos}`} />
@@ -90,14 +100,14 @@ export function BarcodeScanner({ onDetected, onFallbackCamera, onFallbackManual 
       <div className="flex gap-3">
         <button
           onClick={onFallbackCamera}
-          className="text-sm text-primary underline"
+          className="text-sm text-white/80 hover:text-white underline transition-colors"
         >
           {t('scanner.try_camera')}
         </button>
-        <span className="text-gray-300">|</span>
+        <span className="text-white/40">|</span>
         <button
           onClick={onFallbackManual}
-          className="text-sm text-primary underline"
+          className="text-sm text-white/80 hover:text-white underline transition-colors"
         >
           {t('scanner.try_manual')}
         </button>

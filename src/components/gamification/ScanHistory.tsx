@@ -12,10 +12,17 @@ export function ScanHistory({ history }: Props) {
   if (history.length === 0) {
     return (
       <div className="text-center py-8">
-        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-2">
-          <span className="text-gray-400 text-xl font-bold">0</span>
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2"
+          style={{
+            background: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
+          }}
+        >
+          <span className="text-white/50 text-xl font-bold">0</span>
         </div>
-        <p className="text-sm text-gray-500">{t('gamification.no_history')}</p>
+        <p className="text-sm text-white/80">{t('gamification.no_history')}</p>
       </div>
     )
   }
@@ -33,7 +40,16 @@ export function ScanHistory({ history }: Props) {
         })
 
         return (
-          <div key={i} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm">
+          <div
+            key={i}
+            className="rounded-xl p-3 flex items-center gap-3"
+            style={{
+              background: 'rgba(255, 255, 255, 0.12)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+            }}
+          >
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"
               style={{ backgroundColor: color }}
@@ -41,11 +57,17 @@ export function ScanHistory({ history }: Props) {
               {entry.score}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800 truncate">{entry.displayName}</p>
-              <p className="text-xs text-gray-400">{date}</p>
+              <p className="text-sm font-medium text-white truncate">{entry.displayName}</p>
+              <p className="text-xs text-white/50">{date}</p>
             </div>
             {entry.choseAlternative && (
-              <span className="text-xs bg-secondary/20 text-deep px-2 py-0.5 rounded-full shrink-0">
+              <span
+                className="text-xs px-2 py-0.5 rounded-full shrink-0 text-white"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)'
+                }}
+              >
                 {t('gamification.alternative_chosen')}
               </span>
             )}

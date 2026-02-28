@@ -54,7 +54,7 @@ export function GreenPTChat({ speciesContext }: Props) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-20 right-4 w-12 h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center text-xl hover:bg-deep transition-colors z-40"
+        className="fixed bottom-20 right-3 sm:right-4 w-11 h-11 sm:w-12 sm:h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center text-xl hover:bg-deep transition-colors z-40"
         aria-label={t('chat.open_chat')}
       >
         💬
@@ -63,7 +63,7 @@ export function GreenPTChat({ speciesContext }: Props) {
   }
 
   return (
-    <div className="fixed bottom-20 right-4 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl flex flex-col z-40 overflow-hidden border border-gray-100">
+    <div className="fixed bottom-20 right-2 sm:right-4 w-[calc(100vw-1rem)] sm:w-80 bg-white rounded-2xl shadow-2xl flex flex-col z-40 overflow-hidden border border-gray-100">
       {/* Header */}
       <div className="bg-primary text-white px-4 py-3 flex items-center justify-between">
         <div>
@@ -72,11 +72,11 @@ export function GreenPTChat({ speciesContext }: Props) {
             <p className="text-xs opacity-75 truncate">{t('chat.about')} {speciesContext}</p>
           )}
         </div>
-        <button onClick={() => setOpen(false)} className="opacity-70 hover:opacity-100">✕</button>
+        <button onClick={() => setOpen(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center opacity-70 hover:opacity-100">✕</button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-64">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-[40vh] sm:max-h-64">
         {messages.length === 0 && (
           <p className="text-xs text-gray-400 text-center py-4">
             {t('chat.empty_message')}

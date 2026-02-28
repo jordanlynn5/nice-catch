@@ -48,7 +48,7 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
   }
 
   return (
-    <div className="flex flex-col h-full max-h-screen">
+    <div className="flex flex-col h-full max-h-dvh">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-200 bg-white">
         <button onClick={onBack} className="text-primary text-sm font-medium">

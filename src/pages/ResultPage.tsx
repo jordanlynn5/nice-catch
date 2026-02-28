@@ -103,23 +103,54 @@ export function ResultPage() {
   if (!currentResult) return null
 
   return (
-    <div className="flex-1 flex flex-col bg-cream">
-      {/* Clean header bar */}
-      <div className="flex items-center justify-between px-6 py-5 bg-white border-b" style={{ borderColor: '#f5e6d3' }}>
+    <div className="flex-1 flex flex-col relative overflow-hidden">
+      {/* Underwater gradient background */}
+      <div className="absolute inset-0" style={{
+        background: 'var(--ocean-gradient)'
+      }} />
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(18)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-white opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${100 + Math.random() * 20}%`,
+              animation: `float-up ${8 + Math.random() * 12}s linear infinite`,
+              animationDelay: `${Math.random() * 8}s`
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Glassmorphism header bar */}
+      <div
+        className="relative z-20 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5"
+        style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)'
+        }}
+      >
         <button
           onClick={handleGoBack}
-          className="text-base font-medium flex items-center gap-2"
-          style={{ color: '#0891b2' }}
+          className="text-base font-medium flex items-center gap-2 text-white hover:text-white/80 transition-colors"
         >
           ← {t('common.back')}
         </button>
-        <button onClick={handleShare} className="text-base font-medium" style={{ color: '#0891b2' }}>
+        <button
+          onClick={handleShare}
+          className="text-base font-medium text-white hover:text-white/80 transition-colors"
+        >
           {t('result.share')}
         </button>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div className="relative z-10 flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 md:px-8">
         {loading ? (
           <div className="flex items-center justify-center min-h-[300px]">
             <LoadingSpinner />
@@ -131,6 +162,15 @@ export function ResultPage() {
 
       {/* Floating chat */}
       <GreenPTChat speciesContext={currentResult.displayName} />
+
+      <style>{`
+        @keyframes float-up {
+          0% { transform: translateY(0) translateX(0); opacity: 0; }
+          10% { opacity: 0.2; }
+          90% { opacity: 0.2; }
+          100% { transform: translateY(-100vh) translateX(${Math.random() * 30 - 15}px); opacity: 0; }
+        }
+      `}</style>
     </div>
   )
 }

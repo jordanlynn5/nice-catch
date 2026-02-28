@@ -41,7 +41,7 @@ function ToastItem({ message, type, onDismiss }: ToastItemProps) {
       <span className="flex-1">{message}</span>
       <button
         onClick={onDismiss}
-        className="shrink-0 w-6 h-6 flex items-center justify-center rounded hover:bg-white/20 transition-colors text-lg"
+        className="shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/20 transition-colors text-lg"
         aria-label="Dismiss"
       >
         ✕

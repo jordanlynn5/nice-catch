@@ -8,7 +8,7 @@ export function OfflineBanner() {
   if (!isOffline) return null
 
   return (
-    <div className="bg-earth/90 text-white text-xs font-medium text-center py-1.5 px-4 fixed top-0 left-0 right-0 z-50">
+    <div className="bg-earth/90 text-white text-xs font-medium text-center py-1.5 px-4 fixed top-0 left-0 right-0 z-50 safe-area-inset-top">
       📶 {t('offline.banner')}
     </div>
   )

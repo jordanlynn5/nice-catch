@@ -10,10 +10,12 @@
   "nav": {
     "scan": "Scan",
     "history": "History",
-    "profile": "Profile",
+    "profile": "Badges",
     "about": "About"
   },
   "home": {
+    "catchline": "Informed decisions, made simpler",
+    "question": "What fish are you buying?",
     "title": "What fish are you buying?",
     "subtitle": "Scan the label or search by species",
     "scan_barcode": "Scan barcode",

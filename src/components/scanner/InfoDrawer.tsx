@@ -17,7 +17,7 @@ export function InfoDrawer({ title, meaning, whereToFind, example }: Props) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/15 text-primary text-xs font-bold leading-none shrink-0"
+        className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-primary/15 text-primary text-base font-bold leading-none shrink-0"
         aria-label={t('info_drawer.more_info')}
         aria-expanded={open}
       >
