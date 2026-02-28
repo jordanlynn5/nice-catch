@@ -9,6 +9,7 @@ import { useSustainability } from '@/hooks/useSustainability'
 import { useGameification } from '@/hooks/useGameification'
 import { getProductCache } from '@/services/cache/productCache'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { isMobileDevice } from '@/utils/deviceDetection'
 import type { Species, ParsedLabel } from '@/types/species'
 
 type ScanMode = 'home' | 'unified_scan' | 'barcode_wizard' | 'manual' | 'ai_assistant' | 'history' | 'profile'
@@ -66,6 +67,16 @@ export function HomePage() {
       navigate('/result')
     } else {
       addToast(t('errors.not_found'), 'error')
+    }
+  }
+
+  const handleStartExploring = () => {
+    // On mobile: open camera scanner
+    // On desktop: go straight to AI chat (no camera needed)
+    if (isMobileDevice()) {
+      setMode('unified_scan')
+    } else {
+      setMode('ai_assistant')
     }
   }
 
@@ -170,47 +181,11 @@ export function HomePage() {
       }} />
 
       {/* Top navigation bar */}
-      <nav className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 safe-area-inset-top">
-        <button
-          onClick={() => setMode('home')}
-          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
-        >
-          <img
-            src="/favicon.png"
-            alt="Nice Catch"
-            className="w-10 h-10 rounded-full object-cover cursor-pointer"
-            style={{
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              border: '2px solid rgba(255,255,255,0.3)'
-            }}
-          />
-          <span style={{
-            fontFamily: 'Playfair Display, serif',
-            fontSize: 'clamp(1rem, 3vw, 1.5rem)',
-            color: 'white',
-            fontWeight: '600',
-            textShadow: '0 2px 12px rgba(0,0,0,0.5)'
-          }}>
-            {t('app_name')}
-          </span>
-        </button>
-
+      <nav className="absolute top-0 left-0 right-0 z-40 flex items-center justify-end px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 safe-area-inset-top">
         <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
           <button
-            onClick={() => setMode('home')}
-            className="hidden sm:block text-white/90 hover:text-white transition-colors"
-            style={{
-              fontFamily: 'Source Sans Pro, sans-serif',
-              fontSize: '0.9375rem',
-              fontWeight: '500',
-              textShadow: '0 1px 4px rgba(0,0,0,0.3)'
-            }}
-          >
-            Home
-          </button>
-          <button
             onClick={() => navigate('/about')}
-            className="hidden sm:block text-white/90 hover:text-white transition-colors"
+            className="text-white/90 hover:text-white transition-colors"
             style={{
               fontFamily: 'Source Sans Pro, sans-serif',
               fontSize: '0.9375rem',
@@ -277,6 +252,21 @@ export function HomePage() {
       {/* Center content — Hero */}
       <div className="absolute inset-0 flex items-center justify-center z-20 px-6 sm:px-8 md:px-16 lg:px-24">
         <div className="text-center max-w-3xl">
+          {/* App Icon */}
+          <div className="flex justify-center mb-8">
+            <img
+              src="/favicon.png"
+              alt="Nice Catch"
+              className="rounded-full object-cover"
+              style={{
+                width: 'clamp(5rem, 15vw, 9rem)',
+                height: 'clamp(5rem, 15vw, 9rem)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4), 0 0 0 4px rgba(255,255,255,0.2)',
+                border: '4px solid rgba(255,255,255,0.3)'
+              }}
+            />
+          </div>
+
           {/* Main title */}
           <h1 className="mb-6" style={{
             fontFamily: 'Playfair Display, serif',
@@ -316,7 +306,7 @@ export function HomePage() {
 
           {/* CTA — Dive in (hidden on phones where mobile action bar replaces it) */}
           <button
-            onClick={() => setMode('unified_scan')}
+            onClick={handleStartExploring}
             className="hidden sm:inline-flex group relative px-6 py-4 sm:px-10 sm:py-5 rounded-full transition-all hover:scale-105 active:scale-95"
             style={{
               background: 'rgba(255,255,255,0.15)',
@@ -333,7 +323,7 @@ export function HomePage() {
                 fontWeight: '600',
                 letterSpacing: '0.02em'
               }}>
-                Scan with AI assistant
+                Score with AI Assistant
               </span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="transition-transform group-hover:translate-x-1">
                 <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -351,7 +341,7 @@ export function HomePage() {
         }}>
           {/* Main CTA */}
           <button
-            onClick={() => setMode('unified_scan')}
+            onClick={handleStartExploring}
             className="flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-base active:scale-95 transition-all shadow-xl"
             style={{
               background: 'rgba(255,255,255,0.2)',
@@ -359,7 +349,7 @@ export function HomePage() {
               border: '2px solid rgba(255,255,255,0.3)'
             }}
           >
-            Scan with AI assistant
+            Score with AI Assistant
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

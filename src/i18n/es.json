@@ -15,7 +15,7 @@
   },
   "home": {
     "catchline": "Decisiones informadas, más simples",
-    "question": "Consulta la puntuación de sostenibilidad de tu pescado o marisco usando el asistente de IA para escanear la etiqueta o el código de barras",
+    "question": "Consulta la puntuación de sostenibilidad de tu pescado o marisco usando el Asistente de IA.",
     "title": "¿Qué pescado vas a comprar?",
     "subtitle": "Escanea la etiqueta o busca la especie",
     "scan_barcode": "Escanear código de barras",
@@ -40,7 +40,8 @@
     "search_placeholder": "Ej: merluza, dorada, salmón...",
     "no_results": "No se encontraron resultados",
     "searching": "Buscando...",
-    "smart_scan": "Apunta al código o etiqueta"
+    "smart_scan": "Apunta al código o etiqueta",
+    "camera_instructions": "Haz una foto de la etiqueta o del código de barras para empezar"
   },
   "wizard": {
     "step1_title": "¿Qué pescado es?",

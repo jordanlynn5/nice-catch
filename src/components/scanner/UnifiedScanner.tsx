@@ -279,9 +279,11 @@ export function UnifiedScanner({ onBarcodeSuccess, onLabelSuccess, onAIFallback,
             </div>
 
             {/* Instruction label */}
-            <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none">
-              <span className="bg-black/60 text-white text-sm px-4 py-2 rounded-full backdrop-blur-sm">
-                {t('scanner.smart_scan')}
+            <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none px-4">
+              <span className="bg-black/70 text-white text-sm sm:text-base px-5 py-2.5 rounded-full backdrop-blur-md text-center max-w-md" style={{
+                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+              }}>
+                {t('scanner.camera_instructions')}
               </span>
             </div>
           </>
@@ -300,8 +302,8 @@ export function UnifiedScanner({ onBarcodeSuccess, onLabelSuccess, onAIFallback,
             <div className="w-10 h-10 bg-primary rounded-full" />
           </button>
 
-          <p className="text-white/70 text-sm text-center px-6">
-            Auto-detecting barcodes or tap to capture label
+          <p className="text-white/70 text-xs sm:text-sm text-center px-6">
+            Barcode auto-detection active
           </p>
         </>
       )}
