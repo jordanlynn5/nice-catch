@@ -130,9 +130,9 @@ export function ProductCard({ result, onChooseAlternative }: Props) {
             >
               <p className="text-sm uppercase tracking-wider mb-2 text-white/80">{t('result.catch_area')}</p>
               <p className="text-base font-semibold mb-1 text-white">
-                FAO {result.faoArea}
+                {getAreaName(result.faoArea)}
               </p>
-              <p className="text-sm text-white/80">{getAreaName(result.faoArea)}</p>
+              <p className="text-xs text-white/70">FAO {result.faoArea}</p>
             </div>
           )}
           {result.fishingMethod && (

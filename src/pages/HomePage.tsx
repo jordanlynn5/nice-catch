@@ -199,36 +199,6 @@ export function HomePage() {
         background: 'var(--ocean-gradient)'
       }} />
 
-      {/* Animated light rays */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-1/4 w-px h-full" style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%)',
-          animation: 'sway-1 8s ease-in-out infinite',
-          transformOrigin: 'top'
-        }} />
-        <div className="absolute top-0 right-1/3 w-px h-full" style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%)',
-          animation: 'sway-2 10s ease-in-out infinite',
-          transformOrigin: 'top'
-        }} />
-      </div>
-
-      {/* Floating particles (bubbles/plankton) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-white opacity-30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${100 + Math.random() * 20}%`,
-              animation: `float-up ${8 + Math.random() * 12}s linear infinite`,
-              animationDelay: `${Math.random() * 8}s`
-            }}
-          />
-        ))}
-      </div>
-
       {/* Top navigation bar */}
       <nav className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 safe-area-inset-top">
         <button
@@ -468,24 +438,6 @@ export function HomePage() {
       <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none md:block hidden" style={{
         background: 'linear-gradient(0deg, rgba(10,37,64,0.8) 0%, transparent 100%)'
       }} />
-
-      {/* CSS Animations */}
-      <style>{`
-        @keyframes float-up {
-          0% { transform: translateY(0) translateX(0); opacity: 0; }
-          10% { opacity: 0.3; }
-          90% { opacity: 0.3; }
-          100% { transform: translateY(-100vh) translateX(${Math.random() * 40 - 20}px); opacity: 0; }
-        }
-        @keyframes sway-1 {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          50% { transform: translateX(30px) rotate(3deg); }
-        }
-        @keyframes sway-2 {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          50% { transform: translateX(-25px) rotate(-3deg); }
-        }
-      `}</style>
     </div>
   )
 }
