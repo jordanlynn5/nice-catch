@@ -124,7 +124,7 @@ export function ChatAssistant({ onComplete, onBack }: Props) {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 text-base"
             disabled={loading}
           />
           <button
