@@ -22,7 +22,15 @@ export function useBarcode() {
       setScannerActive(true)
 
       await reader.decodeFromConstraints(
-        { video: { facingMode: { ideal: 'environment' } } },
+        {
+          video: {
+            facingMode: { ideal: 'environment' },
+            // @ts-expect-error - focusMode is not in TypeScript's MediaTrackConstraints yet, but widely supported
+            focusMode: { ideal: 'continuous' },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          }
+        },
         videoEl,
         (result, _err) => {
           if (result) {

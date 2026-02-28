@@ -51,4 +51,17 @@
   @media (min-width: 768px) { .responsive-container { max-width: 720px; } }
   @media (min-width: 1024px) { .responsive-container { max-width: 960px; } }
   @media (min-width: 1280px) { .responsive-container { max-width: 1140px; } }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }

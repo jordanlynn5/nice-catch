@@ -15,7 +15,7 @@
   },
   "home": {
     "catchline": "Informed decisions, made simpler",
-    "question": "What fish are you buying?",
+    "question": "Check the sustainability score of your fish or seafood product by using the AI assistant to scan your label or barcode",
     "title": "What fish are you buying?",
     "subtitle": "Scan the label or search by species",
     "scan_barcode": "Scan barcode",
@@ -31,6 +31,7 @@
     "barcode_detected": "Barcode detected",
     "try_camera": "Try with camera",
     "try_manual": "Manual search",
+    "try_ai": "Ask AI for help",
     "camera_permission": "Camera access required",
     "camera_not_available": "Camera not available",
     "take_photo": "Take photo",
@@ -38,7 +39,8 @@
     "calculating": "Calculating...",
     "search_placeholder": "E.g.: hake, sea bream, salmon...",
     "no_results": "No results found",
-    "searching": "Searching..."
+    "searching": "Searching...",
+    "smart_scan": "Point at barcode or label"
   },
   "wizard": {
     "step1_title": "What fish is it?",

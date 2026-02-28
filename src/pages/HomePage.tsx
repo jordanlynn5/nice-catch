@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BarcodeScanner } from '@/components/scanner/BarcodeScanner'
-import { CameraCapture } from '@/components/scanner/CameraCapture'
+import { UnifiedScanner } from '@/components/scanner/UnifiedScanner'
 import { ManualSearch } from '@/components/scanner/ManualSearch'
 import { ChatAssistant } from '@/components/ai/ChatAssistant'
 import { useI18n } from '@/hooks/useI18n'
@@ -9,12 +8,10 @@ import { useAppStore } from '@/store/appStore'
 import { useSustainability } from '@/hooks/useSustainability'
 import { useGameification } from '@/hooks/useGameification'
 import { getProductCache } from '@/services/cache/productCache'
-import { lookupBarcode } from '@/services/api/openFoodFacts'
-import { resolveSpeciesId, getSpeciesById } from '@/services/parsers/synonymResolver'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import type { Species, ParsedLabel } from '@/types/species'
 
-type ScanMode = 'home' | 'barcode' | 'barcode_wizard' | 'camera' | 'manual' | 'ai_assistant' | 'history' | 'profile'
+type ScanMode = 'home' | 'unified_scan' | 'barcode_wizard' | 'manual' | 'ai_assistant' | 'history' | 'profile'
 
 export function HomePage() {
   const [mode, setMode] = useState<ScanMode>('home')
@@ -29,7 +26,7 @@ export function HomePage() {
   const addToast = useAppStore((s) => s.addToast)
   const setLanguage = useAppStore((s) => s.setLanguage)
 
-  const handleBarcode = async (barcode: string) => {
+  const handleBarcodeSuccess = async (barcode: string, species?: Species, label?: ParsedLabel) => {
     const cached = await getProductCache(barcode)
     if (cached) {
       setCurrentResult(cached)
@@ -37,27 +34,19 @@ export function HomePage() {
       return
     }
 
-    setLooking(true)
-    try {
-      const label = await lookupBarcode(barcode)
-      const speciesRaw = label?.speciesRaw ?? ''
-      const speciesId = resolveSpeciesId(speciesRaw)
-      const species = speciesId ? getSpeciesById(speciesId) : null
-
-      if (species) {
-        setBarcodeSpecies(species)
-        setBarcodeLabel(label)
-        setMode('barcode_wizard')
-      } else {
-        addToast(t('errors.barcode_failed'), 'error')
-        setMode('manual')
-      }
-    } finally {
-      setLooking(false)
+    if (species && label) {
+      // Barcode resolved to a known species
+      setBarcodeSpecies(species)
+      setBarcodeLabel(label)
+      setMode('barcode_wizard')
+    } else {
+      // Barcode lookup failed, fallback to manual
+      addToast(t('errors.barcode_failed'), 'error')
+      setMode('manual')
     }
   }
 
-  const handleCameraLabel = async (label: ParsedLabel) => {
+  const handleLabelSuccess = async (label: ParsedLabel) => {
     const result = await resolve({ label })
     if (result) {
       setCurrentResult(result)
@@ -111,7 +100,7 @@ export function HomePage() {
     )
   }
 
-  if (mode === 'barcode') {
+  if (mode === 'unified_scan') {
     return (
       <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
         background: 'var(--ocean-gradient)'
@@ -123,30 +112,11 @@ export function HomePage() {
         >
           ← {t('common.back')}
         </button>
-        <BarcodeScanner
-          onDetected={handleBarcode}
-          onFallbackCamera={() => setMode('camera')}
-          onFallbackManual={() => setMode('manual')}
-        />
-      </div>
-    )
-  }
-
-  if (mode === 'camera') {
-    return (
-      <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
-        background: 'var(--ocean-gradient)'
-      }}>
-        <button
-          onClick={() => setMode('home')}
-          className="self-start mb-4 text-white/80 hover:text-white transition-colors text-sm sm:text-base"
-          style={{ fontFamily: 'Source Sans Pro, sans-serif' }}
-        >
-          ← {t('common.back')}
-        </button>
-        <CameraCapture
-          onResult={handleCameraLabel}
-          onFallback={() => setMode('manual')}
+        <UnifiedScanner
+          onBarcodeSuccess={handleBarcodeSuccess}
+          onLabelSuccess={handleLabelSuccess}
+          onAIFallback={() => setMode('ai_assistant')}
+          onManualFallback={() => setMode('manual')}
         />
       </div>
     )
@@ -172,7 +142,7 @@ export function HomePage() {
   if (mode === 'ai_assistant') {
     return (
       <ChatAssistant
-        onComplete={handleCameraLabel}
+        onComplete={handleLabelSuccess}
         onBack={() => setMode('home')}
       />
     )
@@ -271,16 +241,6 @@ export function HomePage() {
       {/* Side navigation */}
       <div className="hidden md:flex absolute left-6 lg:left-8 top-1/2 -translate-y-1/2 z-30 flex-col space-y-3">
         <NavButton
-          onClick={() => setMode('camera')}
-          icon={
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M3 8 L3 18 C3 19 4 20 5 20 L19 20 C20 20 21 19 21 18 L21 8 C21 7 20 6 19 6 L17 6 L16 4 L8 4 L7 6 L5 6 C4 6 3 7 3 8 Z" stroke="currentColor" strokeWidth="2"/>
-              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          }
-          label="Label"
-        />
-        <NavButton
           onClick={() => setMode('manual')}
           icon={
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -289,19 +249,6 @@ export function HomePage() {
             </svg>
           }
           label="Search"
-        />
-        <NavButton
-          onClick={() => setMode('barcode')}
-          icon={
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="6" width="2" height="12" fill="currentColor"/>
-              <rect x="7" y="6" width="1" height="12" fill="currentColor"/>
-              <rect x="10" y="6" width="3" height="12" fill="currentColor"/>
-              <rect x="15" y="6" width="1" height="12" fill="currentColor"/>
-              <rect x="18" y="6" width="2" height="12" fill="currentColor"/>
-            </svg>
-          }
-          label="Barcode"
         />
         <div className="h-px bg-white/20 my-4" />
         <NavButton
@@ -369,7 +316,7 @@ export function HomePage() {
 
           {/* CTA — Dive in (hidden on phones where mobile action bar replaces it) */}
           <button
-            onClick={() => setMode('ai_assistant')}
+            onClick={() => setMode('unified_scan')}
             className="hidden sm:inline-flex group relative px-6 py-4 sm:px-10 sm:py-5 rounded-full transition-all hover:scale-105 active:scale-95"
             style={{
               background: 'rgba(255,255,255,0.15)',
@@ -386,7 +333,7 @@ export function HomePage() {
                 fontWeight: '600',
                 letterSpacing: '0.02em'
               }}>
-                Start Exploring
+                Scan with AI assistant
               </span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="transition-transform group-hover:translate-x-1">
                 <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -402,33 +349,36 @@ export function HomePage() {
           background: 'linear-gradient(0deg, rgba(10,37,64,0.95) 0%, rgba(10,37,64,0.7) 70%, transparent 100%)',
           paddingTop: '2.5rem'
         }}>
-          <MobileActionButton
-            onClick={() => setMode('camera')}
-            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 8 L3 18 C3 19 4 20 5 20 L19 20 C20 20 21 19 21 18 L21 8 C21 7 20 6 19 6 L17 6 L16 4 L8 4 L7 6 L5 6 C4 6 3 7 3 8 Z" stroke="currentColor" strokeWidth="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="2"/></svg>}
-            label="Label"
-          />
-          <MobileActionButton
-            onClick={() => setMode('manual')}
-            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path d="M16 16 L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}
-            label="Search"
-          />
-          <MobileActionButton
-            onClick={() => setMode('barcode')}
-            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="2" height="12" fill="currentColor"/><rect x="7" y="6" width="1" height="12" fill="currentColor"/><rect x="10" y="6" width="3" height="12" fill="currentColor"/><rect x="15" y="6" width="1" height="12" fill="currentColor"/><rect x="18" y="6" width="2" height="12" fill="currentColor"/></svg>}
-            label="Barcode"
-          />
+          {/* Main CTA */}
           <button
-            onClick={() => setMode('ai_assistant')}
-            className="flex items-center gap-2 px-5 py-3 rounded-full text-white font-semibold text-sm active:scale-95 transition-all"
+            onClick={() => setMode('unified_scan')}
+            className="flex items-center gap-3 px-8 py-4 rounded-full text-white font-semibold text-base active:scale-95 transition-all shadow-xl"
             style={{
               background: 'rgba(255,255,255,0.2)',
               backdropFilter: 'blur(20px)',
-              border: '1.5px solid rgba(255,255,255,0.3)'
+              border: '2px solid rgba(255,255,255,0.3)'
             }}
           >
-            Explore
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            Scan with AI assistant
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
+          {/* Secondary option - Manual search */}
+          <button
+            onClick={() => setMode('manual')}
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.1)',
+              backdropFilter: 'blur(10px)',
+              border: '1.5px solid rgba(255,255,255,0.2)'
+            }}
+            aria-label="Manual search"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
+              <path d="M16 16 L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
         </div>
@@ -476,25 +426,3 @@ function NavButton({ onClick, icon, label }: NavButtonProps) {
   )
 }
 
-function MobileActionButton({ onClick, icon, label }: NavButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-white/80 active:scale-95 transition-all"
-      style={{
-        backdropFilter: 'blur(10px)',
-        border: '1.5px solid rgba(255,255,255,0.15)',
-        background: 'rgba(255,255,255,0.08)'
-      }}
-    >
-      <div className="w-5 h-5">{icon}</div>
-      <span style={{
-        fontFamily: 'Source Sans Pro, sans-serif',
-        fontSize: '0.6875rem',
-        fontWeight: '500'
-      }}>
-        {label}
-      </span>
-    </button>
-  )
-}
