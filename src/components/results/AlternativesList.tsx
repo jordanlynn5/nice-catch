@@ -41,7 +41,7 @@ export function AlternativesList({ alternatives, onChoose }: Props) {
                 <p className="font-medium text-gray-800 text-sm truncate">{alt.displayName}</p>
                 <p className="text-xs text-gray-500">{label}</p>
               </div>
-              <span className="text-primary text-xs font-medium shrink-0">Elegir →</span>
+              <span className="text-primary text-xs font-medium shrink-0">{t('result.choose')}</span>
             </button>
           )
         })}

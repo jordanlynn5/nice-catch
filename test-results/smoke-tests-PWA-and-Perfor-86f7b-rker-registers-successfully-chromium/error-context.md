@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: 🐟
+      - generic [ref=e7]: Nice Catch
+    - button "Toggle language" [ref=e8] [cursor=pointer]: ES
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "What fish are you buying?" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Scan the label or search by species
+      - button "📷 Scan barcode" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 📷
+        - text: Scan barcode
+      - generic [ref=e16]:
+        - button "🏷️ Photograph label" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: 🏷️
+          - text: Photograph label
+        - button "🔍 Search species" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: 🔍
+          - text: Search species
+      - button "🤖 Ask AI Assistant" [ref=e21] [cursor=pointer]:
+        - generic [ref=e22]: 🤖
+        - text: Ask AI Assistant
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: 🌊
+        - paragraph [ref=e25]: You haven't scanned anything yet
+        - paragraph [ref=e26]: Start scanning!
+  - navigation [ref=e27]:
+    - generic [ref=e28]:
+      - button "📷 Scan" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 📷
+        - generic [ref=e31]: Scan
+      - button "🏆 Profile" [ref=e32] [cursor=pointer]:
+        - generic [ref=e33]: 🏆
+        - generic [ref=e34]: Profile
+      - button "ℹ️ About" [ref=e35] [cursor=pointer]:
+        - generic [ref=e36]: ℹ️
+        - generic [ref=e37]: About
+```

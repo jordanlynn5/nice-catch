@@ -26,7 +26,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 60,
-    "scoreRange": [40, 80],
+    "scoreRange": [25, 80],
     "goodAlternatives": ["lubina", "besugo"],
     "category": "white_fish",
     "notes_es": "La dorada de acuicultura certificada es una opción razonable. La silvestre del Mediterráneo está bajo presión."
@@ -42,7 +42,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 58,
-    "scoreRange": [38, 78],
+    "scoreRange": [25, 78],
     "goodAlternatives": ["dorada", "besugo"],
     "category": "white_fish",
     "notes_es": "La lubina salvaje mediterránea está bajo presión pesquera moderada."
@@ -58,7 +58,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 55,
-    "scoreRange": [30, 72],
+    "scoreRange": [15, 72],
     "goodAlternatives": ["trucha_arcoiris", "sardina"],
     "category": "fatty_fish",
     "notes_es": "El salmón salvaje del Atlántico está muy reducido. El salmón de acuicultura varía mucho según certificación."
@@ -74,7 +74,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 70,
-    "scoreRange": [45, 85],
+    "scoreRange": [20, 85],
     "goodAlternatives": ["anchoa", "boqueron"],
     "category": "small_pelagic",
     "notes_es": "Las sardinas son una de las opciones más sostenibles cuando proceden del Atlántico. Evita las del Mediterráneo sur."
@@ -90,7 +90,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 75,
-    "scoreRange": [50, 88],
+    "scoreRange": [30, 88],
     "goodAlternatives": ["sardina", "caballa"],
     "category": "small_pelagic",
     "notes_es": "Las anchoas del Cantábrico (Golfo de Vizcaya) son una excelente elección sostenible."
@@ -106,7 +106,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 75,
-    "scoreRange": [50, 88],
+    "scoreRange": [30, 88],
     "goodAlternatives": ["sardina", "caballa"],
     "category": "small_pelagic",
     "notes_es": "El boquerón fresco es nutritivo y generalmente bien gestionado en el Cantábrico."
@@ -122,7 +122,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 72,
-    "scoreRange": [48, 85],
+    "scoreRange": [30, 85],
     "goodAlternatives": ["sardina", "anchoa"],
     "category": "small_pelagic",
     "notes_es": "La caballa es rica en omega-3 y sus poblaciones están en buen estado en el Atlántico norte."
@@ -170,7 +170,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 55,
-    "scoreRange": [35, 70],
+    "scoreRange": [25, 70],
     "goodAlternatives": ["caballa", "sardina"],
     "category": "large_pelagic",
     "notes_es": "El bonito del norte del Atlántico norte es más sostenible que otras especies de atún cuando se pesca con caña."
@@ -330,7 +330,7 @@
     },
     "iucnStatus": "LC",
     "defaultScore": 65,
-    "scoreRange": [45, 80],
+    "scoreRange": [30, 80],
     "goodAlternatives": ["salmon", "mejillon"],
     "category": "fatty_fish",
     "notes_es": "La trucha de acuicultura española es generalmente bien gestionada. Busca certificación ASC."

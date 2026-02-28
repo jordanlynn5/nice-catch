@@ -35,11 +35,17 @@ function ToastItem({ message, type, onDismiss }: ToastItemProps) {
 
   return (
     <div
-      className={`${colors[type]} px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate-slide-up flex items-center justify-between`}
+      className={`${colors[type]} px-4 py-3 rounded-xl shadow-lg text-sm font-medium animate-slide-up flex items-center justify-between gap-3`}
       role="alert"
     >
-      <span>{message}</span>
-      <button onClick={onDismiss} className="ml-3 opacity-70 hover:opacity-100">×</button>
+      <span className="flex-1">{message}</span>
+      <button
+        onClick={onDismiss}
+        className="shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/20 transition-colors text-lg"
+        aria-label="Dismiss"
+      >
+        ✕
+      </button>
     </div>
   )
 }

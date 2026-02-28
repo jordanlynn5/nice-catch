@@ -21,8 +21,8 @@ export function useBarcode() {
 
       setScannerActive(true)
 
-      const result = await reader.decodeFromVideoDevice(
-        undefined,
+      await reader.decodeFromConstraints(
+        { video: { facingMode: { ideal: 'environment' } } },
         videoEl,
         (result, _err) => {
           if (result) {
@@ -30,8 +30,6 @@ export function useBarcode() {
           }
         }
       )
-
-      setDetected((result as unknown as { getText: () => string })?.getText?.() ?? null)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Camera error'
       if (msg.includes('permission') || msg.includes('NotAllowed')) {

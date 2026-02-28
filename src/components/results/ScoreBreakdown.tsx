@@ -1,6 +1,7 @@
 import type { ScoreBreakdown as ScoreBreakdownType } from '@/types/scoring'
 import type { IUCNStatus } from '@/types/species'
 import { useI18n } from '@/hooks/useI18n'
+import { getAreaName } from '@/services/scoring/areaScore'
 
 interface Props {
   breakdown: ScoreBreakdownType
@@ -65,7 +66,7 @@ export function ScoreBreakdown({ breakdown, iucnStatus, fishingMethod, faoArea }
           label={t('result.area_impact')}
           value={breakdown.areaModifier}
           max={15}
-          subtitle={faoArea ? `FAO ${faoArea}` : undefined}
+          subtitle={faoArea ? getAreaName(faoArea) : undefined}
         />
         {breakdown.originModifier !== 0 && (
           <PillarBar

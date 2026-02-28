@@ -29,7 +29,9 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         this.props.fallback ?? (
           <div className="flex flex-col items-center justify-center p-8 text-center">
-            <p className="text-4xl mb-3">🐠</p>
+            <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mb-3">
+              <span className="text-danger text-2xl font-bold">!</span>
+            </div>
             <p className="text-gray-700 font-medium">Algo salió mal</p>
             <button
               onClick={() => this.setState({ hasError: false })}

@@ -6,12 +6,12 @@
 ---
 
 ## Current Status Snapshot
-- Code: **fully scaffolded** (83 files, builds clean, 19/19 tests pass)
-- GitHub: **live** at `github.com/jordanlynn5/nice-catch`
-- Vercel: **not yet deployed**
-- API keys: **not yet configured**
+- Code: **fully scaffolded** (90+ files, builds clean, **24/24 tests pass**)
+- GitHub: **live** at `github.com/jordanlynn5/nice-catch` (developer branch ahead of main)
+- Vercel: **CLI installed**, dev server tested locally
+- API keys: **configured** (IUCN, Wolfram, GreenPT working)
 - PWA icons: **missing**
-- Live URL: **none yet**
+- Live URL: **none yet** (vercel dev runs at localhost:3001)
 
 ---
 
@@ -20,25 +20,26 @@
 Everything in this phase is done.
 
 - [x] Project scaffolded (Vite 5 + React 18 + TypeScript + Tailwind)
-- [x] All 83 source files written
+- [x] All 90+ source files written
 - [x] TypeScript passes clean (`npm run typecheck`)
-- [x] 19/19 tests passing (`npm run test:ci`)
+- [x] **24/24 tests passing** (`npm run test:ci`) — includes guidance tests
 - [x] Production build succeeds (`npm run build`)
 - [x] PWA service worker + manifest generated
 - [x] Dev server runs at `localhost:5173`
 - [x] GitHub repo created and pushed (`github.com/jordanlynn5/nice-catch`)
 - [x] Git credentials fixed (HTTPS + gh auth)
+- [x] **Smart Buying Guidance system** — replaced species alternatives with actionable EU label criteria (committed to developer branch)
 
 ---
 
-## Phase 1 — API Keys & Local Verification 🔴 NEXT
+## Phase 1 — API Keys & Local Verification 🚧 IN PROGRESS
 
 **Goal:** Every feature works end-to-end locally before touching Vercel.
 
 ### 1.1 Get API credentials
-- [ ] **IUCN Red List key** — register free at https://apiv3.iucnredlist.org → "Get Token"
-- [ ] **Wolfram App ID** — log in at developer.wolframalpha.com → create app → copy App ID (Wolfram One subscription already active)
-- [ ] **GreenPT API key** — sign up at greenpt.ai → copy key from dashboard
+- [x] **IUCN Red List key** — register free at https://apiv3.iucnredlist.org → "Get Token"
+- [x] **Wolfram App ID** — log in at developer.wolframalpha.com → create app → copy App ID (Wolfram One subscription already active)
+- [x] **GreenPT API key** — sign up at greenpt.ai → copy key from dashboard
 
 ### 1.2 Create `.env.local`
 ```
@@ -46,25 +47,28 @@ IUCN_API_KEY=your_key_here
 WOLFRAM_APP_ID=your_app_id_here
 GREENPT_API_KEY=your_key_here
 ```
-- [ ] File created at project root (never committed — already in `.gitignore`)
+- [x] File created at project root (never committed — already in `.gitignore`)
 
 ### 1.3 Install Vercel CLI for local testing
 ```bash
 npm i -g vercel
-vercel dev   # runs app + serverless functions together at localhost:3000
+vercel dev --listen 3000   # runs app + serverless functions together at localhost:3001
 ```
-- [ ] Vercel CLI installed
-- [ ] `vercel dev` starts without errors
+- [x] Vercel CLI installed
+- [x] `vercel dev` starts without errors
 
 ### 1.4 End-to-end smoke tests (run locally with `vercel dev`)
-- [ ] Manual search: type "orada" → resolves to dorada, score displayed
+- [~] Manual search: type "orada" → resolves to dorada, score displayed
 - [ ] Manual search: type "atún rojo" → score ≤ 30, ReduceMessage shown with seasonality
-- [ ] IUCN: search merluza → Vercel function log shows live IUCN API response
-- [ ] Wolfram CO2: search sardina → CO2 badge shows value, Vercel log shows Wolfram query
+- [~] IUCN: search merluza → Vercel function log shows live IUCN API response (503 errors seen)
+- [~] Wolfram CO2: search sardina → CO2 badge shows value, Vercel log shows Wolfram query (503 errors seen)
 - [ ] Wolfram cache: search sardina again → no second Wolfram query (served from IndexedDB)
 - [ ] Gamification: 3 searches → Profile page shows ocean score > 0 + First Catch badge
-- [ ] i18n: toggle EN → all labels switch to English
+- [~] i18n: toggle EN → all labels switch to English
 - [ ] Barcode scanner: open scanner view → camera activates, scan overlay visible
+- [x] **AI Assistant**: extracts species/FAO/method from natural language → score displayed
+- [x] **Buying Guidance**: low-scoring fish shows 3 prioritized label criteria to improve score
+- [x] **FAO area scoring**: general FAO codes (27, 37, 87) now work correctly (+8, -14, 0 modifiers)
 
 ---
 
@@ -302,8 +306,8 @@ git push origin main   # auto-deploys via GitHub integration
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 0 | Foundation | ✅ Complete |
-| 1 | API Keys & Local Verification | 🔴 Next |
+| 0 | Foundation | ✅ Complete (24/24 tests, Smart Buying Guidance) |
+| 1 | API Keys & Local Verification | 🚧 In Progress (API keys configured, vercel dev running) |
 | 2 | PWA Icons | 🔴 Next |
 | 3 | Vercel Deployment | 🔴 Blocked on 1 |
 | 4 | Barcode Testing | 🔴 Blocked on 3 |

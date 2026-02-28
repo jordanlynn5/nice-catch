@@ -12,10 +12,10 @@ export function SpeciesDetail({ fishBaseData, scientificName }: Props) {
   if (!fishBaseData) return null
 
   const items = [
-    fishBaseData.family && { label: 'Familia', value: fishBaseData.family },
-    fishBaseData.habitat && { label: 'Hábitat', value: fishBaseData.habitat },
-    fishBaseData.maxLength && { label: 'Longitud máx.', value: `${fishBaseData.maxLength} cm` },
-    fishBaseData.trophicLevel && { label: 'Nivel trófico', value: fishBaseData.trophicLevel.toFixed(1) },
+    fishBaseData.family && { label: t('result.species_family'), value: fishBaseData.family },
+    fishBaseData.habitat && { label: t('result.species_habitat'), value: fishBaseData.habitat },
+    fishBaseData.maxLength && { label: t('result.species_max_length'), value: `${fishBaseData.maxLength} cm` },
+    fishBaseData.trophicLevel && { label: t('result.species_trophic'), value: fishBaseData.trophicLevel.toFixed(1) },
   ].filter((x): x is { label: string; value: string } => !!x)
 
   if (items.length === 0) return null

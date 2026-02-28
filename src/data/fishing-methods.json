@@ -93,7 +93,7 @@
   "aquaculture_standard": {
     "name": "Acuicultura estándar",
     "name_en": "Standard aquaculture",
-    "modifier": 10,
+    "modifier": -5,
     "eu_gear_codes": [],
     "description": "Acuicultura regulada sin certificación especial"
   },

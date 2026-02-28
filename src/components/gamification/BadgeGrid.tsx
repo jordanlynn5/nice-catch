@@ -20,8 +20,8 @@ export function BadgeGrid({ earnedBadges }: Props) {
 
     const text =
       language === 'es'
-        ? `¡Acabo de ganar el badge "${badge.name_es}" en Nice Catch! 🌊🐟 #NiceCatch #Sostenibilidad`
-        : `Just earned the "${badge.name_en}" badge in Nice Catch! 🌊🐟 #NiceCatch #Sustainability`
+        ? `¡Acabo de ganar el badge "${badge.name_es}" en Nice Catch! #NiceCatch #Sostenibilidad`
+        : `Just earned the "${badge.name_en}" badge in Nice Catch! #NiceCatch #Sustainability`
 
     if (navigator.share) {
       try {
@@ -32,39 +32,50 @@ export function BadgeGrid({ earnedBadges }: Props) {
       }
     } else {
       await navigator.clipboard.writeText(text)
-      addToast('Copiado al portapapeles', 'success')
+      addToast(t('common.copied'), 'success')
       recordShare()
     }
   }
 
   return (
     <div className="space-y-3">
-      <h3 className="font-semibold text-gray-800 text-sm">{t('gamification.your_badges')}</h3>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <h3 className="font-semibold text-white text-sm">{t('gamification.your_badges')}</h3>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {BADGES.map((badge) => {
           const earned = earnedIds.has(badge.id)
           return (
             <div
               key={badge.id}
-              className={`rounded-2xl p-3 flex flex-col items-center gap-1.5 text-center transition-all ${
+              className="rounded-2xl p-3 flex flex-col items-center gap-1.5 text-center transition-all"
+              style={
                 earned
-                  ? 'bg-white shadow-sm border border-primary/20'
-                  : 'bg-gray-100 opacity-50'
-              }`}
+                  ? {
+                      background: 'var(--glass-secondary-bg)',
+                      backdropFilter: 'var(--glass-secondary-blur)',
+                      border: '1px solid var(--glass-secondary-border)',
+                      boxShadow: 'var(--glass-secondary-shadow)'
+                    }
+                  : {
+                      background: 'var(--glass-tertiary-bg)',
+                      backdropFilter: 'var(--glass-tertiary-blur)',
+                      border: '1px solid var(--glass-tertiary-border)',
+                      opacity: 0.5
+                    }
+              }
             >
               <span className="text-2xl">{badge.icon}</span>
-              <p className={`text-xs font-semibold ${earned ? 'text-gray-800' : 'text-gray-400'}`}>
+              <p className={`text-xs font-semibold ${earned ? 'text-white' : 'text-white/50'}`}>
                 {language === 'es' ? badge.name_es : badge.name_en}
               </p>
               {earned ? (
                 <button
                   onClick={() => handleShare(badge.id)}
-                  className="text-[10px] text-primary font-medium"
+                  className="text-[10px] text-white/90 font-medium hover:text-white transition-colors"
                 >
                   {t('gamification.share_badge')} ↗
                 </button>
               ) : (
-                <p className="text-[10px] text-gray-400">{t('gamification.locked')}</p>
+                <p className="text-[10px] text-white/50">{t('gamification.locked')}</p>
               )}
             </div>
           )

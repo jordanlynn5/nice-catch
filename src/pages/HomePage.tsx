@@ -3,49 +3,57 @@ import { useNavigate } from 'react-router-dom'
 import { BarcodeScanner } from '@/components/scanner/BarcodeScanner'
 import { CameraCapture } from '@/components/scanner/CameraCapture'
 import { ManualSearch } from '@/components/scanner/ManualSearch'
+import { ChatAssistant } from '@/components/ai/ChatAssistant'
 import { useI18n } from '@/hooks/useI18n'
 import { useAppStore } from '@/store/appStore'
 import { useSustainability } from '@/hooks/useSustainability'
 import { useGameification } from '@/hooks/useGameification'
 import { getProductCache } from '@/services/cache/productCache'
 import { lookupBarcode } from '@/services/api/openFoodFacts'
+import { resolveSpeciesId, getSpeciesById } from '@/services/parsers/synonymResolver'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import type { Species } from '@/types/species'
-import type { ParsedLabel } from '@/types/species'
+import type { Species, ParsedLabel } from '@/types/species'
 
-type ScanMode = 'home' | 'barcode' | 'camera' | 'manual'
+type ScanMode = 'home' | 'barcode' | 'barcode_wizard' | 'camera' | 'manual' | 'ai_assistant' | 'history' | 'profile'
 
 export function HomePage() {
   const [mode, setMode] = useState<ScanMode>('home')
-  const { t } = useI18n()
+  const [barcodeSpecies, setBarcodeSpecies] = useState<Species | null>(null)
+  const [barcodeLabel, setBarcodeLabel] = useState<ParsedLabel | null>(null)
+  const [looking, setLooking] = useState(false)
+  const { t, language } = useI18n()
   const navigate = useNavigate()
   const { resolve, loading } = useSustainability()
   const { recordScan } = useGameification()
   const setCurrentResult = useAppStore((s) => s.setCurrentResult)
   const addToast = useAppStore((s) => s.addToast)
-  const profile = useGameification().getProfile()
+  const setLanguage = useAppStore((s) => s.setLanguage)
 
   const handleBarcode = async (barcode: string) => {
-    // Check product cache first
-    const { getProductCache: getCache, setProductCache: setCache } = await import('@/services/cache/productCache')
-    const cached = await getCache(barcode)
+    const cached = await getProductCache(barcode)
     if (cached) {
       setCurrentResult(cached)
       navigate('/result')
       return
     }
 
-    const label = await lookupBarcode(barcode)
-    const result = await resolve({ label: label ?? undefined, barcode })
-    if (result) {
-      const { setProductCache } = await import('@/services/cache/productCache')
-      await setProductCache(barcode, result)
-      setCurrentResult(result)
-      await recordScan(result)
-      navigate('/result')
-    } else {
-      addToast(t('errors.barcode_failed'), 'error')
-      setMode('manual')
+    setLooking(true)
+    try {
+      const label = await lookupBarcode(barcode)
+      const speciesRaw = label?.speciesRaw ?? ''
+      const speciesId = resolveSpeciesId(speciesRaw)
+      const species = speciesId ? getSpeciesById(speciesId) : null
+
+      if (species) {
+        setBarcodeSpecies(species)
+        setBarcodeLabel(label)
+        setMode('barcode_wizard')
+      } else {
+        addToast(t('errors.barcode_failed'), 'error')
+        setMode('manual')
+      }
+    } finally {
+      setLooking(false)
     }
   }
 
@@ -61,8 +69,8 @@ export function HomePage() {
     }
   }
 
-  const handleSpeciesSelect = async (species: Species) => {
-    const result = await resolve({ speciesName: species.names.es[0] })
+  const handleSpeciesSelect = async (species: Species, label: ParsedLabel) => {
+    const result = await resolve({ speciesName: species.names.scientific, label })
     if (result) {
       setCurrentResult(result)
       await recordScan(result)
@@ -72,18 +80,49 @@ export function HomePage() {
     }
   }
 
-  if (loading) {
+  if (loading || looking) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner message="Analizando..." size="lg" />
+      <div className="flex-1 flex items-center justify-center" style={{
+        background: 'var(--ocean-gradient)'
+      }}>
+        <LoadingSpinner message={looking ? t('scanner.searching') : t('scanner.calculating')} size="lg" />
+      </div>
+    )
+  }
+
+  if (mode === 'barcode_wizard' && barcodeSpecies) {
+    return (
+      <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
+        background: 'var(--ocean-gradient)'
+      }}>
+        <button
+          onClick={() => { setBarcodeSpecies(null); setBarcodeLabel(null); setMode('home') }}
+          className="self-start mb-4 text-white/80 hover:text-white transition-colors text-sm sm:text-base"
+          style={{ fontFamily: 'Source Sans Pro, sans-serif' }}
+        >
+          ← {t('common.back')}
+        </button>
+        <ManualSearch
+          onSelect={handleSpeciesSelect}
+          initialSpecies={barcodeSpecies}
+          initialLabel={barcodeLabel}
+        />
       </div>
     )
   }
 
   if (mode === 'barcode') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
+      <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
+        background: 'var(--ocean-gradient)'
+      }}>
+        <button
+          onClick={() => setMode('home')}
+          className="self-start mb-4 text-white/80 hover:text-white transition-colors text-sm sm:text-base"
+          style={{ fontFamily: 'Source Sans Pro, sans-serif' }}
+        >
+          ← {t('common.back')}
+        </button>
         <BarcodeScanner
           onDetected={handleBarcode}
           onFallbackCamera={() => setMode('camera')}
@@ -95,8 +134,16 @@ export function HomePage() {
 
   if (mode === 'camera') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
+      <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
+        background: 'var(--ocean-gradient)'
+      }}>
+        <button
+          onClick={() => setMode('home')}
+          className="self-start mb-4 text-white/80 hover:text-white transition-colors text-sm sm:text-base"
+          style={{ fontFamily: 'Source Sans Pro, sans-serif' }}
+        >
+          ← {t('common.back')}
+        </button>
         <CameraCapture
           onResult={handleCameraLabel}
           onFallback={() => setMode('manual')}
@@ -107,87 +154,347 @@ export function HomePage() {
 
   if (mode === 'manual') {
     return (
-      <div className="flex-1 flex flex-col p-4">
-        <button onClick={() => setMode('home')} className="self-start text-primary mb-4">← Volver</button>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('home.manual_search')}</h2>
+      <div className="flex-1 flex flex-col px-4 py-4 sm:p-6" style={{
+        background: 'var(--ocean-gradient)'
+      }}>
+        <button
+          onClick={() => setMode('home')}
+          className="self-start mb-4 text-white/80 hover:text-white transition-colors text-sm sm:text-base"
+          style={{ fontFamily: 'Source Sans Pro, sans-serif' }}
+        >
+          ← {t('common.back')}
+        </button>
         <ManualSearch onSelect={handleSpeciesSelect} />
       </div>
     )
   }
 
-  // Home screen
+  if (mode === 'ai_assistant') {
+    return (
+      <ChatAssistant
+        onComplete={handleCameraLabel}
+        onBack={() => setMode('home')}
+      />
+    )
+  }
+
+  if (mode === 'history') {
+    navigate('/profile')
+    return null
+  }
+
+  if (mode === 'profile') {
+    navigate('/profile')
+    return null
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // OCEAN DIVE — Immersive Underwater Experience
+  // Centered hero, side navigation, diving into the deep
+  // ═══════════════════════════════════════════════════════════════
   return (
-    <div className="flex-1 flex flex-col p-5 space-y-6">
-      {/* Hero */}
-      <div className="text-center space-y-2 pt-4">
-        <h1 className="text-2xl font-bold text-deep">{t('home.title')}</h1>
-        <p className="text-sm text-gray-500">{t('home.subtitle')}</p>
-      </div>
+    <div className="relative w-full min-h-dvh overflow-hidden">
+      {/* Underwater gradient background */}
+      <div className="absolute inset-0" style={{
+        background: 'var(--ocean-gradient)'
+      }} />
 
-      {/* Main scan button */}
-      <button
-        onClick={() => setMode('barcode')}
-        className="w-full bg-gradient-to-r from-primary to-deep text-white py-5 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 shadow-lg active:scale-98 transition-transform"
-      >
-        <span className="text-2xl">📷</span>
-        {t('home.scan_barcode')}
-      </button>
-
-      {/* Secondary actions */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Top navigation bar */}
+      <nav className="absolute top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 safe-area-inset-top">
         <button
+          onClick={() => setMode('home')}
+          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+        >
+          <img
+            src="/favicon.png"
+            alt="Nice Catch"
+            className="w-10 h-10 rounded-full object-cover cursor-pointer"
+            style={{
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              border: '2px solid rgba(255,255,255,0.3)'
+            }}
+          />
+          <span style={{
+            fontFamily: 'Playfair Display, serif',
+            fontSize: 'clamp(1rem, 3vw, 1.5rem)',
+            color: 'white',
+            fontWeight: '600',
+            textShadow: '0 2px 12px rgba(0,0,0,0.5)'
+          }}>
+            {t('app_name')}
+          </span>
+        </button>
+
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+          <button
+            onClick={() => setMode('home')}
+            className="hidden sm:block text-white/90 hover:text-white transition-colors"
+            style={{
+              fontFamily: 'Source Sans Pro, sans-serif',
+              fontSize: '0.9375rem',
+              fontWeight: '500',
+              textShadow: '0 1px 4px rgba(0,0,0,0.3)'
+            }}
+          >
+            Home
+          </button>
+          <button
+            onClick={() => navigate('/about')}
+            className="hidden sm:block text-white/90 hover:text-white transition-colors"
+            style={{
+              fontFamily: 'Source Sans Pro, sans-serif',
+              fontSize: '0.9375rem',
+              fontWeight: '500',
+              textShadow: '0 1px 4px rgba(0,0,0,0.3)'
+            }}
+          >
+            About
+          </button>
+          <button
+            onClick={() => setLanguage(language === 'en' ? 'es' : 'en')}
+            className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-all hover:bg-white/10"
+            style={{
+              fontFamily: 'Source Sans Pro, sans-serif',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: 'white',
+              border: '1.5px solid rgba(255,255,255,0.3)',
+              backdropFilter: 'blur(10px)',
+              background: 'rgba(255,255,255,0.05)'
+            }}
+          >
+            {language === 'en' ? 'ES' : 'EN'}
+          </button>
+        </div>
+      </nav>
+
+      {/* Side navigation */}
+      <div className="hidden md:flex absolute left-6 lg:left-8 top-1/2 -translate-y-1/2 z-30 flex-col space-y-3">
+        <NavButton
           onClick={() => setMode('camera')}
-          className="bg-secondary/20 text-deep py-4 rounded-xl font-medium text-sm flex flex-col items-center gap-1"
-        >
-          <span className="text-xl">🏷️</span>
-          {t('home.capture_label')}
-        </button>
-        <button
+          icon={
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M3 8 L3 18 C3 19 4 20 5 20 L19 20 C20 20 21 19 21 18 L21 8 C21 7 20 6 19 6 L17 6 L16 4 L8 4 L7 6 L5 6 C4 6 3 7 3 8 Z" stroke="currentColor" strokeWidth="2"/>
+              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="2"/>
+            </svg>
+          }
+          label="Label"
+        />
+        <NavButton
           onClick={() => setMode('manual')}
-          className="bg-warm text-deep py-4 rounded-xl font-medium text-sm flex flex-col items-center gap-1"
-        >
-          <span className="text-xl">🔍</span>
-          {t('home.manual_search')}
-        </button>
+          icon={
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
+              <path d="M16 16 L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          }
+          label="Search"
+        />
+        <NavButton
+          onClick={() => setMode('barcode')}
+          icon={
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="6" width="2" height="12" fill="currentColor"/>
+              <rect x="7" y="6" width="1" height="12" fill="currentColor"/>
+              <rect x="10" y="6" width="3" height="12" fill="currentColor"/>
+              <rect x="15" y="6" width="1" height="12" fill="currentColor"/>
+              <rect x="18" y="6" width="2" height="12" fill="currentColor"/>
+            </svg>
+          }
+          label="Barcode"
+        />
+        <div className="h-px bg-white/20 my-4" />
+        <NavButton
+          onClick={() => navigate('/profile')}
+          icon={
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 6 L12 12 L16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          }
+          label="Previous scans"
+        />
+        <NavButton
+          onClick={() => navigate('/profile')}
+          icon={
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="10" r="6" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 7 L13 9.5 L15.5 9.5 L13.5 11 L14.5 13.5 L12 11.5 L9.5 13.5 L10.5 11 L8.5 9.5 L11 9.5 Z" fill="currentColor"/>
+              <path d="M9 16 L9 22 L12 20 L15 22 L15 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          }
+          label="Badges"
+        />
       </div>
 
-      {/* Recent scans */}
-      {profile.history.length > 0 && (
-        <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700 text-sm">{t('home.recent_scans')}</h2>
-          <div className="space-y-2">
-            {profile.history.slice(0, 3).map((entry, i) => (
-              <div key={i} className="bg-white rounded-xl p-3 flex items-center gap-3 shadow-sm">
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                  style={{
-                    backgroundColor:
-                      entry.score >= 76 ? '#106c72' :
-                      entry.score >= 51 ? '#80b8a2' :
-                      entry.score >= 26 ? '#b97f5f' : '#ef4444',
-                  }}
-                >
-                  {entry.score}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{entry.displayName}</p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(entry.timestamp).toLocaleDateString('es-ES')}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Center content — Hero */}
+      <div className="absolute inset-0 flex items-center justify-center z-20 px-6 sm:px-8 md:px-16 lg:px-24">
+        <div className="text-center max-w-3xl">
+          {/* Main title */}
+          <h1 className="mb-6" style={{
+            fontFamily: 'Playfair Display, serif',
+            fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+            color: 'white',
+            fontWeight: '600',
+            lineHeight: '1.1',
+            textShadow: '0 4px 24px rgba(0,0,0,0.4)',
+            letterSpacing: '0.02em'
+          }}>
+            {t('app_name')}
+          </h1>
 
-      {profile.history.length === 0 && (
-        <div className="text-center py-6">
-          <p className="text-4xl mb-2">🌊</p>
-          <p className="text-sm text-gray-500">{t('home.no_recent_scans')}</p>
-          <p className="text-sm font-medium text-primary mt-1">{t('home.start_scanning')}</p>
+          {/* Catchline */}
+          <p className="mb-8" style={{
+            fontFamily: 'Playfair Display, serif',
+            fontSize: 'clamp(1.25rem, 3vw, 2rem)',
+            color: 'rgba(255,255,255,0.9)',
+            fontStyle: 'italic',
+            fontWeight: '400',
+            textShadow: '0 2px 12px rgba(0,0,0,0.3)',
+            lineHeight: '1.5'
+          }}>
+            {t('home.catchline')}
+          </p>
+
+          {/* Question */}
+          <p className="mb-8 md:mb-12" style={{
+            fontFamily: 'Source Sans Pro, sans-serif',
+            fontSize: 'clamp(1rem, 2vw, 1.375rem)',
+            color: 'rgba(255,255,255,0.85)',
+            fontWeight: '400',
+            textShadow: '0 1px 8px rgba(0,0,0,0.2)'
+          }}>
+            {t('home.question')}
+          </p>
+
+          {/* CTA — Dive in (hidden on phones where mobile action bar replaces it) */}
+          <button
+            onClick={() => setMode('ai_assistant')}
+            className="hidden sm:inline-flex group relative px-6 py-4 sm:px-10 sm:py-5 rounded-full transition-all hover:scale-105 active:scale-95"
+            style={{
+              background: 'rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(20px)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'
+            }}
+          >
+            <div className="flex items-center gap-4">
+              <span style={{
+                fontFamily: 'Source Sans Pro, sans-serif',
+                fontSize: '1.125rem',
+                color: 'white',
+                fontWeight: '600',
+                letterSpacing: '0.02em'
+              }}>
+                Start Exploring
+              </span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="transition-transform group-hover:translate-x-1">
+                <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </button>
         </div>
-      )}
+      </div>
+
+      {/* Mobile action bar — phones only */}
+      <div className="md:hidden absolute bottom-0 left-0 right-0 z-30 safe-area-inset-bottom">
+        <div className="flex items-center justify-center gap-3 px-4 py-4" style={{
+          background: 'linear-gradient(0deg, rgba(10,37,64,0.95) 0%, rgba(10,37,64,0.7) 70%, transparent 100%)',
+          paddingTop: '2.5rem'
+        }}>
+          <MobileActionButton
+            onClick={() => setMode('camera')}
+            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 8 L3 18 C3 19 4 20 5 20 L19 20 C20 20 21 19 21 18 L21 8 C21 7 20 6 19 6 L17 6 L16 4 L8 4 L7 6 L5 6 C4 6 3 7 3 8 Z" stroke="currentColor" strokeWidth="2"/><circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="2"/></svg>}
+            label="Label"
+          />
+          <MobileActionButton
+            onClick={() => setMode('manual')}
+            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path d="M16 16 L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>}
+            label="Search"
+          />
+          <MobileActionButton
+            onClick={() => setMode('barcode')}
+            icon={<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="2" height="12" fill="currentColor"/><rect x="7" y="6" width="1" height="12" fill="currentColor"/><rect x="10" y="6" width="3" height="12" fill="currentColor"/><rect x="15" y="6" width="1" height="12" fill="currentColor"/><rect x="18" y="6" width="2" height="12" fill="currentColor"/></svg>}
+            label="Barcode"
+          />
+          <button
+            onClick={() => setMode('ai_assistant')}
+            className="flex items-center gap-2 px-5 py-3 rounded-full text-white font-semibold text-sm active:scale-95 transition-all"
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(20px)',
+              border: '1.5px solid rgba(255,255,255,0.3)'
+            }}
+          >
+            Explore
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12 L19 12 M19 12 L12 5 M19 12 L12 19" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom wave/depth indicator */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none md:block hidden" style={{
+        background: 'linear-gradient(0deg, rgba(10,37,64,0.8) 0%, transparent 100%)'
+      }} />
     </div>
+  )
+}
+
+interface NavButtonProps {
+  onClick: () => void
+  icon: React.ReactNode
+  label: string
+}
+
+function NavButton({ onClick, icon, label }: NavButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="group flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:bg-white/10"
+      style={{
+        backdropFilter: 'blur(10px)',
+        border: '1.5px solid rgba(255,255,255,0.15)'
+      }}
+    >
+      <div className="w-6 h-6 text-white/80 group-hover:text-white transition-colors">
+        {icon}
+      </div>
+      <span style={{
+        fontFamily: 'Source Sans Pro, sans-serif',
+        fontSize: '0.875rem',
+        color: 'rgba(255,255,255,0.8)',
+        fontWeight: '500',
+        whiteSpace: 'nowrap'
+      }}
+      className="hidden lg:inline group-hover:text-white transition-colors"
+      >
+        {label}
+      </span>
+    </button>
+  )
+}
+
+function MobileActionButton({ onClick, icon, label }: NavButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-white/80 active:scale-95 transition-all"
+      style={{
+        backdropFilter: 'blur(10px)',
+        border: '1.5px solid rgba(255,255,255,0.15)',
+        background: 'rgba(255,255,255,0.08)'
+      }}
+    >
+      <div className="w-5 h-5">{icon}</div>
+      <span style={{
+        fontFamily: 'Source Sans Pro, sans-serif',
+        fontSize: '0.6875rem',
+        fontWeight: '500'
+      }}>
+        {label}
+      </span>
+    </button>
   )
 }

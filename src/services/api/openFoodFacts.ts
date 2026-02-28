@@ -4,6 +4,14 @@ import { parseBarcodeProduct } from '@/services/parsers/labelParser'
 
 const BASE_URL = 'https://world.openfoodfacts.org'
 
+const REQUESTED_FIELDS = [
+  'code', 'product_name', 'product_name_es', 'species', 'brands', 'quantity',
+  'origins_tags', 'origins', 'origin',
+  'categories_tags', 'labels_tags', 'food_groups_tags',
+  'manufacturing_places', 'ingredients_text',
+  'ecoscore_grade', 'ecoscore_score', 'ecoscore_data'
+].join(',')
+
 interface OFFProduct {
   code: string
   product: {
@@ -13,8 +21,21 @@ interface OFFProduct {
     categories_tags?: string[]
     origins?: string
     origin?: string
+    origins_tags?: string[]
     manufacturing_places?: string
     labels_tags?: string[]
+    food_groups_tags?: string[]
+    ecoscore_data?: {
+      adjustments?: {
+        production_system?: {
+          labels?: string[]
+          value?: number
+        }
+        origins_of_ingredients?: {
+          origins_from_origins_field?: string[]
+        }
+      }
+    }
     [key: string]: unknown
   }
   status: number
@@ -24,7 +45,7 @@ interface OFFProduct {
 export async function lookupBarcode(barcode: string): Promise<ParsedLabel | null> {
   try {
     const data = await ky
-      .get(`${BASE_URL}/api/v2/product/${barcode}.json`, {
+      .get(`${BASE_URL}/api/v2/product/${barcode}.json?fields=${REQUESTED_FIELDS}`, {
         timeout: 8000,
         retry: 1,
       })
@@ -32,17 +53,7 @@ export async function lookupBarcode(barcode: string): Promise<ParsedLabel | null
 
     if (data.status !== 1) return null
 
-    const product = data.product
-    const parsed = parseBarcodeProduct(product as Record<string, unknown>)
-
-    // Also look for certifications in labels_tags
-    const labelTags = product.labels_tags ?? []
-    const certs: string[] = []
-    if (labelTags.some((t: string) => t.includes('msc'))) certs.push('MSC')
-    if (labelTags.some((t: string) => t.includes('asc'))) certs.push('ASC')
-    if (certs.length > 0) parsed.certifications = certs
-
-    return parsed
+    return parseBarcodeProduct(data.product as Record<string, unknown>)
   } catch {
     return null
   }
