@@ -112,7 +112,7 @@ export function GreenPTChat({ speciesContext }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKey}
           placeholder={t('chat.placeholder')}
-          className="flex-1 text-sm px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary/50"
+          className="flex-1 text-base px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary/50"
           disabled={loading}
         />
         <button
